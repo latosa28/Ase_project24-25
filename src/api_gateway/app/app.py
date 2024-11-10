@@ -5,14 +5,8 @@ from app.services.authentication.routes import auth_bp
 from app.services.collection.routes import collection_bp
 from app.services.market.routes import market_bp
 
-# from app.services.account.routes import account_bp
-# from app.services.authentication.routes import auth_bp
-# from app.services.collection.routes import collection_bp
-# from app.services.market.routes import market_bp
-#
 app = Flask(__name__)
-#
-#
+
 # Register blueprints with their respective URL prefix
 app.register_blueprint(auth_bp, url_prefix='/auth')  # Auth routes
 app.register_blueprint(account_bp, url_prefix='/account')  # Account routes
