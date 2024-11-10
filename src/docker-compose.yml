@@ -78,7 +78,7 @@ services:
     build: ./api_gateway
     container_name: api_gateway
     ports:
-      - "5000:5000"  # Exposed port for public client
+      - "5001:5000"  # Exposed port for public client
     networks:
       - app-network
       - public-network  # Connected to the public network
@@ -124,21 +124,9 @@ services:
       - admin_account
       - market
 
-  # Web client (optional, if you want to serve a static frontend)
-  client:
-    image: nginx:alpine
-    container_name: client
-    volumes:
-      - ./client.html:/usr/share/nginx/html/index.html  # Serve a static HTML page
-    ports:
-      - "8080:80"  # Exposed port for the public client
-    networks:
-      - public-network  # Connected to the public network
-      - app-network  # Can communicate with the public API Gateway
-
   # MySQL for the collection microservice
   collection_db:
-    image: mysql:5.7
+    image: mysql:8
     container_name: collection_db
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
@@ -147,13 +135,13 @@ services:
       - MYSQL_PASSWORD=${DB_COLLECTION_PASSWORD}  # Password for this user from .env
     volumes:
       - collection_db_data:/var/lib/mysql
-      - ./collection-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./collection/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
   # MySQL for the account microservice
   account_db:
-    image: mysql:5.7
+    image: mysql:8
     container_name: account_db
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
@@ -162,13 +150,13 @@ services:
       - MYSQL_PASSWORD=${DB_ACCOUNT_PASSWORD}  # Password for this user from .env
     volumes:
       - account_db_data:/var/lib/mysql
-      - ./account-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./account/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
   # MySQL for the market microservice
   market_db:
-    image: mysql:5.7
+    image: mysql:8
     container_name: market_db
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
@@ -177,13 +165,13 @@ services:
       - MYSQL_PASSWORD=${DB_MARKET_PASSWORD}  # Password for this user from .env
     volumes:
       - market_db_data:/var/lib/mysql
-      - ./market-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./market/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
   # MySQL for the currency microservice
   currency_db:
-    image: mysql:5.7
+    image: mysql:8
     container_name: currency_db
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
@@ -192,13 +180,13 @@ services:
       - MYSQL_PASSWORD=${DB_CURRENCY_PASSWORD}  # Password for this user from .env
     volumes:
       - currency_db_data:/var/lib/mysql
-      - ./currency-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./currency/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
   # MySQL for the admin microservice
   admin_db:
-    image: mysql:5.7
+    image: mysql:8
     container_name: admin_db
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
@@ -207,7 +195,7 @@ services:
       - MYSQL_PASSWORD=${DB_ADMIN_PASSWORD}  # Password for this user from .env
     volumes:
       - admin_db_data:/var/lib/mysql
-      - ./admin-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./admin/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 

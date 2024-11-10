@@ -23,10 +23,12 @@ users_balance = {
     "user3": 2500
 }
 
+
 # Endpoint per ottenere la lista degli oggetti nel mercato
 @app.route('/market/items', methods=['GET'])
 def get_market_items():
     return jsonify(market_items), 200
+
 
 # Endpoint per acquistare un oggetto dal mercato
 @app.route('/market/buy', methods=['POST'])
@@ -53,6 +55,7 @@ def buy_item():
 
     return jsonify({"message": f"Purchased {item['name']}", "new_balance": users_balance[user_id]}), 200
 
+
 # Endpoint per vendere un oggetto nel mercato
 @app.route('/market/sell', methods=['POST'])
 def sell_item():
@@ -74,6 +77,7 @@ def sell_item():
     users_balance[user_id] += item_price
 
     return jsonify({"message": f"Sold {item['name']}", "new_balance": users_balance[user_id]}), 200
+
 
 # Avvio dell'app Flask
 if __name__ == '__main__':

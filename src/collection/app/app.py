@@ -14,6 +14,7 @@ users = {
     }
 }
 
+
 # Endpoint per ottenere la collezione gacha del sistema
 @app.route('/collection', methods=['GET'])
 def get_system_collection():
@@ -24,6 +25,7 @@ def get_system_collection():
         "squirtle": {"id": "squirtle", "name": "Squirtle", "type": "Water"}
     }
     return jsonify(system_collection), 200
+
 
 # Endpoint per ottenere le informazioni di un singolo item della collezione di sistema
 @app.route('/item/<item_id>', methods=['GET'])
@@ -39,6 +41,7 @@ def get_item_info(item_id):
         return jsonify(item), 200
     return jsonify({"error": "Item not found"}), 404
 
+
 # Endpoint per ottenere la collezione di un utente specifico
 @app.route('/user/<user_id>/collection', methods=['GET'])
 def get_user_collection(user_id):
@@ -47,6 +50,7 @@ def get_user_collection(user_id):
         return jsonify(user_collection), 200
     return jsonify({"error": "User collection not found"}), 404
 
+
 # Endpoint per ottenere le informazioni di un'istanza specifica della collezione di un utente
 @app.route('/user/<user_id>/instance/<instance_id>', methods=['GET'])
 def get_user_instance(user_id, instance_id):
@@ -54,6 +58,7 @@ def get_user_instance(user_id, instance_id):
     if user_collection and instance_id in user_collection:
         return jsonify(user_collection[instance_id]), 200
     return jsonify({"error": "Instance not found"}), 404
+
 
 # Endpoint per eseguire il "roll" (aggiornamento o aggiunta) di un item nella collezione dell'utente
 @app.route('/user/<user_id>/roll', methods=['PUT'])
@@ -71,6 +76,7 @@ def roll_gacha(user_id):
     # Aggiunge o aggiorna l'item nella collezione dell'utente
     users[user_id][item_id] = new_item
     return jsonify({"message": "Item rolled successfully", "item": new_item}), 200
+
 
 # Avvio dell'app Flask
 if __name__ == '__main__':

@@ -11,6 +11,7 @@ users_balance = {
     "user4": 0      # Utente con saldo iniziale di 0
 }
 
+
 # Endpoint per ottenere l'importo (amount) della valuta di un utente
 @app.route('/user/<user_id>/amount', methods=['GET'])
 def get_amount(user_id):
@@ -18,6 +19,7 @@ def get_amount(user_id):
     if user_id in users_balance:
         return jsonify({"user_id": user_id, "amount": users_balance[user_id]}), 200
     return jsonify({"error": "User not found"}), 404
+
 
 # Endpoint per aggiungere una quantità all'importo della valuta di un utente
 @app.route('/user/<user_id>/add_amount', methods=['POST'])
@@ -35,6 +37,7 @@ def add_amount(user_id):
         users_balance[user_id] = amount_to_add
 
     return jsonify({"message": f"Added {amount_to_add} to {user_id}'s balance", "new_balance": users_balance[user_id]}), 200
+
 
 # Endpoint per sottrarre una quantità dall'importo della valuta di un utente
 @app.route('/user/<user_id>/sub_amount', methods=['POST'])
@@ -54,6 +57,7 @@ def sub_amount(user_id):
             return jsonify({"error": "Insufficient balance"}), 400
     else:
         return jsonify({"error": "User not found"}), 404
+
 
 # Avvio dell'app Flask
 if __name__ == '__main__':

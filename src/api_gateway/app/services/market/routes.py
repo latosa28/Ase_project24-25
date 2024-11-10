@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 
-from api_gateway.app.utils.auth import token_required
+from app.utils.auth import token_required
 
 market_bp = Blueprint('market', __name__)
 
