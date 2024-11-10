@@ -1,12 +1,12 @@
 FROM python:3.12-slim
 
-WORKDIR /service
+WORKDIR /app
 
 COPY requirements.txt .
 COPY app/ .
 
 RUN pip install -r requirements.txt
 
-EXPOSE 5003
+EXPOSE 5000
 
-CMD flask run --host=0.0.0.0 --port=5003
+CMD flask run --host=0.0.0.0 --port=5000
