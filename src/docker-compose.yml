@@ -147,6 +147,7 @@ services:
       - MYSQL_PASSWORD=${DB_COLLECTION_PASSWORD}  # Password for this user from .env
     volumes:
       - collection_db_data:/var/lib/mysql
+      - ./collection-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
@@ -161,6 +162,7 @@ services:
       - MYSQL_PASSWORD=${DB_ACCOUNT_PASSWORD}  # Password for this user from .env
     volumes:
       - account_db_data:/var/lib/mysql
+      - ./account-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
@@ -175,6 +177,7 @@ services:
       - MYSQL_PASSWORD=${DB_MARKET_PASSWORD}  # Password for this user from .env
     volumes:
       - market_db_data:/var/lib/mysql
+      - ./market-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
@@ -189,6 +192,7 @@ services:
       - MYSQL_PASSWORD=${DB_CURRENCY_PASSWORD}  # Password for this user from .env
     volumes:
       - currency_db_data:/var/lib/mysql
+      - ./currency-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
@@ -203,6 +207,7 @@ services:
       - MYSQL_PASSWORD=${DB_ADMIN_PASSWORD}  # Password for this user from .env
     volumes:
       - admin_db_data:/var/lib/mysql
+      - ./admin-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
