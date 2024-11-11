@@ -1,6 +1,6 @@
 -- Create the database if it does not already exist
-CREATE DATABASE IF NOT EXISTS ${DB_COLLECTION_NAME};
-USE ${DB_COLLECTION_NAME};  -- Select the database to use
+CREATE DATABASE IF NOT EXISTS collection_db;
+USE collection_db;  -- Select the database to use
 
 -- Create the item table if it does not already exist
 CREATE TABLE IF NOT EXISTS item (

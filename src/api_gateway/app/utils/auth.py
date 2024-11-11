@@ -5,6 +5,7 @@ from functools import wraps
 # Secret key for JWT encoding and decoding (deve essere lo stesso in tutti i microservizi)
 SECRET_KEY = 'mysecretkey'
 
+
 # Funzione per validare il token
 def token_required(f):
     @wraps(f)
@@ -12,8 +13,8 @@ def token_required(f):
         token = None
 
         # Controlla se il token è presente nell'header Authorization
-        if 'Authorization' in request.headers:
-            token = request.headers['Authorization'].split(" ")[1]  # Ottieni il token dal formato "Bearer <token>"
+        if 'X-Auth-Token' in request.headers:
+            token = request.headers['X-Auth-Token']
 
         if not token:
             return jsonify({'message': 'Token is missing!'}), 403

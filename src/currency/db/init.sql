@@ -1,6 +1,6 @@
 -- Create the database if it does not already exist
-CREATE DATABASE IF NOT EXISTS ${DB_CURRENCY_NAME};
-USE ${DB_CURRENCY_NAME};  -- Select the database to use
+CREATE DATABASE IF NOT EXISTS currency_db;
+USE currency_db;  -- Select the database to use
 
 -- Create the currency table if it does not already exist
 CREATE TABLE IF NOT EXISTS currency (

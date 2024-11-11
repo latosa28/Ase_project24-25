@@ -1,6 +1,6 @@
 -- Create the database if it does not already exist
-CREATE DATABASE IF NOT EXISTS ${DB_ADMIN_NAME};
-USE ${DB_ADMIN_NAME};  -- Select the database to use
+CREATE DATABASE IF NOT EXISTS admin_db;
+USE admin_db;  -- Select the database to use
 
 -- Create the admin_account table if it does not already exist
 CREATE TABLE IF NOT EXISTS admin_account (
