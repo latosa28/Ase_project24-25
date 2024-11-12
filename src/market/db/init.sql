@@ -1,6 +1,6 @@
 -- Create the database if it does not already exist
-CREATE DATABASE IF NOT EXISTS ${DB_MARKET_NAME};
-USE ${DB_MARKET_NAME};  -- Select the database to use
+CREATE DATABASE IF NOT EXISTS market_db;
+USE market_db;  -- Select the database to use
 
 -- Create the market table if it does not already exist
 CREATE TABLE IF NOT EXISTS market (

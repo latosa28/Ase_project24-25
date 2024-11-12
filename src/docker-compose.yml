@@ -16,6 +16,8 @@ services:
       - DB_NAME=${DB_COLLECTION_NAME}  # Database name from .env
       - DB_USER=${DB_COLLECTION_USER}  # Database user from .env
       - DB_PASSWORD=${DB_COLLECTION_PASSWORD}  # Database password from .env
+    volumes:
+      - ./collection/conf:/conf
     depends_on:
       - collection_db  # Ensure the database starts before the service
 
@@ -88,6 +90,7 @@ services:
       - account
       - collection
       - market
+      - currency
 
   # Admin service (accessible only from the private network and through api_gateway_admin)
   admin_account:
@@ -136,6 +139,7 @@ services:
     volumes:
       - collection_db_data:/var/lib/mysql
       - ./collection/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./collection/db/images:/collection_db/items_images
     networks:
       - app-network
 

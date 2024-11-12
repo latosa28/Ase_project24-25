@@ -8,9 +8,11 @@ from app.utils.auth import token_required
 
 auth_bp = Blueprint('authentication', __name__)
 
+ACCOUNT_URL = "http://account:5003"
+
 
 # login
-@auth_bp.route('/login', methods=['POST'])
+@auth_bp.route('/user/auth', methods=['POST'])
 def login():
     data = request.get_json()
 
@@ -20,8 +22,7 @@ def login():
     username = data['username']
     password = data['password']
 
-    # Verifica il nome utente e la password (simulazione)
-    response = requests.get(f'http://account:5003/get_user/{username}')  # Account service
+    response = requests.get(ACCOUNT_URL + f'/user/username/{username}')  # Account service
 
     if response.status_code != 200:
         return jsonify({'message': 'User not found!'}), 404
@@ -41,8 +42,8 @@ def login():
 
 
 # Endpoint to logout (POST request to invalidate the token on the client-side)
-@auth_bp.route('/logout', methods=['POST'])
+@auth_bp.route('/user/auth', methods=['DELETE'])
 @token_required
-def logout(user_id):
+def logout():
     # Invalidate the token on the client side (simple approach)
     return jsonify({'message': 'Successfully logged out!'}), 200
