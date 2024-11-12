@@ -5,4 +5,5 @@ flask-marshmallow
 cryptography
 marshmallow-sqlalchemy
 pymysql
+requests
 mysql-connector-python
