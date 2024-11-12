@@ -27,11 +27,13 @@ ma = Marshmallow(app)
 class Item(db.Model):
     id_item = db.Column(db.Integer, primary_key=True)
     rarity = db.Column(db.String(50), nullable=False)
-    characteristics = db.Column(db.Text, nullable=False)
+    name = db.Column(db.String(100), nullable=False, unique=True)
+    image_path = db.Column(db.String(255), nullable=False)
 
-    def __init__(self, rarity, characteristics):
+    def __init__(self, rarity, name, image_path):
         self.rarity = rarity
-        self.characteristics = characteristics
+        self.name = name
+        self.image_path = image_path
 
 class UserItem(db.Model):
     id_istance = db.Column(db.Integer, primary_key=True)
@@ -39,16 +41,26 @@ class UserItem(db.Model):
     id_user = db.Column(db.Integer, nullable=False)
     date_roll = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-# Schema for serializing the Item object into JSON
+    item = db.relationship('Item', backref=db.backref('user_items', lazy=True))
+
+    def __init__(self, id_item, id_user, date_roll):
+        self.id_item = id_item
+        self.id_user = id_user
+        self.date_roll = date_roll
+
+# Schema di Marshmallow per Item
 class ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Item
 
+# Schema di Marshmallow per UserItem
 class UserItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = UserItem
 
+# Crea un'istanza di schema per serializzare i dati
 item_schema = ItemSchema()
+items_schema = ItemSchema(many=True)
 user_item_schema = UserItemSchema()
 user_items_schema = UserItemSchema(many=True)
 
@@ -142,7 +154,8 @@ def roll_gacha(user_id):
         "message": "Item added to collection",
         "id_item": rolled_item.id_item,
         "rarity": rolled_item.rarity,
-        "characteristics": rolled_item.characteristics,
+        "name": rolled_item.name,
+        "image_path": rolled_item.image_path,
         "id_istance": new_user_item.id_istance
     }), 201
     except IntegrityError as e:
