@@ -90,6 +90,7 @@ services:
       - account
       - collection
       - market
+      - currency
 
   # Admin service (accessible only from the private network and through api_gateway_admin)
   admin_account:
