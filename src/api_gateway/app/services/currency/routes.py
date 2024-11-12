@@ -7,11 +7,13 @@ currency_bp = Blueprint('currency', __name__)
 # URL del microservizio currency
 URL = "http://currency:5005"  # Aggiorna la porta al microservizio che è 5005
 
+
 @currency_bp.route('/user/<int:user_id>/amount', methods=['GET'])
 @token_required
 def get_amount(user, user_id):
     response = requests.get(f'{URL}/user/{user_id}/amount')
     return response.json(), response.status_code
+
 
 @currency_bp.route('/user/<int:user_id>/add_amount', methods=['POST'])
 @token_required

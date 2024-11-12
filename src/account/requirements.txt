@@ -6,3 +6,4 @@ cryptography
 marshmallow-sqlalchemy
 pymysql
 mysql-connector-python
+requests

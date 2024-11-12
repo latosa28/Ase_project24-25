@@ -4,7 +4,6 @@ from flask import Flask, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
-from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 import random
 
@@ -16,7 +15,7 @@ app = Flask(__name__)
 
 def load_rarity_config():
     # Apre il file rarity_config.json e carica i dati
-    with open('/conf/rarity_config.json', 'r') as file:
+    with open('/conf/rarity_conf.json', 'r') as file:
         rarity_data = json.load(file)
 
     # Verifica che la somma delle percentuali sia 100
@@ -54,16 +53,16 @@ class Item(db.Model):
 
 
 class UserItem(db.Model):
-    id_istance = db.Column(db.Integer, primary_key=True)
-    id_item = db.Column(db.Integer, db.ForeignKey('item.id_item'), nullable=False)
-    id_user = db.Column(db.Integer, nullable=False)
+    istance_id = db.Column(db.Integer, primary_key=True)
+    item_id = db.Column(db.Integer, db.ForeignKey('item.item_id'), nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
     date_roll = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     item = db.relationship('Item', backref=db.backref('user_items', lazy=True))
 
-    def __init__(self, id_item, id_user, date_roll):
-        self.id_item = id_item
-        self.id_user = id_user
+    def __init__(self, item_id, user_id, date_roll):
+        self.item_id = item_id
+        self.user_id = user_id
         self.date_roll = date_roll
 
 # Schema di Marshmallow per Item
@@ -85,27 +84,27 @@ user_items_schema = UserItemSchema(many=True)
 
 
 # Route to create a new item (pokemon)
-@app.route('/item', methods=['POST'])
-def create_item():
-    # Get data from the incoming JSON request
-    rarity = request.json.get('rarity')
-    characteristics = request.json.get('characteristics')
-
-    # Ensure all required fields are provided
-    if not rarity or not characteristics:
-        return jsonify({"message": "Missing data"}), 400
-
-    # Create a new item instance
-    new_item = Item(rarity=rarity, characteristics=characteristics)
-
-    try:
-        db.session.add(new_item)
-        db.session.commit()
-        return jsonify({"id_item": new_item.id_item}), 201
-    except IntegrityError:
-        db.session.rollback()
-        logging.error(f"Error while creating item: {str(e)}")
-        return jsonify({"message": "An error occurred while processing your request."}), 400
+# @app.route('/item', methods=['POST'])
+# def create_item():
+#     # Get data from the incoming JSON request
+#     rarity = request.json.get('rarity')
+#     characteristics = request.json.get('characteristics')
+#
+#     # Ensure all required fields are provided
+#     if not rarity or not characteristics:
+#         return jsonify({"message": "Missing data"}), 400
+#
+#     # Create a new item instance
+#     new_item = Item(rarity=rarity, characteristics=characteristics)
+#
+#     try:
+#         db.session.add(new_item)
+#         db.session.commit()
+#         return jsonify({"item_id": new_item.item_id}), 201
+#     except IntegrityError:
+#         db.session.rollback()
+#         logging.error(f"Error while creating item: {str(e)}")
+#         return jsonify({"message": "An error occurred while processing your request."}), 400
 
 
 # Route to get all items
@@ -121,9 +120,9 @@ def get_items():
 
 
 # Route to get a specific item by ID
-@app.route('/item/<int:id_item>', methods=['GET'])
-def get_item_by_id(id_item):
-    item = Item.query.get(id_item)
+@app.route('/item/<int:item_id>', methods=['GET'])
+def get_item_by_id(item_id):
+    item = Item.query.get(item_id)
     if item:
         # Return the item data as JSON
         item_data = ItemSchema().dump(item)
@@ -135,7 +134,7 @@ def get_item_by_id(id_item):
 # Route: Visualizzare la collezione di un utente
 @app.route('/user/<int:user_id>/collection', methods=['GET'])
 def get_user_collection(user_id):
-    user_items = UserItem.query.filter_by(id_user=user_id).all()
+    user_items = UserItem.query.filter_by(user_id=user_id).all()
     if user_items:
         return jsonify(user_items_schema.dump(user_items)), 200
     else:
@@ -143,9 +142,9 @@ def get_user_collection(user_id):
 
 
 # Route: Ottenere informazioni su una specifica istanza della collezione di un utente
-@app.route('/user/<int:user_id>/instance/<int:id_istance>', methods=['GET'])
-def get_user_item_instance(user_id, id_istance):
-    user_item = UserItem.query.filter_by(id_user=user_id, id_istance=id_istance).first()
+@app.route('/user/<int:user_id>/instance/<int:istance_id>', methods=['GET'])
+def get_user_item_instance(user_id, istance_id):
+    user_item = UserItem.query.filter_by(user_id=user_id, istance_id=istance_id).first()
     if user_item:
         return jsonify(user_item_schema.dump(user_item)), 200
     else:
@@ -164,20 +163,20 @@ def roll_gacha(user_id):
     rolled_item = random.choice(items)
 
     # Creazione della nuova istanza dell'item nella collezione dell'utente
-    new_user_item = UserItem(id_item=rolled_item.id_item, id_user=user_id, date_roll=datetime.utcnow())
+    new_user_item = UserItem(item_id=rolled_item.item_id, user_id=user_id, date_roll=datetime.utcnow())
 
     try:
         db.session.add(new_user_item)
         db.session.commit()
         print("Record successfully added to database")
-        print(f"ID_istance generated: {new_user_item.id_istance}")
+        print(f"istance_id generated: {new_user_item.istance_id}")
         return jsonify({
         "message": "Item added to collection",
-        "id_item": rolled_item.id_item,
+        "item_id": rolled_item.item_id,
         "rarity": rolled_item.rarity,
         "name": rolled_item.name,
         "image_path": rolled_item.image_path,
-        "id_istance": new_user_item.id_istance
+        "istance_id": new_user_item.istance_id
     }), 201
     except IntegrityError as e:
         db.session.rollback()

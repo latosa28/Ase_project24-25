@@ -1,5 +1,6 @@
 import logging
 
+import requests
 from flask import Flask, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -9,6 +10,8 @@ from sqlalchemy.exc import IntegrityError
 
 # Initialize the Flask application
 app = Flask(__name__)
+
+CURRENCY_URL = "http://currency:5005"
 
 logging.basicConfig(level=logging.DEBUG)
 # Database configuration
@@ -63,6 +66,7 @@ def create_user():
     try:
         db.session.add(new_user)
         db.session.commit()
+        requests.post(CURRENCY_URL + f'/user/{new_user.user_id}/add_amount', json={"amount": 500})
         return jsonify({"user_id": new_user.user_id}), 201
     except Exception as e:
         db.session.rollback()

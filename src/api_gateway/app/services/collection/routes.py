@@ -9,26 +9,26 @@ URL = "http://collection:5002"
 
 
 # Route to create a new item (pokemon)
-@collection_bp.route('/item', methods=['POST'])
-def create_item():
-    data = request.get_json()
-
-    if not data or not data.get('rarity') or not data.get('characteristics'):
-        return jsonify({'message': 'Missing required fields!'}), 400
-
-    rarity = data['rarity']
-    characteristics = data['characteristics']
-
-    # Send request to collection service to create the item
-    response = requests.post(URL + '/item', json={
-        'rarity': rarity,
-        'characteristics': characteristics
-    })
-
-    if response.status_code == 201:
-        return jsonify({'message': 'Item created successfully!'}), 201
-    else:
-        return jsonify({'message': 'Failed to create item!'}), 400
+# @collection_bp.route('/item', methods=['POST'])
+# def create_item():
+#     data = request.get_json()
+#
+#     if not data or not data.get('rarity') or not data.get('characteristics'):
+#         return jsonify({'message': 'Missing required fields!'}), 400
+#
+#     rarity = data['rarity']
+#     characteristics = data['characteristics']
+#
+#     # Send request to collection service to create the item
+#     response = requests.post(URL + '/item', json={
+#         'rarity': rarity,
+#         'characteristics': characteristics
+#     })
+#
+#     if response.status_code == 201:
+#         return jsonify({'message': 'Item created successfully!'}), 201
+#     else:
+#         return jsonify({'message': 'Failed to create item!'}), 400
 
 
 # Route to get all items
@@ -40,10 +40,10 @@ def get_items(current_user):
 
 
 # Route to get a specific item by ID
-@collection_bp.route('/item/<int:id_item>', methods=['GET'])
+@collection_bp.route('/item/<int:item_id>', methods=['GET'])
 @token_required
-def get_item_by_id(current_user,id_item):
-    response = requests.get(URL + f'/item/{id_item}')
+def get_item_by_id(current_user, item_id):
+    response = requests.get(URL + f'/item/{item_id}')
     return response.json(), response.status_code
 
 # Route per visualizzare la collezione dell'utente

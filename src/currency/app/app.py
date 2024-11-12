@@ -21,6 +21,7 @@ class currency(db.Model):
         self.user_id = user_id
         self.amount = amount
 
+
 # Endpoint per ottenere il saldo di un utente
 @app.route('/user/<user_id>/amount', methods=['GET'])
 def get_amount(user_id):
@@ -28,6 +29,7 @@ def get_amount(user_id):
     if amount:
         return jsonify({"user_id": user_id, "amount": amount.amount}), 200
     return jsonify({"error": "User not found"}), 404
+
 
 # Endpoint per aggiungere una quantità al saldo di un utente
 @app.route('/user/<user_id>/add_amount', methods=['POST'])
