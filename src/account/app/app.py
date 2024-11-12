@@ -116,6 +116,16 @@ def get_user_by_username(username):
     else:
         # If the user is not found, return a 404 error
         return jsonify({"message": "User not found"}), 404
+    
+# Route to get all users
+@app.route('/users', methods=['GET'])
+def get_all_users():
+    # Get all users from the database
+    all_users = User.query.all()
+    # Serialize the list of users
+    user_data = users_schema.dump(all_users)
+    return jsonify(user_data), 200
+
 
 
 # Initialize Marshmallow schema for user

@@ -56,4 +56,10 @@ def get_user_by_username(username):
     response = requests.get(URL + f'/user/username/{username}')
     return response.json(), response.status_code
 
+@account_bp.route('/users', methods=['GET'])
+def get_all_users():
+    response = requests.get(URL + '/users')
+    return response.json(), response.status_code
+
+
 
