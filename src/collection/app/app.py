@@ -1,3 +1,4 @@
+import json
 import logging
 from flask import Flask, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
@@ -12,6 +13,22 @@ from sqlalchemy.exc import IntegrityError
 # Initialize the Flask application
 app = Flask(__name__)
 
+
+def load_rarity_config():
+    # Apre il file rarity_config.json e carica i dati
+    with open('/conf/rarity_config.json', 'r') as file:
+        rarity_data = json.load(file)
+
+    # Verifica che la somma delle percentuali sia 100
+    total_percentage = sum(rarity_data.values())
+    if total_percentage != 100.0:
+        raise ValueError(f"Le percentuali sommano {total_percentage}. Devono essere esattamente 100.")
+
+    return rarity_data
+
+
+# Carica la configurazione al momento dell'avvio dell'app
+rarity_config = load_rarity_config()
 logging.basicConfig(level=logging.DEBUG)
 
 # Database configuration
@@ -25,7 +42,7 @@ ma = Marshmallow(app)
 
 # Define the Item model for the 'item' table in the database
 class Item(db.Model):
-    id_item = db.Column(db.Integer, primary_key=True)
+    item_id = db.Column(db.Integer, primary_key=True)
     rarity = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(100), nullable=False, unique=True)
     image_path = db.Column(db.String(255), nullable=False)
@@ -34,6 +51,7 @@ class Item(db.Model):
         self.rarity = rarity
         self.name = name
         self.image_path = image_path
+
 
 class UserItem(db.Model):
     id_istance = db.Column(db.Integer, primary_key=True)
@@ -58,11 +76,13 @@ class UserItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = UserItem
 
+
 # Crea un'istanza di schema per serializzare i dati
 item_schema = ItemSchema()
 items_schema = ItemSchema(many=True)
 user_item_schema = UserItemSchema()
 user_items_schema = UserItemSchema(many=True)
+
 
 # Route to create a new item (pokemon)
 @app.route('/item', methods=['POST'])
@@ -110,7 +130,8 @@ def get_item_by_id(id_item):
         return jsonify(item_data), 200
     else:
         return jsonify({"message": "Item not found"}), 404
-    
+
+
 # Route: Visualizzare la collezione di un utente
 @app.route('/user/<int:user_id>/collection', methods=['GET'])
 def get_user_collection(user_id):
