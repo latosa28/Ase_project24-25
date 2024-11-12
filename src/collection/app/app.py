@@ -1,74 +1,33 @@
-import json
 import logging
-from flask import Flask, request, jsonify, abort
-from flask_sqlalchemy import SQLAlchemy
+
+import requests
+from flask import Flask, jsonify
 from flask_marshmallow import Marshmallow
-import os
 from datetime import datetime
 import random
 
 from sqlalchemy.exc import IntegrityError
 
+from config import load_config
+from models import db, Item, UserItem
+
 # Initialize the Flask application
 app = Flask(__name__)
-
-
-def load_rarity_config():
-    # Apre il file rarity_config.json e carica i dati
-    with open('/conf/rarity_conf.json', 'r') as file:
-        rarity_data = json.load(file)
-
-    # Verifica che la somma delle percentuali sia 100
-    total_percentage = sum(rarity_data.values())
-    if total_percentage != 100.0:
-        raise ValueError(f"Le percentuali sommano {total_percentage}. Devono essere esattamente 100.")
-
-    return rarity_data
-
-
-# Carica la configurazione al momento dell'avvio dell'app
-rarity_config = load_rarity_config()
-logging.basicConfig(level=logging.DEBUG)
-
-# Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Initialize SQLAlchemy and Marshmallow for ORM and serialization
-db = SQLAlchemy(app)
+load_config(app)
+db.init_app(app)  # Qui inizializziamo il db con l'app
 ma = Marshmallow(app)
 
+# Logging setup
+logging.basicConfig(level=logging.DEBUG)
 
-# Define the Item model for the 'item' table in the database
-class Item(db.Model):
-    item_id = db.Column(db.Integer, primary_key=True)
-    rarity = db.Column(db.String(50), nullable=False)
-    name = db.Column(db.String(100), nullable=False, unique=True)
-    image_path = db.Column(db.String(255), nullable=False)
+CURRENCY_URL = "http://currency:5005"
 
-    def __init__(self, rarity, name, image_path):
-        self.rarity = rarity
-        self.name = name
-        self.image_path = image_path
-
-
-class UserItem(db.Model):
-    istance_id = db.Column(db.Integer, primary_key=True)
-    item_id = db.Column(db.Integer, db.ForeignKey('item.item_id'), nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
-    date_roll = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    item = db.relationship('Item', backref=db.backref('user_items', lazy=True))
-
-    def __init__(self, item_id, user_id, date_roll):
-        self.item_id = item_id
-        self.user_id = user_id
-        self.date_roll = date_roll
 
 # Schema di Marshmallow per Item
 class ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Item
+
 
 # Schema di Marshmallow per UserItem
 class UserItemSchema(ma.SQLAlchemyAutoSchema):
@@ -108,7 +67,7 @@ user_items_schema = UserItemSchema(many=True)
 
 
 # Route to get all items
-@app.route('/collection', methods=['GET'])
+@app.route("/collection", methods=["GET"])
 def get_items():
     items = Item.query.all()
     if items:
@@ -120,7 +79,7 @@ def get_items():
 
 
 # Route to get a specific item by ID
-@app.route('/item/<int:item_id>', methods=['GET'])
+@app.route("/item/<int:item_id>", methods=["GET"])
 def get_item_by_id(item_id):
     item = Item.query.get(item_id)
     if item:
@@ -132,7 +91,7 @@ def get_item_by_id(item_id):
 
 
 # Route: Visualizzare la collezione di un utente
-@app.route('/user/<int:user_id>/collection', methods=['GET'])
+@app.route("/user/<int:user_id>/collection", methods=["GET"])
 def get_user_collection(user_id):
     user_items = UserItem.query.filter_by(user_id=user_id).all()
     if user_items:
@@ -142,7 +101,7 @@ def get_user_collection(user_id):
 
 
 # Route: Ottenere informazioni su una specifica istanza della collezione di un utente
-@app.route('/user/<int:user_id>/instance/<int:istance_id>', methods=['GET'])
+@app.route("/user/<int:user_id>/instance/<int:istance_id>", methods=["GET"])
 def get_user_item_instance(user_id, istance_id):
     user_item = UserItem.query.filter_by(user_id=user_id, istance_id=istance_id).first()
     if user_item:
@@ -151,39 +110,61 @@ def get_user_item_instance(user_id, istance_id):
         return jsonify({"message": "Item instance not found"}), 404
 
 
-# Route: Roll per un nuovo gacha
-@app.route('/user/<int:user_id>/roll', methods=['PUT'])
-def roll_gacha(user_id):
-    # Estrai un item casuale dal database
+# Funzione per calcolare le probabilità degli item
+def _get_item_probabilities():
     items = Item.query.all()
-    if not items:
+    # Raggruppiamo gli item per rarità
+    rarity_counts = {}
+    for item in items:
+        if item.rarity not in rarity_counts:
+            rarity_counts[item.rarity] = 0
+        rarity_counts[item.rarity] += 1
+
+    # Calcoliamo i pesi per ogni item
+    item_probabilities = []
+    for item in items:
+        rarity = item.rarity
+        rarity_percentage = app.config["rarities"].get(rarity, 0)
+        count_of_rarity = rarity_counts.get(rarity, 1)  # Default a 1 se non ci sono item di quella rarità
+
+        # La probabilità di ciascun item è la percentuale di rarità divisa per il numero di item con quella rarità
+        item_probability = rarity_percentage / count_of_rarity
+        item_probabilities.append((item, item_probability))
+
+    return item_probabilities
+
+
+# Route: Roll per un nuovo gacha
+@app.route("/user/<int:user_id>/roll", methods=["PUT"])
+def roll_gacha(user_id):
+    item_probabilities = _get_item_probabilities()  # Ottieni le probabilità calcolate
+
+    if not item_probabilities:
         return jsonify({"message": "No items available for gacha"}), 404
 
-    # Selezione casuale di un item
-    rolled_item = random.choice(items)
+    # Estrazione casuale di un item basato sulle probabilità calcolate
+    items, probabilities = zip(*item_probabilities)
+    rolled_item = random.choices(items, probabilities, k=1)[0]
+    response = requests.post(CURRENCY_URL + f'/user/{user_id}/sub_amount', json={"amount": app.config["roll_price"]})
 
-    # Creazione della nuova istanza dell'item nella collezione dell'utente
-    new_user_item = UserItem(item_id=rolled_item.item_id, user_id=user_id, date_roll=datetime.utcnow())
+    if response.status_code == 200:
+        new_user_item = UserItem(
+            item_id=rolled_item.item_id, user_id=user_id, date_roll=datetime.utcnow()
+        )
+        try:
+            db.session.add(new_user_item)
+            db.session.commit()
+            response_data = ItemSchema().dump(rolled_item)
+            response_data["istance_id"] = new_user_item.istance_id
+            return response_data, 201
+        except IntegrityError as e:
+            db.session.rollback()
+            logging.error(f"Error while rolling gacha: {str(e)}")
+            return jsonify({"message": "An error occurred during roll"}), 400
 
-    try:
-        db.session.add(new_user_item)
-        db.session.commit()
-        print("Record successfully added to database")
-        print(f"istance_id generated: {new_user_item.istance_id}")
-        return jsonify({
-        "message": "Item added to collection",
-        "item_id": rolled_item.item_id,
-        "rarity": rolled_item.rarity,
-        "name": rolled_item.name,
-        "image_path": rolled_item.image_path,
-        "istance_id": new_user_item.istance_id
-    }), 201
-    except IntegrityError as e:
-        db.session.rollback()
-        logging.error(f"Error while rolling gacha: {str(e)}")
-        return jsonify({"message": "An error occurred during roll"}), 400
+    return response.json(), response.status_code
 
 
 # Run the application
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5002, debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5002, debug=True)

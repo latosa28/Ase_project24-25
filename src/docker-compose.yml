@@ -16,8 +16,6 @@ services:
       - DB_NAME=${DB_COLLECTION_NAME}  # Database name from .env
       - DB_USER=${DB_COLLECTION_USER}  # Database user from .env
       - DB_PASSWORD=${DB_COLLECTION_PASSWORD}  # Database password from .env
-    volumes:
-      - ./collection/conf:/conf
     depends_on:
       - collection_db  # Ensure the database starts before the service
 
