@@ -41,7 +41,15 @@ items_schema = ItemSchema(many=True)
 user_item_schema = UserItemSchema()
 user_items_schema = UserItemSchema(many=True)
 
+currency_request_function = None  # Variabile globale per il mock
 
+def _make_currency_request(user_id, amount):
+    if currency_request_function:
+        return currency_request_function(user_id, amount)
+    else:
+        # Comportamento normale, esegue la richiesta reale
+        return requests.post(CURRENCY_URL + f'/user/{user_id}/sub_amount', json={"amount": amount})
+    
 # Route to create a new item (pokemon)
 # @app.route('/item', methods=['POST'])
 # def create_item():
@@ -145,7 +153,7 @@ def roll_gacha(user_id):
     # Estrazione casuale di un item basato sulle probabilità calcolate
     items, probabilities = zip(*item_probabilities)
     rolled_item = random.choices(items, probabilities, k=1)[0]
-    response = requests.post(CURRENCY_URL + f'/user/{user_id}/sub_amount', json={"amount": app.config["roll_price"]})
+    response = _make_currency_request(user_id, app.config["roll_price"])
 
     if response.status_code == 200:
         new_user_item = UserItem(
