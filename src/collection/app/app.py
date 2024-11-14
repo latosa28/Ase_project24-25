@@ -43,6 +43,7 @@ user_items_schema = UserItemSchema(many=True)
 
 currency_request_function = None  # Variabile globale per il mock
 
+
 def _make_currency_request(user_id, amount):
     if currency_request_function:
         return currency_request_function(user_id, amount)
