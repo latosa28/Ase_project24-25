@@ -29,14 +29,23 @@ def create_account():
     })
 
     if response.status_code == 201:
-        return jsonify({'message': 'Account created successfully!'}), 201
+        # Assumiamo che la risposta del servizio contenga un campo 'user_id'
+        response_data = response.json()
+        user_id = response_data.get('user_id')  # Prendi l'user_id dalla risposta
+
+        if user_id:
+            return jsonify({
+                'message': 'Account created successfully!',
+                'user_id': user_id  # Includi il user_id nella risposta
+            }), 201
+        else:
+            return jsonify({'message': 'Failed to retrieve user_id!'}), 400
     else:
         return jsonify({'message': 'Failed to create account!'}), 400
 
-
 @account_bp.route('/user/<int:user_id>', methods=['DELETE'])
 @token_required
-def delete_user(user_id):
+def delete_user(current_user,user_id):
     response = requests.delete(URL + f'/user/{user_id}')
 
     if response.status_code == 200:

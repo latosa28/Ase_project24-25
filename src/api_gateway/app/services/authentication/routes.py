@@ -44,6 +44,6 @@ def login():
 # Endpoint to logout (POST request to invalidate the token on the client-side)
 @auth_bp.route('/user/auth', methods=['DELETE'])
 @token_required
-def logout():
+def logout(current_user):
     # Invalidate the token on the client side (simple approach)
     return jsonify({'message': 'Successfully logged out!'}), 200

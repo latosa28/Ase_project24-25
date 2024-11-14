@@ -1,9 +1,9 @@
-import collection  # Importa il microservizio collection
+import app as main_app  # Importa il microservizio collection
 from flask import Flask
 from flask.testing import FlaskClient
 
 # Crea un'app di test Flask basata sull'app principale
-test_app = collection.app
+test_app = main_app.app
 test_client = test_app.test_client()
 
 
