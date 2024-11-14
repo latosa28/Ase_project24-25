@@ -5,7 +5,7 @@ from app.utils.auth import token_required
 currency_bp = Blueprint('currency', __name__)
 
 # URL del microservizio currency
-URL = "http://currency:5005"  # Aggiorna la porta al microservizio che è 5005
+URL = "http://currency:5005"
 
 
 @currency_bp.route('/user/<int:user_id>/amount', methods=['GET'])
@@ -26,6 +26,7 @@ def add_amount(user, user_id):
 
     response = requests.post(f'{URL}/user/{user_id}/add_amount', json={"amount": amount_to_add})
     return response.json(), response.status_code
+
 
 @currency_bp.route('/user/<int:user_id>/sub_amount', methods=['POST'])
 @token_required
