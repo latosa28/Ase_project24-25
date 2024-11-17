@@ -1,10 +1,9 @@
 import app as main_app  # Importa il microservizio collection
 from flask import Flask
-from flask.testing import FlaskClient
+
 
 # Crea un'app di test Flask basata sull'app principale
 test_app = main_app.app
-test_client = test_app.test_client()
 
 
 # Funzione mock per simulare le risposte del servizio `currency`
@@ -16,6 +15,6 @@ def mock_currency_request(user_id, amount):
 
 
 # Imposta la funzione mock nel file collection
-collection.currency_request_function = mock_currency_request
+main_app.currency_request_function = mock_currency_request
 
 

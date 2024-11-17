@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # Microservice for collections (test version)
+  collection_test:
+    build:
+      context: ./collection
+      dockerfile: Dockerfile_test
+    container_name: collection_test
+    ports:  # Binding della porta
+      - "5002:5002"  # Espone la porta 5002 del container sulla porta 5002 dell'host
+    environment:
+      - FLASK_ENV=testing
+      - DB_HOST=collection_db
+      - DB_PORT=3306
+      - DB_NAME=${DB_COLLECTION_NAME}
+      - DB_USER=${DB_COLLECTION_USER}
+      - DB_PASSWORD=${DB_COLLECTION_PASSWORD}
+    depends_on:
+      collection_db:
+        condition: service_healthy  # Ensure the database starts before the service
+
+  # MySQL for the collection microservice
+  collection_db:
+    image: mysql:8
+    container_name: collection_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_COLLECTION_NAME}
+      - MYSQL_USER=${DB_COLLECTION_USER}
+      - MYSQL_PASSWORD=${DB_COLLECTION_PASSWORD}
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - test_collection_db_data:/var/lib/mysql
+      - ./collection/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./collection/db/images:/collection_db/items_images
+
+volumes:
+  test_collection_db_data:
