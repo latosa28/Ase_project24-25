@@ -1,9 +1,7 @@
 Flask
 Flask-SQLAlchemy
-Flask-Migrate
 mysql-connector-python
 requests
-flask-marshmallow
 cryptography
-marshmallow-sqlalchemy
 pymysql
+apscheduler
