@@ -17,11 +17,19 @@ class Item(db.Model):
         self.name = name
         self.image_path = image_path
 
+    def serialize(self):
+        return {
+            'item_id': self.item_id,
+            'rarity': self.rarity,
+            'name': self.name,
+            'image_path': self.image_path
+        }
+
 
 class UserItem(db.Model):
     __tablename__ = 'user_item'
 
-    istance_id = db.Column(db.Integer, primary_key=True)
+    instance_id = db.Column(db.Integer, primary_key=True)
     item_id = db.Column(db.Integer, db.ForeignKey('item.item_id'), nullable=False)
     user_id = db.Column(db.Integer, nullable=False)
     date_roll = db.Column(db.DateTime, nullable=False)
@@ -32,3 +40,13 @@ class UserItem(db.Model):
         self.item_id = item_id
         self.user_id = user_id
         self.date_roll = date_roll
+
+    def serialize(self):
+        return {
+            'instance_id': self.instance_id,
+            'item_id': self.item_id,
+            'user_id': self.user_id,
+            'date_roll': self.date_roll
+        }
+
+
