@@ -13,7 +13,7 @@ app.register_blueprint(auth_bp)  # Auth routes
 app.register_blueprint(account_bp)  # Account routes
 app.register_blueprint(collection_bp)  # Collection routes
 app.register_blueprint(market_bp)  # Market routes
-app.register_blueprint(currency_bp)
+app.register_blueprint(currency_bp) # Currency routes
 
 # Run the app
 if __name__ == '__main__':

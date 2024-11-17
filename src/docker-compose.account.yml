@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Microservice for account (test version)
+  account_test:
+    build:
+      context: ./account
+      dockerfile: Dockerfile_test  # Use the test Dockerfile
+    container_name: account_test
+    ports:  # Port binding
+      - "5003:5003"  # Expose container port 5003 on host port 5003
+    environment:
+      - FLASK_ENV=testing
+      - DB_HOST=account_db
+      - DB_PORT=3306
+      - DB_NAME=${DB_ACCOUNT_NAME}
+      - DB_USER=${DB_ACCOUNT_USER}
+      - DB_PASSWORD=${DB_ACCOUNT_PASSWORD}
+    depends_on:
+      account_db:
+        condition: service_healthy  # Ensure the database starts before the service
+
+  # MySQL for the account microservice
+  account_db:
+    image: mysql:8
+    container_name: account_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_ACCOUNT_NAME}
+      - MYSQL_USER=${DB_ACCOUNT_USER}
+      - MYSQL_PASSWORD=${DB_ACCOUNT_PASSWORD}
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - test_account_db_:/var/lib/mysql
+      - ./account/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  test_account_db_:  # Explicitly define the named volume
