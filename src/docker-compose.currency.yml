@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Microservice for currency (test version)
+  currency_test:
+    build:
+      context: ./currency
+      dockerfile: Dockerfile
+    container_name: currency_test
+    ports:  # Binding della porta
+      - "5005:5005"  # Espone la porta 5005 del container sulla porta 5005 dell'host
+    environment:
+      - FLASK_ENV=testing
+      - DB_HOST=currency_db
+      - DB_PORT=3306
+      - DB_NAME=${DB_CURRENCY_NAME}
+      - DB_USER=${DB_CURRENCY_USER}
+      - DB_PASSWORD=${DB_CURRENCY_PASSWORD}
+    depends_on:
+      currency_db:
+        condition: service_healthy  # Ensure the database starts before the service
+
+  # MySQL for the currency microservice
+  currency_db:
+    image: mysql:8
+    container_name: currency_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_CURRENCY_NAME}
+      - MYSQL_USER=${DB_CURRENCY_USER}
+      - MYSQL_PASSWORD=${DB_CURRENCY_PASSWORD}
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - test_currency_db_data:/var/lib/mysql
+      - ./currency/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  test_currency_db_data:
