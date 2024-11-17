@@ -10,6 +10,6 @@ CREATE TABLE IF NOT EXISTS market (
     buyer_user_id INT,                                -- ID of the buyer user (can be null, if no buyer yet)
     start_date TIMESTAMP NOT NULL,                     -- Start date and time of the auction, cannot be null
     end_date TIMESTAMP NOT NULL,                       -- End date and time of the auction, cannot be null
-    status ENUM('open', 'closed') NOT NULL,           -- Auction status
+    status ENUM('open', 'expired', 'closed') NOT NULL,           -- Auction status
     bid DECIMAL(10, 2) NOT NULL                       -- The current bid amount, cannot be null
 );
