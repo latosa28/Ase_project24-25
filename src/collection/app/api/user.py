@@ -46,7 +46,7 @@ def get_user_collection(user_id):
     user_item_joined = (
         db.session.query(UserItem)
         .join(Item)
-        .filter_by(UserItem.user_id == user_id)
+        .filter(UserItem.user_id == user_id)
         .all()
     )
 
@@ -62,6 +62,7 @@ def get_user_collection(user_id):
             ),
             200,
         )
+    return jsonify({}), 200
 
 
 # Route: Ottenere informazioni su una specifica istanza della collezione di un utente
@@ -70,7 +71,7 @@ def get_user_item_instance(user_id, instance_id):
     user_item_joined = (
         db.session.query(UserItem)
         .join(Item)
-        .filter_by(UserItem.user_id == user_id, UserItem.instance_id == instance_id)
+        .filter(UserItem.user_id == user_id, UserItem.instance_id == instance_id)
         .first()
     )
 
