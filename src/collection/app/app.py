@@ -1,7 +1,7 @@
 import logging
 
 import requests
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_marshmallow import Marshmallow
 from datetime import datetime
 import random
@@ -11,10 +11,9 @@ from sqlalchemy.exc import IntegrityError
 from config import load_config
 from models import db, Item, UserItem
 
-# Initialize the Flask application
 app = Flask(__name__)
 load_config(app)
-db.init_app(app)  # Qui inizializziamo il db con l'app
+db.init_app(app)
 ma = Marshmallow(app)
 
 # Logging setup
@@ -117,6 +116,19 @@ def get_user_item_instance(user_id, istance_id):
         return jsonify(user_item_schema.dump(user_item)), 200
     else:
         return jsonify({"message": "Item instance not found"}), 404
+
+
+@app.route("/user/<int:user_id>/instance/<int:istance_id>", methods=["POST"])
+def move_istance(user_id, istance_id):
+    new_user_id = request.json.get("new_user_id")
+
+    if not new_user_id:
+        return jsonify({"message": "New User id is mandatory"}), 400
+
+    user_item = UserItem.query.filter_by(user_id=user_id, istance_id=istance_id).first()
+    user_item.user_id = new_user_id
+    db.session.commit()
+    return jsonify(user_item_schema.dump(user_item)), 200
 
 
 # Funzione per calcolare le probabilità degli item
