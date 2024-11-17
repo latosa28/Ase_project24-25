@@ -25,6 +25,7 @@ ma = Marshmallow(app)
 
 # Define the User model for the 'user' table in the database
 class Admin(db.Model):
+    __tablename__ = 'admin_account'
     admin_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
@@ -113,4 +114,4 @@ admins_schema = AdminSchema(many=True)
 # Run the application
 if __name__ == '__main__':
     # Set host to '0.0.0.0' to make the app accessible from other containers
-    app.run(host='0.0.0.0', port=5003, debug=True)
+    app.run(host='0.0.0.0', port=5010, debug=True)
