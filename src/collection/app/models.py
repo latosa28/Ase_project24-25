@@ -1,7 +1,6 @@
 # models.py
 from flask_sqlalchemy import SQLAlchemy
 
-# Inizializza db qui, per evitare di importarlo nel file principale
 db = SQLAlchemy()
 
 
