@@ -26,6 +26,12 @@ def get_transactions_history(user_id):
     return jsonify([transaction.serialize() for transaction in transactions]), 200
 
 
+@user_api.route("/user/<int:user_id>/market/<int:market_id>", methods=["GET"])
+def get_auction(user_id, market_id):
+    auction = Market.query.filter(Market.market_id == market_id).first()
+    return jsonify(auction.serialize()), 200
+
+
 @user_api.route("/user/<int:user_id>/market/<int:market_id>/bid", methods=["PUT"])
 def place_bid(user_id, market_id):
     date_now = datetime.utcnow()

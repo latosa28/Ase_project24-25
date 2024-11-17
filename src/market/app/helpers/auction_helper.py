@@ -27,7 +27,7 @@ def move_instance(user_id, new_user_id, istance_id):
 def handle_expired_auction(auction):
     try:
         logging.info(f"Auction {auction.market_id} has expired, processing...")
-        auction.status = "closed"
+        auction.status = "expired"
         if auction.seller_user_id:
             add_amount(auction.seller_user_id, auction.bid)
             move_instance(
