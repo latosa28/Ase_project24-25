@@ -5,7 +5,7 @@ services:
   collection_test:
     build:
       context: ./collection
-      dockerfile: Dockerfile_test
+      dockerfile: Dockerfile
     container_name: collection_test
     ports:  # Binding della porta
       - "5002:5002"  # Espone la porta 5002 del container sulla porta 5002 dell'host

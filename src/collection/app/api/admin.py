@@ -9,7 +9,7 @@ admin_api = Blueprint("admin_api", __name__)
 
 
 # Route to get all items
-@admin_api.route("admin/<int:admin_id>/collection", methods=["GET"])
+@admin_api.route("/admin/<int:admin_id>/collection", methods=["GET"])
 def get_items(admin_id):
     items = Item.query.all()
     if items:
@@ -17,7 +17,7 @@ def get_items(admin_id):
 
 
 # Route to get a specific item by ID
-@admin_api.route("admin/<int:admin_id>/item/<int:item_id>", methods=["GET"])
+@admin_api.route("/admin/<int:admin_id>/item/<int:item_id>", methods=["GET"])
 def get_item_by_id(admin_id, item_id):
     item = Item.query.get(item_id)
     if item:
@@ -33,7 +33,7 @@ def _check_rarity(rarity):
     return
 
 
-@admin_api.route("admin/<int:admin_id>/item/<int:item_id>", methods=["POST"])
+@admin_api.route("/admin/<int:admin_id>/item/<int:item_id>", methods=["POST"])
 def update_item(admin_id, item_id):
     image_path = request.json.get("image_path")
     name = request.json.get("name")
@@ -61,7 +61,7 @@ def update_item(admin_id, item_id):
         return jsonify({"message": "Item not found"}), 404
 
 
-@admin_api.route("admin/<int:admin_id>/item/", methods=["PUT"])
+@admin_api.route("/admin/<int:admin_id>/item/", methods=["PUT"])
 def add_item(admin_id):
     image_path = request.json.get("image_path")
     name = request.json.get("name")
@@ -84,7 +84,7 @@ def add_item(admin_id):
         return jsonify({"message": "An error occurred while add gacha"}), 400
 
 
-@admin_api.route("admin/<int:admin_id>/item/<int:item_id>", methods=["DELETE"])
+@admin_api.route("/admin/<int:admin_id>/item/<int:item_id>", methods=["DELETE"])
 def delete_item(admin_id, item_id):
     item = Item.query.get(item_id)
     if item:
