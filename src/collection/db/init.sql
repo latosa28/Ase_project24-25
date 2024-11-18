@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS item (
 
 -- Create the user_item table if it does not already exist
 CREATE TABLE IF NOT EXISTS user_item (
-    istance_id  INT AUTO_INCREMENT PRIMARY KEY,       -- ID for the instance of the collection, this is the primary key
+    instance_id  INT AUTO_INCREMENT PRIMARY KEY,       -- ID for the instance of the collection, this is the primary key
     item_id INT NOT NULL,                             -- ID of the item, cannot be null (links to the item table)
     user_id INT NOT NULL,                             -- ID of the user who owns the item, cannot be null
     Date_roll DATETIME NOT NULL,                      -- Date when the item was added to the collection, cannot be null
