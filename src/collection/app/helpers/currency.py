@@ -5,6 +5,7 @@ CURRENCY_URL = "http://currency:5005"
 
 
 class CurrencyHelper:
+
     def mock_currency_request(self, user_id, amount):
         if user_id == 1:
             return type('MockResponse', (object,), {"status_code": 200, "json": lambda: {"message": "Mock success"}})()

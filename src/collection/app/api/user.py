@@ -44,21 +44,16 @@ def _serialize_user_collection(user_item_joined):
 @user_api.route("/user/<int:user_id>/collection", methods=["GET"])
 def get_user_collection(user_id):
     user_item_joined = (
-        db.session.query(UserItem)
-        .join(Item)
-        .filter(UserItem.user_id == user_id)
-        .all()
+        db.session.query(UserItem).join(Item).filter(UserItem.user_id == user_id).all()
     )
 
     if user_item_joined:
         return (
             jsonify(
-                {
-                    [
-                        _serialize_user_collection(user_item)
-                        for user_item in user_item_joined
-                    ]
-                }
+                [
+                    _serialize_user_collection(user_item)
+                    for user_item in user_item_joined
+                ]
             ),
             200,
         )
@@ -88,7 +83,9 @@ def move_instance(user_id, instance_id):
     if not new_user_id:
         return jsonify({"message": "New User id is mandatory"}), 400
 
-    user_item = UserItem.query.filter_by(user_id=user_id, instance_id=instance_id).first()
+    user_item = UserItem.query.filter_by(
+        user_id=user_id, instance_id=instance_id
+    ).first()
     user_item.user_id = new_user_id
     db.session.commit()
     return jsonify({}), 200
@@ -142,7 +139,7 @@ def roll_gacha(user_id):
             db.session.commit()
             response_data = rolled_item.serialize()
             response_data["instance_id"] = new_user_item.instance_id
-            return {"instance_id"}, 201
+            return response_data, 201
         except IntegrityError as e:
             db.session.rollback()
             logging.error(f"Error while rolling gacha: {str(e)}")
