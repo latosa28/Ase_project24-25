@@ -2,3 +2,7 @@ Flask
 Flask-SQLAlchemy
 Flask-Migrate
 mysql-connector-python
+Flask-Blueprints
+PyJWT
+requests
+Werkzeug

@@ -97,7 +97,7 @@ services:
     expose:
       - "5006"  # Exposed only within the Docker network
     networks:
-      - admin-network  # Accessible only from the private admin network
+      - app-network
     environment:
       - FLASK_ENV=development
       - DB_HOST=admin_db
@@ -112,8 +112,8 @@ services:
   admin_api_gateway:
     build: ./admin_api_gateway
     container_name: admin_api_gateway
-    expose:
-      - "7777"  # Exposed only within the Docker network
+    ports:
+      - "5010:5010"  
     networks:
       - app-network  # Accessible only from the private network
       - admin-network  # Private network for admin services
@@ -197,7 +197,7 @@ services:
       - MYSQL_PASSWORD=${DB_ADMIN_PASSWORD}  # Password for this user from .env
     volumes:
       - admin_db_data:/var/lib/mysql
-      - ./admin/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./admin_account/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 

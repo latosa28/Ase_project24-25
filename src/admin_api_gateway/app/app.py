@@ -1,10 +1,20 @@
-from flask import Flask, jsonify, request
+from flask import Flask
+
+from app.services.admin_account.routes import admin_account_bp
+from app.services.authentication.routes import auth_bp
+#from app.services.collection.routes import collection_bp
+#from app.services.market.routes import market_bp
+#from app.services.currency.routes import currency_bp
 
 app = Flask(__name__)
 
+# Register blueprints with their respective URL prefix
+app.register_blueprint(auth_bp)  # Auth routes
+app.register_blueprint(admin_account_bp)  # Account routes
+#app.register_blueprint(collection_bp)  # Collection routes
+#app.register_blueprint(market_bp)  # Market routes
+#app.register_blueprint(currency_bp)
 
-# Avvio dell'app Flask
+# Run the app
 if __name__ == '__main__':
-    app.config['DEBUG'] = True  # Abilita il debug per ottenere errori più dettagliati
-    app.run(host='0.0.0.0', port=7777)
-
+    app.run(host='0.0.0.0', port=7777, debug=True)
