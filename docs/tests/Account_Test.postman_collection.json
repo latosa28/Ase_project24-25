@@ -1,0 +1,154 @@
+{
+	"info": {
+		"_postman_id": "073f5bcb-7494-4007-9584-4cf48f8dc711",
+		"name": "Account_Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "39564474"
+	},
+	"item": [
+		{
+			"name": "create_user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create User - Status Code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Create User - Contains user_id\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"user_id\");\r",
+							"    pm.environment.set(\"test_user_id\", jsonData.user_id);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"testuser\",\r\n  \"email\": \"testuser@example.com\",\r\n  \"password\": \"TestPassword123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5003/user"
+			},
+			"response": []
+		},
+		{
+			"name": "get_user_id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get User by ID - Status Code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get User by ID - User Data is Correct\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"username\", \"testuser\");\r",
+							"    pm.expect(jsonData).to.have.property(\"email\", \"testuser@example.com\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5003/user/1"
+			},
+			"response": []
+		},
+		{
+			"name": "get_user_username",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get User by Username - Status Code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get User by Username - User Data is Correct\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"username\", \"testuser\");\r",
+							"    pm.expect(jsonData).to.have.property(\"email\", \"testuser@example.com\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5003/user/username/testuser"
+			},
+			"response": []
+		},
+		{
+			"name": "delete_user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete User - Status Code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Delete User - Correct Message\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(\"User deleted successfully\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "{{jwt_token}}",
+						"type": "text"
+					}
+				],
+				"url": "http://localhost:5003/user/1"
+			},
+			"response": []
+		}
+	]
+}

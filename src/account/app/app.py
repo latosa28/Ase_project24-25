@@ -12,6 +12,7 @@ from sqlalchemy.exc import IntegrityError
 app = Flask(__name__)
 
 CURRENCY_URL = "http://currency:5005"
+currency_request_function = None  # Variabile globale per il mock
 
 logging.basicConfig(level=logging.DEBUG)
 # Database configuration
@@ -42,6 +43,13 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
 
+# Funzione per effettuare la richiesta al servizio `currency`
+def _make_currency_request(user_id, amount):
+    if currency_request_function:
+        return currency_request_function(user_id, amount)
+    else:
+        # Comportamento normale, esegue la richiesta reale
+        return requests.post(CURRENCY_URL + f'/user/{user_id}/add_amount', json={"amount": amount})
 
 # Route to create a new user
 @app.route('/user', methods=['POST'])
@@ -66,8 +74,12 @@ def create_user():
     try:
         db.session.add(new_user)
         db.session.commit()
-        requests.post(CURRENCY_URL + f'/user/{new_user.user_id}/add_amount', json={"amount": 500})
-        return jsonify({"user_id": new_user.user_id}), 201
+        response = _make_currency_request(new_user.user_id, 500)
+        if response.status_code == 200:
+            return jsonify({"user_id": new_user.user_id}), 201
+        else:
+            db.session.rollback()
+            return jsonify({"message": response.json().get('error', 'An error occurred')}), response.status_code
     except Exception as e:
         db.session.rollback()
         logging.error(f"Error while creating user: {str(e)}")

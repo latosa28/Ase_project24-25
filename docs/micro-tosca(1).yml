@@ -1,0 +1,81 @@
+tosca_definitions_version: micro_tosca_yaml_1.1
+description: ASE-PROJECT
+imports:
+- micro: https://di-unipi-socc.github.io/microTOSCA/1.1/microTOSCA.yaml
+topology_template:
+  node_templates:
+    account:
+      type: micro.nodes.Service
+      requirements:
+      - interaction: account_db
+      - interaction: currency
+      - interaction: collection
+    collection:
+      type: micro.nodes.Service
+      requirements:
+      - interaction: collection_db
+      - interaction: currency
+    market:
+      type: micro.nodes.Service
+      requirements:
+      - interaction: market_db
+      - interaction: currency
+      - interaction: collection
+    api_gateway:
+      type: micro.nodes.MessageRouter
+      requirements:
+      - interaction: account
+      - interaction: collection
+      - interaction: market
+      - interaction: currency
+    collection_db:
+      type: micro.nodes.Datastore
+    account_db:
+      type: micro.nodes.Datastore
+    market_db:
+      type: micro.nodes.Datastore
+    currency:
+      type: micro.nodes.Service
+      requirements:
+      - interaction: currency_db
+    currency_db:
+      type: micro.nodes.Datastore
+  groups:
+    adad:
+      type: micro.groups.Edge
+      members:
+      - api_gateway
+  relationship_templates:
+    t:
+      type: micro.relationships.InteractsWith
+      properties:
+        timeout: true
+    c:
+      type: micro.relationships.InteractsWith
+      properties:
+        circuit_breaker: true
+    d:
+      type: micro.relationships.InteractsWith
+      properties:
+        dynamic_discovery: true
+    tc:
+      type: micro.relationships.InteractsWith
+      properties:
+        timeout: true
+        circuit_breaker: true
+    td:
+      type: micro.relationships.InteractsWith
+      properties:
+        timeout: true
+        dynamic_discovery: true
+    cd:
+      type: micro.relationships.InteractsWith
+      properties:
+        circuit_breaker: true
+        dynamic_discovery: true
+    tcd:
+      type: micro.relationships.InteractsWith
+      properties:
+        timeout: true
+        circuit_breaker: true
+        dynamic_discovery: true

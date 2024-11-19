@@ -1,0 +1,132 @@
+{
+	"info": {
+		"_postman_id": "348cf381-d550-49a5-bc23-5c1723a0e668",
+		"name": "Currency_Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "39564474"
+	},
+	"item": [
+		{
+			"name": "get_amount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verifica stato 200 OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifica che il saldo esista\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+							"    pm.environment.set(\"old_balance\", jsonData.amount);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5005/user/1/amount"
+			},
+			"response": []
+		},
+		{
+			"name": "add_amount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verifica stato 200 OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Ottieni il vecchio saldo e l'importo da aggiungere dalla variabile di ambiente\r",
+							"const old_balance = parseFloat(pm.environment.get(\"old_balance\"));\r",
+							"\r",
+							"// Estrai il nuovo saldo dalla risposta\r",
+							"const jsonData = pm.response.json();\r",
+							"const new_balance = jsonData.new_balance;\r",
+							"\r",
+							"// Verifica che il nuovo saldo sia uguale al vecchio saldo + l'importo aggiunto\r",
+							"pm.test(\"Verifica che il nuovo saldo sia corretto\", function () {\r",
+							"    pm.expect(new_balance).to.eql(old_balance + 50);\r",
+							"    pm.environment.set(\"old_balance\", jsonData.new_balance);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"amount\": 50\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5005/user/1/add_amount"
+			},
+			"response": []
+		},
+		{
+			"name": "sub_amount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verifica stato 200 OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Ottieni il vecchio saldo e l'importo da aggiungere dalla variabile di ambiente\r",
+							"const old_balance = parseFloat(pm.environment.get(\"old_balance\"));\r",
+							"\r",
+							"// Estrai il nuovo saldo dalla risposta\r",
+							"const jsonData = pm.response.json();\r",
+							"const new_balance = jsonData.new_balance;\r",
+							"\r",
+							"// Verifica che il nuovo saldo sia uguale al vecchio saldo + l'importo aggiunto\r",
+							"pm.test(\"Verifica che il nuovo saldo sia corretto\", function () {\r",
+							"    pm.expect(new_balance).to.eql(old_balance - 50);\r",
+							"    pm.environment.set(\"old_balance\", jsonData.new_balance);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"amount\": 50\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5005/user/1/sub_amount"
+			},
+			"response": []
+		}
+	]
+}
