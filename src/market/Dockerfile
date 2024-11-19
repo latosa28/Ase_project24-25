@@ -3,9 +3,9 @@ FROM python:3.12-slim
 WORKDIR /service
 
 COPY requirements.txt .
-COPY app/ .
-
 RUN pip install -r requirements.txt
+
+COPY app/ .
 
 EXPOSE 5004
 

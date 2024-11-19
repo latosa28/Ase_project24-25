@@ -3,6 +3,8 @@ from flask import Blueprint, jsonify, request, current_app
 from datetime import datetime
 import logging
 import requests
+
+from helpers.currency import CurrencyHelper
 from models.models import Market, db
 
 user_api = Blueprint('user_api', __name__)
@@ -55,12 +57,7 @@ def place_bid(user_id, market_id):
     if bid_amount <= auction.bid:
         return jsonify({"message": "Bid must be higher than the current bid"}), 400
     try:
-        response = requests.post(
-            f"{current_app.config['currency']}/user/{user_id}/sub_amount",
-            json={"amount": str(bid_amount)},
-        )
-        if response.status_code != 200:
-            raise Exception("Buyer dont'have enough amount")
+        CurrencyHelper().add_amount(user_id, bid_amount)
         old_buyer_user_id = auction.buyer_user_id
         old_bid = auction.bid
         # Aggiorna l'asta con la nuova offerta
@@ -68,12 +65,7 @@ def place_bid(user_id, market_id):
         auction.buyer_user_id = user_id  # Imposta l'acquirente
         db.session.commit()
         if old_buyer_user_id:
-            response = requests.post(
-                f"{current_app.config['currency']}/user/{old_buyer_user_id}/add_amount",
-                json={"amount": str(old_bid)},
-            )
-            if response.status_code != 200:
-                raise Exception("Amount was not returned to the old buyer")
+            CurrencyHelper().add_amount(old_buyer_user_id, old_bid)
     except Exception as e:
         db.session.rollback()
         logging.error(f"Error while place bid: {str(e)}")
@@ -96,7 +88,11 @@ def set_auction(user_id, instance_id):
         return jsonify({"message": "end_date and start_bid are mandatory"}), 400
 
     if start_bid <= 0:
-        return jsonify({"message": "start_bid must be a positive number"}), 40
+        return jsonify({"message": "start_bid must be a positive number"}), 400
+
+    auction = Market.query.filter((Market.status == 'open') & (Market.istance_id == instance_id)).first()
+    if auction:
+        return jsonify({"message": "Auction already open"}), 400
 
     try:
         end_date = datetime.strptime(end_date, current_app.config["date_format"])
