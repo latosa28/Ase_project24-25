@@ -43,6 +43,7 @@ def create_account():
     else:
         return jsonify({'message': 'Failed to create account!'}), 400
 
+
 @admin_account_bp.route('/admin/<int:admin_id>', methods=['DELETE'])
 @token_required
 def delete_admin(current_admin,admin_id):

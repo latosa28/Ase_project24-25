@@ -25,7 +25,7 @@ def login():
     response = requests.get(ACCOUNT_URL + f'/admin/username/{username}')  # Account service
 
     if response.status_code != 200:
-        return jsonify({'message': 'User not found!'}), 404
+        return response.json(), response.status_code
 
     user = response.json()
 
