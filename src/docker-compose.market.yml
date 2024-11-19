@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Microservice for market (test version)
+  market_test:
+    build:
+      context: ./market
+      dockerfile: Dockerfile
+    container_name: market_test
+    ports:  # Binding della porta
+      - "5004:5004"  # Espone la porta 5004 del container sulla porta 5004 dell'host
+    environment:
+      - FLASK_ENV=testing
+      - DB_HOST=market_db
+      - DB_PORT=3306
+      - DB_NAME=${DB_MARKET_NAME}
+      - DB_USER=${DB_MARKET_USER}
+      - DB_PASSWORD=${DB_MARKET_PASSWORD}
+    depends_on:
+      market_db:
+        condition: service_healthy  # Assicurati che il database sia pronto prima di avviare il servizio
+
+  # MySQL for the market microservice
+  market_db:
+    image: mysql:8
+    container_name: market_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_MARKET_NAME}
+      - MYSQL_USER=${DB_MARKET_USER}
+      - MYSQL_PASSWORD=${DB_MARKET_PASSWORD}
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - test_market_db_data:/var/lib/mysql
+      - ./market/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  test_market_db_data:
