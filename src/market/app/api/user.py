@@ -5,6 +5,7 @@ import logging
 import requests
 
 from helpers.currency import CurrencyHelper
+from helpers.collection import CollectionHelper
 from models.models import Market, db
 
 user_api = Blueprint('user_api', __name__)
@@ -57,7 +58,7 @@ def place_bid(user_id, market_id):
     if bid_amount <= auction.bid:
         return jsonify({"message": "Bid must be higher than the current bid"}), 400
     try:
-        CurrencyHelper().add_amount(user_id, bid_amount)
+        CurrencyHelper().sub_amount(user_id, bid_amount)
         old_buyer_user_id = auction.buyer_user_id
         old_bid = auction.bid
         # Aggiorna l'asta con la nuova offerta
@@ -112,7 +113,7 @@ def set_auction(user_id, instance_id):
     if not end_date > date_now:
         return jsonify({"message": "end_date must be in the future"}), 400
 
-    response = requests.get(f"{current_app.config['collection']}/user/{user_id}/instance/{instance_id}")
+    response = CollectionHelper().get_instance(user_id, instance_id)   
     if response.status_code != 200:
         return jsonify({"message": "Unauthorized or invalid instance"}), 403
 
