@@ -21,11 +21,13 @@ def get_user_transactions_history(admin_id, user_id):
     response = requests.get(URL + f'/admin/{admin_id}/user/{user_id}/transactions_history')
     return response.json(), response.status_code
 
+
 @market_bp.route('/admin/<int:admin_id>/transactions_history', methods=['GET'])
 @token_required
 def get_transactions_history(admin_id):
     response = requests.get(URL + f'/admin/{admin_id}/transactions_history')
     return response.json(), response.status_code
+
 
 @market_bp.route('/admin/<int:admin_id>/market/<int:market_id>', methods=['PUT'])
 @token_required

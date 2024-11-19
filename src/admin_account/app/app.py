@@ -106,19 +106,17 @@ def get_admin_by_id(admin_id):
         # If the user is not found, return a 404 error
         return jsonify({"message": "Admin not found"}), 404
 
+
 # Route to get user details by ID
-@app.route('/admin/<string:username>', methods=['GET'])
+@app.route('/admin/username/<string:username>', methods=['GET'])
 def get_admin_by_username(username):
-    # Find the user by ID
-    admin = Admin.query.get(username)
+    admin = Admin.query.filter_by(username=username).first()
     if admin:
-        # Return the user data as JSON
-        admin_data = AdminSchema().dump(admin)  # Serializzazione corretta
+        admin_data = AdminSchema().dump(admin)
         return jsonify(admin_data), 200
     else:
         # If the user is not found, return a 404 error
         return jsonify({"message": "Admin not found"}), 404
-
 
 
 # Initialize Marshmallow schema for user
