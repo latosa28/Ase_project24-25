@@ -10,7 +10,7 @@
 			"name": "Account",
 			"item": [
 				{
-					"name": "create_user",
+					"name": "create_user1",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -33,7 +33,6 @@
 									"pm.test(\"Create User - Contains user_id\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"user_id\");\r",
-									"    pm.environment.set(\"test_user_id\", jsonData.user_id);\r",
 									"});\r",
 									""
 								],
@@ -47,7 +46,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"testuser\",\r\n  \"email\": \"testuser1@example.com\",\r\n  \"password\": \"TestPassword123\"\r\n}",
+							"raw": "{\r\n  \"username\": \"testuser1\",\r\n  \"email\": \"testuser1@example.com\",\r\n  \"password\": \"TestPassword123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -59,20 +58,29 @@
 					"response": []
 				},
 				{
-					"name": "get_user_id",
+					"name": "create_user2",
 					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Get User by ID - Status Code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"Create User - Status Code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Get User by ID - User Data is Correct\", function () {\r",
+									"pm.test(\"Create User - Contains user_id\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property(\"username\", \"testuser\");\r",
-									"    pm.expect(jsonData).to.have.property(\"email\", \"testuser@example.com\");\r",
+									"    pm.expect(jsonData).to.have.property(\"user_id\");\r",
 									"});\r",
 									""
 								],
@@ -82,27 +90,45 @@
 						}
 					],
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
-						"url": "http://localhost:5001/user/{{test_user_id}}"
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"testuser2\",\r\n  \"email\": \"testuser2@example.com\",\r\n  \"password\": \"TestPassword1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5001/user"
 					},
 					"response": []
 				},
 				{
-					"name": "get_user_username",
+					"name": "create_user3",
 					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Get User by Username - Status Code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"Create User - Status Code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Get User by Username - User Data is Correct\", function () {\r",
+									"pm.test(\"Create User - Contains user_id\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property(\"username\", \"testuser\");\r",
-									"    pm.expect(jsonData).to.have.property(\"email\", \"testuser@example.com\");\r",
+									"    pm.expect(jsonData).to.have.property(\"user_id\");\r",
 									"});\r",
 									""
 								],
@@ -112,14 +138,144 @@
 						}
 					],
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
-						"url": "http://localhost:5001/user/username/testuser"
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"testuser3\",\r\n  \"email\": \"testuser3@example.com\",\r\n  \"password\": \"TestPassword12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5001/user"
 					},
 					"response": []
 				},
 				{
-					"name": "delete_user",
+					"name": "login1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifica che lo status code sia 200 (OK)\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Verifica che la risposta contenga il 'token'\r",
+									"pm.test(\"Response contains token\", function () {\r",
+									"    var responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property('token');\r",
+									"    \r",
+									"    // Salva il token come variabile d'ambiente\r",
+									"    if (responseJson.token) {\r",
+									"        pm.collectionVariables.set(\"jwt_token1\", responseJson.token);\r",
+									"        console.log(\"JWT Token saved: \" + responseJson.token)\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser1\",\r\n    \"password\": \"TestPassword123\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5001/user/auth"
+					},
+					"response": []
+				},
+				{
+					"name": "logout1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token1}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/auth"
+					},
+					"response": []
+				},
+				{
+					"name": "login1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifica che lo status code sia 200 (OK)\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Verifica che la risposta contenga il 'token'\r",
+									"pm.test(\"Response contains token\", function () {\r",
+									"    var responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property('token');\r",
+									"    \r",
+									"    // Salva il token come variabile d'ambiente\r",
+									"    if (responseJson.token) {\r",
+									"        pm.collectionVariables.set(\"jwt_token1\", responseJson.token);\r",
+									"        console.log(\"JWT Token saved: \" + responseJson.token)\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser1\",\r\n    \"password\": \"TestPassword123\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5001/user/auth"
+					},
+					"response": []
+				},
+				{
+					"name": "delete_user1",
 					"event": [
 						{
 							"listen": "test",
@@ -145,11 +301,59 @@
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token1}}",
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/{{test_user_id}}"
+						"url": "http://localhost:5001/user/1"
+					},
+					"response": []
+				},
+				{
+					"name": "create_user1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create User - Status Code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Create User - Contains user_id\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"user_id\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"testuser1\",\r\n  \"email\": \"testuser1@example.com\",\r\n  \"password\": \"TestPassword123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5001/user"
 					},
 					"response": []
 				}
@@ -159,7 +363,7 @@
 			"name": "Authentication",
 			"item": [
 				{
-					"name": "login",
+					"name": "login1",
 					"event": [
 						{
 							"listen": "test",
@@ -177,8 +381,8 @@
 									"    \r",
 									"    // Salva il token come variabile d'ambiente\r",
 									"    if (responseJson.token) {\r",
-									"        pm.environment.set(\"jwt_token\", responseJson.token);\r",
-									"        console.log(\"JWT Token saved: \" + responseJson.token);\r",
+									"        pm.collectionVariables.set(\"jwt_token1\", responseJson.token);\r",
+									"        console.log(\"JWT Token saved: \" + responseJson.token)\r",
 									"    }\r",
 									"});\r",
 									""
@@ -193,7 +397,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"testuser\",\r\n    \"password\": \"TestPassword123\"\r\n}\r\n",
+							"raw": "{\r\n    \"username\": \"testuser1\",\r\n    \"password\": \"TestPassword123\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -205,15 +409,29 @@
 					"response": []
 				},
 				{
-					"name": "logout",
+					"name": "login2",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
+									"// Verifica che lo status code sia 200 (OK)\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
-									"});"
+									"});\r",
+									"\r",
+									"// Verifica che la risposta contenga il 'token'\r",
+									"pm.test(\"Response contains token\", function () {\r",
+									"    var responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property('token');\r",
+									"    \r",
+									"    // Salva il token come variabile d'ambiente\r",
+									"    if (responseJson.token) {\r",
+									"        pm.collectionVariables.set(\"jwt_token2\", responseJson.token);\r",
+									"        console.log(\"JWT Token saved: \" + responseJson.token)\r",
+									"    }\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -221,14 +439,63 @@
 						}
 					],
 					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
-								"type": "text"
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser2\",\r\n    \"password\": \"TestPassword1234\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
 							}
-						],
+						},
+						"url": "http://localhost:5001/user/auth"
+					},
+					"response": []
+				},
+				{
+					"name": "login3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifica che lo status code sia 200 (OK)\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Verifica che la risposta contenga il 'token'\r",
+									"pm.test(\"Response contains token\", function () {\r",
+									"    var responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property('token');\r",
+									"    \r",
+									"    // Salva il token come variabile d'ambiente\r",
+									"    if (responseJson.token) {\r",
+									"        pm.collectionVariables.set(\"jwt_token3\", responseJson.token);\r",
+									"        console.log(\"JWT Token saved: \" + responseJson.token)\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser3\",\r\n    \"password\": \"TestPassword12345\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": "http://localhost:5001/user/auth"
 					},
 					"response": []
@@ -275,7 +542,7 @@
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token1}}",
 								"type": "text"
 							}
 						],
@@ -312,7 +579,7 @@
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token1}}",
 								"type": "text"
 							}
 						],
@@ -321,7 +588,7 @@
 					"response": []
 				},
 				{
-					"name": "user_collection",
+					"name": "user_collection1",
 					"event": [
 						{
 							"listen": "test",
@@ -331,17 +598,47 @@
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"User collection should be an array\", function () {\r",
+									"pm.test(\"Response should be an empty object\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(Object.keys(jsonData).length).to.eql(0);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Each user item should have required fields\", function () {\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token1}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/1/collection"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response should be an empty object\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
-									"    jsonData.forEach(item => {\r",
-									"        pm.expect(item).to.have.property('istance_id');\r",
-									"        pm.expect(item).to.have.property('date_roll');\r",
-									"    });\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(Object.keys(jsonData).length).to.eql(0);\r",
 									"});\r",
 									""
 								],
@@ -355,16 +652,16 @@
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token2}}",
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/{{test_user_id}}/collection"
+						"url": "http://localhost:5001/user/2/collection"
 					},
 					"response": []
 				},
 				{
-					"name": "item_collection",
+					"name": "user_collection3",
 					"event": [
 						{
 							"listen": "test",
@@ -374,12 +671,12 @@
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Item instance should have required fields\", function () {\r",
+									"pm.test(\"Response should be an empty object\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('istance_id');\r",
-									"    pm.expect(jsonData).to.have.property('date_roll');\r",
-									"    pm.expect(jsonData).to.have.property('user_id');\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(Object.keys(jsonData).length).to.eql(0);\r",
 									"});\r",
+									"\r",
 									""
 								],
 								"type": "text/javascript",
@@ -392,16 +689,16 @@
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token3}}",
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/{{test_user_id}}/instance/1"
+						"url": "http://localhost:5001/user/3/collection"
 					},
 					"response": []
 				},
 				{
-					"name": "roll",
+					"name": "roll1",
 					"event": [
 						{
 							"listen": "test",
@@ -414,7 +711,10 @@
 									"pm.test(\"Response should contain new item instance details\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('item_id');\r",
-									"    pm.expect(jsonData).to.have.property('istance_id');\r",
+									"    pm.expect(jsonData).to.have.property('instance_id');\r",
+									"    pm.expect(jsonData).to.have.property('image_path');\r",
+									"    pm.expect(jsonData).to.have.property('name');\r",
+									"    pm.expect(jsonData).to.have.property('rarity');\r",
 									"});\r",
 									""
 								],
@@ -428,11 +728,259 @@
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token1}}",
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/{{test_user_id}}/roll"
+						"url": "http://localhost:5001/user/4/roll"
+					},
+					"response": []
+				},
+				{
+					"name": "roll2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response should contain new item instance details\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('item_id');\r",
+									"    pm.expect(jsonData).to.have.property('instance_id');\r",
+									"    pm.expect(jsonData).to.have.property('image_path');\r",
+									"    pm.expect(jsonData).to.have.property('name');\r",
+									"    pm.expect(jsonData).to.have.property('rarity');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token1}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/4/roll"
+					},
+					"response": []
+				},
+				{
+					"name": "roll3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response should contain new item instance details\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('item_id');\r",
+									"    pm.expect(jsonData).to.have.property('instance_id');\r",
+									"    pm.expect(jsonData).to.have.property('image_path');\r",
+									"    pm.expect(jsonData).to.have.property('name');\r",
+									"    pm.expect(jsonData).to.have.property('rarity');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/2/roll"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User collection should be an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(2); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each user item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(item => {\r",
+									"    pm.expect(item).to.have.property('item_id');\r",
+									"    pm.expect(item).to.have.property('instance_id');\r",
+									"    pm.expect(item).to.have.property('image_path');\r",
+									"    pm.expect(item).to.have.property('name');\r",
+									"    pm.expect(item).to.have.property('rarity');\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token1}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/4/collection"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User collection should be an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each user item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(item => {\r",
+									"    pm.expect(item).to.have.property('item_id');\r",
+									"    pm.expect(item).to.have.property('instance_id');\r",
+									"    pm.expect(item).to.have.property('image_path');\r",
+									"    pm.expect(item).to.have.property('name');\r",
+									"    pm.expect(item).to.have.property('rarity');\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/2/collection"
+					},
+					"response": []
+				},
+				{
+					"name": "item_collection1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Item instance should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('date_roll')\r",
+									"    pm.expect(jsonData).to.have.property('item_id');\r",
+									"    pm.expect(jsonData).to.have.property('instance_id');\r",
+									"    pm.expect(jsonData).to.have.property('image_path');\r",
+									"    pm.expect(jsonData).to.have.property('name');\r",
+									"    pm.expect(jsonData).to.have.property('rarity');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token1}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/4/instance/1"
+					},
+					"response": []
+				},
+				{
+					"name": "item_collection2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Item instance should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('date_roll')\r",
+									"    pm.expect(jsonData).to.have.property('item_id');\r",
+									"    pm.expect(jsonData).to.have.property('instance_id');\r",
+									"    pm.expect(jsonData).to.have.property('image_path');\r",
+									"    pm.expect(jsonData).to.have.property('name');\r",
+									"    pm.expect(jsonData).to.have.property('rarity');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/2/instance/3"
 					},
 					"response": []
 				}
@@ -442,7 +990,7 @@
 			"name": "Currency",
 			"item": [
 				{
-					"name": "get_amount",
+					"name": "get_amount1",
 					"event": [
 						{
 							"listen": "test",
@@ -455,7 +1003,7 @@
 									"pm.test(\"Verifica che il saldo esista\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
-									"    pm.environment.set(\"old_balance\", jsonData.amount);\r",
+									"    pm.expect(jsonData.amount).to.eql(460);\r",
 									"});\r",
 									""
 								],
@@ -469,16 +1017,16 @@
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token1}}",
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/{{test_user_id}}/amount"
+						"url": "http://localhost:5001/user/4/amount"
 					},
 					"response": []
 				},
 				{
-					"name": "add_amount",
+					"name": "get_amount2",
 					"event": [
 						{
 							"listen": "test",
@@ -488,17 +1036,10 @@
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"// Ottieni il vecchio saldo e l'importo da aggiungere dalla variabile di ambiente\r",
-									"const old_balance = parseFloat(pm.environment.get(\"old_balance\"));\r",
-									"\r",
-									"// Estrai il nuovo saldo dalla risposta\r",
-									"const jsonData = pm.response.json();\r",
-									"const new_balance = jsonData.new_balance;\r",
-									"\r",
-									"// Verifica che il nuovo saldo sia uguale al vecchio saldo + l'importo aggiunto\r",
-									"pm.test(\"Verifica che il nuovo saldo sia corretto\", function () {\r",
-									"    pm.expect(new_balance).to.eql(old_balance + 50);\r",
-									"    pm.environment.set(\"old_balance\", jsonData.new_balance);\r",
+									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(480);\r",
 									"});\r",
 									""
 								],
@@ -508,29 +1049,20 @@
 						}
 					],
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token2}}",
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"amount\": 50\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "http://localhost:5001/user/{{test_user_id}}/add_amount"
+						"url": "http://localhost:5001/user/2/amount"
 					},
 					"response": []
 				},
 				{
-					"name": "sub_amount",
+					"name": "get_amount3",
 					"event": [
 						{
 							"listen": "test",
@@ -540,17 +1072,11 @@
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"// Ottieni il vecchio saldo e l'importo da aggiungere dalla variabile di ambiente\r",
-									"const old_balance = parseFloat(pm.environment.get(\"old_balance\"));\r",
-									"\r",
-									"// Estrai il nuovo saldo dalla risposta\r",
-									"const jsonData = pm.response.json();\r",
-									"const new_balance = jsonData.new_balance;\r",
-									"\r",
-									"// Verifica che il nuovo saldo sia uguale al vecchio saldo + l'importo aggiunto\r",
-									"pm.test(\"Verifica che il nuovo saldo sia corretto\", function () {\r",
-									"    pm.expect(new_balance).to.eql(old_balance - 50);\r",
-									"    pm.environment.set(\"old_balance\", jsonData.new_balance);\r",
+									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.environment.set(\"old_balance\", jsonData.amount);\r",
+									"    pm.expect(jsonData.amount).to.eql(500);\r",
 									"});\r",
 									""
 								],
@@ -560,24 +1086,15 @@
 						}
 					],
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token3}}",
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"amount\": 50\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "http://localhost:5001/user/{{test_user_id}}/sub_amount"
+						"url": "http://localhost:5001/user/3/amount"
 					},
 					"response": []
 				}
@@ -600,7 +1117,9 @@
 									"const jsonData = pm.response.json();\r",
 									"pm.test(\"Verifica che la lista delle aste sia un array\", function () {\r",
 									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(0); \r",
 									"});\r",
+									"\r",
 									""
 								],
 								"type": "text/javascript",
@@ -613,11 +1132,11 @@
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token3}}",
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/{{test_user_id}}/market_list"
+						"url": "http://localhost:5001/user/3/market_list"
 					},
 					"response": []
 				},
@@ -635,6 +1154,8 @@
 									"const jsonData = pm.response.json();\r",
 									"pm.test(\"Verifica che la lista delle transazioni sia un array\", function () {\r",
 									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(0); \r",
+									"\r",
 									"});\r",
 									""
 								],
@@ -648,11 +1169,11 @@
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token3}}",
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/{{test_user_id}}/transactions_history"
+						"url": "http://localhost:5001/user/3/transactions_history"
 					},
 					"response": []
 				},
@@ -673,8 +1194,39 @@
 									"    pm.expect(jsonData).to.have.property('start_date');\r",
 									"    pm.expect(jsonData).to.have.property('end_date');\r",
 									"    pm.expect(jsonData).to.have.property('bid');\r",
-									"    pm.expect(jsonData.bid).to.eql('200.00');\r",
+									"    pm.expect(jsonData).to.have.property('buyer_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('status')\r",
+									"    pm.expect(jsonData).to.have.property('seller_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('istance_id')\r",
+									"    pm.expect(jsonData).to.have.property('market_id')\r",
 									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Ottieni l'orario attuale\r",
+									"const currentDate = new Date();\r",
+									"\r",
+									"// Aggiungi 1 minuto all'orario attuale\r",
+									"currentDate.setMinutes(currentDate.getMinutes() + 1);\r",
+									"\r",
+									"// Format la data nel formato \"dd/MM/yyyy HH:mm\"\r",
+									"const formattedDate = currentDate.toLocaleString(\"it-IT\", {\r",
+									"    day: \"2-digit\",\r",
+									"    month: \"2-digit\",\r",
+									"    year: \"numeric\",\r",
+									"    hour: \"2-digit\",\r",
+									"    minute: \"2-digit\"\r",
+									"}).replace(\",\", \"\");\r",
+									"\r",
+									"// Imposta la variabile \"end_date\" con il nuovo valore\r",
+									"pm.variables.set(\"end_date\", formattedDate);\r",
 									""
 								],
 								"type": "text/javascript",
@@ -687,25 +1239,74 @@
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token1}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"end_date\": \"25/11/2024 18:00\",\r\n  \"start_bid\": 200.0\r\n}\r\n",
+							"raw": "{\r\n  \"end_date\": \"{{end_date}}\",\r\n  \"start_bid\": 100.0\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/{{test_user_id}}/instance/3/auction"
+						"url": "http://localhost:5001/user/4/instance/1/auction"
 					},
 					"response": []
 				},
 				{
-					"name": "bid",
+					"name": "market_list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Verifica che la lista delle aste sia un array\", function () {\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each auction should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(auction => {\r",
+									"        pm.expect(auction).to.have.property('istance_id');\r",
+									"        pm.expect(auction).to.have.property('start_date');\r",
+									"        pm.expect(auction).to.have.property('end_date');\r",
+									"        pm.expect(auction).to.have.property('bid');\r",
+									"        pm.expect(auction).to.have.property('buyer_user_id')\r",
+									"        pm.expect(auction).to.have.property('status')\r",
+									"        pm.expect(auction).to.have.property('seller_user_id')\r",
+									"        pm.expect(auction).to.have.property('istance_id')\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/2/market_list"
+					},
+					"response": []
+				},
+				{
+					"name": "bid2",
 					"event": [
 						{
 							"listen": "test",
@@ -717,7 +1318,14 @@
 									"\r",
 									"const jsonData = pm.response.json();\r",
 									"pm.test(\"Verifica che l'importo offerto sia corretto\", function () {\r",
-									"    pm.expect(jsonData.bid).to.eql('150.00');\r",
+									"    pm.expect(jsonData).to.have.property('istance_id');\r",
+									"    pm.expect(jsonData).to.have.property('start_date');\r",
+									"    pm.expect(jsonData).to.have.property('end_date');\r",
+									"    pm.expect(jsonData).to.have.property('bid');\r",
+									"    pm.expect(jsonData).to.have.property('buyer_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('status')\r",
+									"    pm.expect(jsonData).to.have.property('seller_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('istance_id')\r",
 									"});\r",
 									""
 								],
@@ -731,24 +1339,599 @@
 						"header": [
 							{
 								"key": "X-Auth-Token",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token2}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"bid_amount\": 150\r\n}\r\n",
+							"raw": "{\r\n  \"bid_amount\": 200\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/{{test_user_id}}/market/3/bid"
+						"url": "http://localhost:5001/user/2/market/1/bid"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(280);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/2/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "bid3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Verifica che l'importo offerto sia corretto\", function () {\r",
+									"    pm.expect(jsonData).to.have.property('istance_id');\r",
+									"    pm.expect(jsonData).to.have.property('start_date');\r",
+									"    pm.expect(jsonData).to.have.property('end_date');\r",
+									"    pm.expect(jsonData).to.have.property('bid');\r",
+									"    pm.expect(jsonData).to.have.property('buyer_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('status')\r",
+									"    pm.expect(jsonData).to.have.property('seller_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('istance_id')\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token3}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"bid_amount\": 250\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5001/user/3/market/1/bid"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(480);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/2/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User collection should be an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each user item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(item => {\r",
+									"    pm.expect(item).to.have.property('item_id');\r",
+									"    pm.expect(item).to.have.property('instance_id');\r",
+									"    pm.expect(item).to.have.property('image_path');\r",
+									"    pm.expect(item).to.have.property('name');\r",
+									"    pm.expect(item).to.have.property('rarity');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The instance_id of the single item should be 1\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].instance_id).to.eql(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function delay(ms) {\r",
+									"    return new Promise(resolve => setTimeout(resolve, ms));\r",
+									"}\r",
+									"\r",
+									"delay(75000).then(() => {\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token1}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/4/collection"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User collection should be an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each user item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(item => {\r",
+									"    pm.expect(item).to.have.property('item_id');\r",
+									"    pm.expect(item).to.have.property('instance_id');\r",
+									"    pm.expect(item).to.have.property('image_path');\r",
+									"    pm.expect(item).to.have.property('name');\r",
+									"    pm.expect(item).to.have.property('rarity');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The instance_id of the single item should be 3\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].instance_id).to.eql(3);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/2/collection"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User collection should be an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each user item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(item => {\r",
+									"    pm.expect(item).to.have.property('item_id');\r",
+									"    pm.expect(item).to.have.property('instance_id');\r",
+									"    pm.expect(item).to.have.property('image_path');\r",
+									"    pm.expect(item).to.have.property('name');\r",
+									"    pm.expect(item).to.have.property('rarity');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The instance_id of the single item should be 1\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].instance_id).to.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token3}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/3/collection"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(710);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token1}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/4/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(480);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/2/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(250);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token3}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/3/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "transaction_history1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Verifica che la lista delle transazioni sia un array\", function () {\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each transaction should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(transaction => {\r",
+									"        pm.expect(transaction).to.have.property('istance_id');\r",
+									"        pm.expect(transaction).to.have.property('start_date');\r",
+									"        pm.expect(transaction).to.have.property('end_date');\r",
+									"        pm.expect(transaction).to.have.property('bid');\r",
+									"        pm.expect(transaction).to.have.property('buyer_user_id')\r",
+									"        pm.expect(transaction).to.have.property('status')\r",
+									"        pm.expect(transaction).to.have.property('seller_user_id')\r",
+									"        pm.expect(transaction).to.have.property('istance_id')\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token1}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/4/transactions_history"
+					},
+					"response": []
+				},
+				{
+					"name": "transaction_history2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Verifica che la lista delle transazioni sia un array\", function () {\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(0); \r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/2/transactions_history"
+					},
+					"response": []
+				},
+				{
+					"name": "transaction_history3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Verifica che la lista delle transazioni sia un array\", function () {\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each transaction should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(transaction => {\r",
+									"        pm.expect(transaction).to.have.property('istance_id');\r",
+									"        pm.expect(transaction).to.have.property('start_date');\r",
+									"        pm.expect(transaction).to.have.property('end_date');\r",
+									"        pm.expect(transaction).to.have.property('bid');\r",
+									"        pm.expect(transaction).to.have.property('buyer_user_id')\r",
+									"        pm.expect(transaction).to.have.property('status')\r",
+									"        pm.expect(transaction).to.have.property('seller_user_id')\r",
+									"        pm.expect(transaction).to.have.property('istance_id')\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token3}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/user/3/transactions_history"
 					},
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt_token1",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token3",
+			"value": "",
+			"type": "string"
 		}
 	]
 }
