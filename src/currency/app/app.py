@@ -1,21 +1,12 @@
 from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
 import os
+
+from models.models import db, Currency
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-
-class Currency(db.Model):
-    __tablename__ = 'currency'
-    user_id = db.Column(db.String(50), primary_key=True)
-    amount = db.Column(db.Float, nullable=False, default=0.0)
-
-    def __init__(self, user_id, amount=0.0):
-        self.user_id = user_id
-        self.amount = amount
+db.init_app(app)
 
 
 def create_currency_row(user_id, amount):

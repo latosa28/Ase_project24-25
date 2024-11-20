@@ -2,7 +2,7 @@ import requests
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 
-from app.utils.auth import token_required
+from utils.auth import token_required
 
 admin_account_bp = Blueprint('admin_account', __name__)
 

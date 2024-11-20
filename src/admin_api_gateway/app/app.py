@@ -1,9 +1,9 @@
 from flask import Flask
 
-from app.services.admin_account.routes import admin_account_bp
-from app.services.authentication.routes import auth_bp
-from app.services.collection.routes import collection_bp
-from app.services.market.routes import market_bp
+from services.admin_account.routes import admin_account_bp
+from services.authentication.routes import auth_bp
+from services.collection.routes import collection_bp
+from services.market.routes import market_bp
 
 app = Flask(__name__)
 
