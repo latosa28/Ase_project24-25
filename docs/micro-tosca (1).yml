@@ -1,5 +1,5 @@
 tosca_definitions_version: micro_tosca_yaml_1.1
-description: ASE-PROJECT
+description: micro.tosca
 imports:
 - micro: https://di-unipi-socc.github.io/microTOSCA/1.1/microTOSCA.yaml
 topology_template:
@@ -8,19 +8,29 @@ topology_template:
       type: micro.nodes.Service
       requirements:
       - interaction: account_db
-      - interaction: currency
-      - interaction: collection
+      - interaction:
+          node: currency
+          relationship: c
+      - interaction:
+          node: collection
+          relationship: c
     collection:
       type: micro.nodes.Service
       requirements:
       - interaction: collection_db
-      - interaction: currency
+      - interaction:
+          node: currency
+          relationship: c
     market:
       type: micro.nodes.Service
       requirements:
       - interaction: market_db
-      - interaction: currency
-      - interaction: collection
+      - interaction:
+          node: currency
+          relationship: c
+      - interaction:
+          node: collection
+          relationship: c
     api_gateway:
       type: micro.nodes.MessageRouter
       requirements:
@@ -28,6 +38,7 @@ topology_template:
       - interaction: collection
       - interaction: market
       - interaction: currency
+      - interaction: payment
     collection_db:
       type: micro.nodes.Datastore
     account_db:
@@ -39,6 +50,15 @@ topology_template:
       requirements:
       - interaction: currency_db
     currency_db:
+      type: micro.nodes.Datastore
+    payment:
+      type: micro.nodes.Service
+      requirements:
+      - interaction: payment_db
+      - interaction:
+          node: currency
+          relationship: c
+    payment_db:
       type: micro.nodes.Datastore
   groups:
     adad:
