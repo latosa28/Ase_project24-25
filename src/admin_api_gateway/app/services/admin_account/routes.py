@@ -57,7 +57,7 @@ def delete_admin(current_admin,admin_id):
 
 @admin_account_bp.route('/admin/<int:admin_id>', methods=['GET'])
 @token_required
-def get_admin_by_id(admin_id):
+def get_admin_by_id(curent_admin, admin_id):
     response = requests.get(URL + f'/admin/{admin_id}')
     return response.json(), response.status_code
 
