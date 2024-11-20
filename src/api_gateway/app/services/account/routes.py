@@ -46,7 +46,7 @@ def create_account():
 
 @account_bp.route('/user/<int:user_id>', methods=['DELETE'])
 @token_required
-def delete_user(current_user,user_id):
+def delete_user(current_user, user_id):
     response = requests.delete(URL + f'/user/{user_id}')
 
     if response.status_code == 200:
@@ -65,6 +65,7 @@ def get_user_by_id(user_id):
 def get_user_by_username(username):
     response = requests.get(URL + f'/user/username/{username}')
     return response.json(), response.status_code
+
 
 @account_bp.route('/users', methods=['GET'])
 def get_all_users():

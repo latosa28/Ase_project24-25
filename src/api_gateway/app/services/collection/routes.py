@@ -25,7 +25,7 @@ def get_item_by_id(current_user, item_id):
 # Route per visualizzare la collezione dell'utente
 @collection_bp.route('/user/<int:user_id>/collection', methods=['GET'])
 @token_required
-def get_user_collection(current_user,user_id):
+def get_user_collection(current_user, user_id):
     response = requests.get(f"{URL}/user/{user_id}/collection")
     return response.json(), response.status_code
 
@@ -33,7 +33,7 @@ def get_user_collection(current_user,user_id):
 # Route per ottenere informazioni su una specifica istanza di un item della collezione dell'utente
 @collection_bp.route('/user/<int:user_id>/instance/<int:id_istance>', methods=['GET'])
 @token_required
-def get_user_item_instance(current_user,user_id, id_istance):
+def get_user_item_instance(current_user, user_id, id_istance):
     response = requests.get(f"{URL}/user/{user_id}/instance/{id_istance}")
     return response.json(), response.status_code
 

@@ -58,7 +58,7 @@ services:
       market_db:
         condition: service_healthy
 
-  # Microservice for currency (not accessible from the API Gateway)
+  # Microservice for currency
   currency:
     build: ./currency
     container_name: currency
@@ -75,6 +75,25 @@ services:
       - DB_PASSWORD=${DB_CURRENCY_PASSWORD}  # Database password from .env
     depends_on:
       currency_db:
+        condition: service_healthy
+
+  # Microservice for payment
+  payment:
+    build: ./payment
+    container_name: payment
+    expose:
+      - "5007"  # Exposed only within the Docker network
+    networks:
+      - app-network
+    environment:
+      - FLASK_ENV=development
+      - DB_HOST=payment_db
+      - DB_PORT=3306
+      - DB_NAME=${DB_PAYMENT_NAME}  # Database name from .env
+      - DB_USER=${DB_PAYMENT_USER}  # Database user from .env
+      - DB_PASSWORD=${DB_PAYMENT_PASSWORD}  # Database password from .env
+    depends_on:
+      payment_db:
         condition: service_healthy
 
   # Public API Gateway (accessible externally)
@@ -231,6 +250,26 @@ services:
     networks:
       - app-network
 
+  # MySQL for the payment microservice
+  payment_db:
+    image: mysql:8
+    container_name: payment_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
+      - MYSQL_DATABASE=${DB_PAYMENT_NAME}  # Database name from .env
+      - MYSQL_USER=${DB_PAYMENT_USER}  # User for this service from .env
+      - MYSQL_PASSWORD=${DB_PAYMENT_PASSWORD}  # Password for this user from .env
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - payment_db_data:/var/lib/mysql
+      - ./payment/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge  # Network for microservices
@@ -245,3 +284,4 @@ volumes:
   market_db_data:
   currency_db_data:
   admin_db_data:
+  payment_db_data:
