@@ -34,7 +34,7 @@ def login():
 
     # Genera il JWT token
     token = jwt.encode({
-        'username': username,
+        'user_id': user["user_id"],
         'exp': datetime.utcnow() + timedelta(hours=1)
     }, 'mysecretkey', algorithm="HS256")
 

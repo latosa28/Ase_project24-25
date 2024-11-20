@@ -79,8 +79,3 @@ def get_user_by_username(username):
         return jsonify({"message": "User not found"}), 404
 
 
-# Route to get all users
-@user_api.route('/users', methods=['GET'])
-def get_all_users():
-    all_users = User.query.all()
-    return jsonify([{"username": user.username, "email": user.email} for user in all_users]), 200

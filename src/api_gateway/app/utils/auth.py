@@ -22,9 +22,9 @@ def token_required(f):
         try:
             # Decodifica il token per ottenere i dati dell'utente
             data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-            current_user = data['username']
+            current_user_id = data['user_id']
         except Exception as e:
             return jsonify({'message': 'Token is invalid!'}), 403
 
-        return f(current_user, *args, **kwargs)
+        return f(current_user_id, *args, **kwargs)
     return decorator

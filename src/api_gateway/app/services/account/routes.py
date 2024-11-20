@@ -29,14 +29,13 @@ def create_account():
     })
 
     if response.status_code == 201:
-        # Assumiamo che la risposta del servizio contenga un campo 'user_id'
         response_data = response.json()
-        user_id = response_data.get('user_id')  # Prendi l'user_id dalla risposta
+        user_id = response_data.get('user_id')
 
         if user_id:
             return jsonify({
                 'message': 'Account created successfully!',
-                'user_id': user_id  # Includi il user_id nella risposta
+                'user_id': user_id
             }), 201
         else:
             return jsonify({'message': 'Failed to retrieve user_id!'}), 400
@@ -44,10 +43,10 @@ def create_account():
         return jsonify({'message': 'Failed to create account!'}), 400
 
 
-@account_bp.route('/user/<int:user_id>', methods=['DELETE'])
+@account_bp.route('/user', methods=['DELETE'])
 @token_required
-def delete_user(current_user, user_id):
-    response = requests.delete(URL + f'/user/{user_id}')
+def delete_user(current_user_id):
+    response = requests.delete(URL + f'/user/{current_user_id}')
 
     if response.status_code == 200:
         return jsonify({'message': 'Account deleted successfully'}), 200
@@ -55,22 +54,12 @@ def delete_user(current_user, user_id):
         return jsonify({'message': 'Failed to delete account!'}), 400
 
 
-@account_bp.route('/user/<int:user_id>', methods=['GET'])
-def get_user_by_id(user_id):
-    response = requests.get(URL + f'/user/{user_id}')
+@account_bp.route('/user', methods=['GET'])
+@token_required
+def get_user_by_id(current_user_id):
+    response = requests.get(URL + f'/user/{current_user_id}')
     return response.json(), response.status_code
 
-
-@account_bp.route('/user/username/<string:username>', methods=['GET'])
-def get_user_by_username(username):
-    response = requests.get(URL + f'/user/username/{username}')
-    return response.json(), response.status_code
-
-
-@account_bp.route('/users', methods=['GET'])
-def get_all_users():
-    response = requests.get(URL + '/users')
-    return response.json(), response.status_code
 
 
 
