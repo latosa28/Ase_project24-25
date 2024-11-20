@@ -10,7 +10,7 @@ URL = "http://collection:5002"
 # Route to get all items
 @collection_bp.route('/admin/<int:admin_id>/collection', methods=['GET'])
 @token_required
-def get_items(current_user, admin_id):
+def get_items(current_admin, admin_id):
     response = requests.get(URL + f'/admin/{admin_id}/collection')
     return response.json(), response.status_code
 
@@ -18,7 +18,7 @@ def get_items(current_user, admin_id):
 # Route to get a specific item by ID
 @collection_bp.route('/admin/<int:admin_id>/item/<int:item_id>', methods=['GET'])
 @token_required
-def get_item_by_id(current_user,admin_id, item_id):
+def get_item_by_id(current_admin,admin_id, item_id):
     response = requests.get(URL + f'/admin/{admin_id}/item/{item_id}')
     return response.json(), response.status_code
 
@@ -26,23 +26,23 @@ def get_item_by_id(current_user,admin_id, item_id):
 # Route per aggiornare un item della collezione dell'utente
 @collection_bp.route('/admin/<int:admin_id>/item/<int:item_id>', methods=['POST'])
 @token_required
-def update_item(current_user,admin_id,item_id):
-    response = requests.get(URL + f'/admin/{admin_id}/item/{item_id}')
+def update_item(current_admin,admin_id,item_id):
+    response = requests.post(f"{URL}/admin/{admin_id}/item/{item_id}")
     return response.json(), response.status_code
 
 
 # Route per aggiungere un item alla collezione dell'utente
 @collection_bp.route('/admin/<int:admin_id>/item/', methods=['PUT'])
 @token_required
-def add_item(current_user,admin_id):
-    response = requests.get(URL + f'/admin/{admin_id}/item/')
+def add_item(current_admin,admin_id):
+    response = requests.put(f"{URL}/admin/{admin_id}/item/")
     return response.json(), response.status_code
 
 
 # Route per eliminare un item dalla collezione dell'utente
 @collection_bp.route('/admin/<int:admin_id>/item/<int:item_id>', methods=['DELETE'])
 @token_required
-def delete_item(current_user,admin_id, item_id):
-    response = requests.put(URL + f'/admin/{admin_id}/item/{item_id}')
+def delete_item(current_admin,admin_id, item_id):
+    response = requests.delete(f"{URL}/admin/{admin_id}/item/{item_id}")
     return response.json(), response.status_code
     
