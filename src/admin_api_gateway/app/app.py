@@ -1,5 +1,6 @@
 from flask import Flask
 
+from services.account.routes import account_bp
 from services.admin_account.routes import admin_account_bp
 from services.authentication.routes import auth_bp
 from services.collection.routes import collection_bp
@@ -10,6 +11,7 @@ app = Flask(__name__)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(admin_account_bp)
+app.register_blueprint(account_bp)
 app.register_blueprint(collection_bp)
 app.register_blueprint(market_bp)
 app.register_blueprint(payment_bp)
