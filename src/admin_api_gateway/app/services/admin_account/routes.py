@@ -30,14 +30,12 @@ def create_account():
     })
 
     if response.status_code == 201:
-        # Assumiamo che la risposta del servizio contenga un campo 'user_id'
         response_data = response.json()
-        admin_id = response_data.get('admin_id')  # Prendi l'user_id dalla risposta
+        admin_id = response_data.get('admin_id')
 
         if admin_id:
             return jsonify({
-                'message': 'Account created successfully!',
-                'admin_id': admin_id  # Includi il user_id nella risposta
+                'message': 'Account created successfully!'
             }), 201
         else:
             return jsonify({'message': 'Failed to retrieve user_id!'}), 400
@@ -45,7 +43,7 @@ def create_account():
         return jsonify({'message': 'Failed to create account!'}), 400
 
 
-@admin_account_bp.route('/admin>', methods=['DELETE'])
+@admin_account_bp.route('/admin', methods=['DELETE'])
 @token_required
 def delete_admin(current_admin_id):
     response = requests.delete(URL + f'/admin/{current_admin_id}')
@@ -58,8 +56,8 @@ def delete_admin(current_admin_id):
 
 @admin_account_bp.route('/admin/<int:admin_id>', methods=['GET'])
 @token_required
-def get_admin_by_id(current_admin_id):
-    response = requests.get(URL + f'/admin/{current_admin_id}')
+def get_admin_by_id(current_admin_id, admin_id):
+    response = requests.get(URL + f'/admin/{admin_id}')
     return response.json(), response.status_code
 
 @admin_account_bp.route('/admin/users', methods=['GET'])

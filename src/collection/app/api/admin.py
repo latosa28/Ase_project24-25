@@ -100,7 +100,6 @@ def add_item(admin_id):
         return jsonify({"message": "An error occurred while adding the item"}), 400
 
 
-
 @admin_api.route("/admin/<int:admin_id>/item/<int:item_id>", methods=["DELETE"])
 def delete_item(admin_id, item_id):
     item = Item.query.get(item_id)

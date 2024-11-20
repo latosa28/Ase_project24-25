@@ -10,8 +10,8 @@ from models.models import Market, db
 user_api = Blueprint('user_api', __name__)
 
 
-@user_api.route("/user/<int:user_id>/market_list", methods=["GET"])
-def get_market_list(user_id):
+@user_api.route("/market_list", methods=["GET"])
+def get_market_list():
     markets = Market.query.filter(
         Market.status == 'open'
     ).all()
@@ -26,12 +26,6 @@ def get_transactions_history(user_id):
     ).all()
 
     return jsonify([transaction.serialize() for transaction in transactions]), 200
-
-
-@user_api.route("/user/<int:user_id>/market/<int:market_id>", methods=["GET"])
-def get_auction(user_id, market_id):
-    auction = Market.query.filter(Market.market_id == market_id).first()
-    return jsonify(auction.serialize()), 200
 
 
 @user_api.route("/user/<int:user_id>/market/<int:market_id>/bid", methods=["PUT"])

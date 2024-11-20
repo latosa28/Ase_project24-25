@@ -34,8 +34,7 @@ def create_account():
 
         if user_id:
             return jsonify({
-                'message': 'Account created successfully!',
-                'user_id': user_id
+                'message': 'Account created successfully!'
             }), 201
         else:
             return jsonify({'message': 'Failed to retrieve user_id!'}), 400

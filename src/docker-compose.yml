@@ -112,6 +112,7 @@ services:
       - collection
       - market
       - currency
+      - payment
 
   # Admin service (accessible only from the private network and through api_gateway_admin)
   admin_account:
@@ -148,6 +149,7 @@ services:
       - collection
       - admin_account
       - market
+      - payment
 
   # MySQL for the collection microservice
   collection_db:
