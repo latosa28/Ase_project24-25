@@ -18,7 +18,7 @@ class Transactions(db.Model):
         Float, nullable=False
     )  # Quantità di currency speciale acquistata
     status = Column(db.String(20), nullable=False)
-    created_at = Column(DateTime, nullable=False)
+    creation_time = Column(DateTime, nullable=False)
 
     def __repr__(self):
         return f"<Transaction {self.id} - {self.status}>"
@@ -29,5 +29,5 @@ class Transactions(db.Model):
             "amount": self.amount,
             "currency_amount": self.currency_amount,
             "status": self.status,
-            "created_at": self.created_at,
+            "creation_time": self.creation_time,
         }

@@ -1,4 +1,7 @@
 import random
+from datetime import datetime
+
+import pytz
 from flask import Blueprint, jsonify, request, current_app
 
 from helpers.currency import CurrencyHelper
@@ -47,6 +50,7 @@ def payment(user_id):
         amount=amount,
         currency_amount=currency_amount,
         status=transaction_status,
+        creation_time=datetime.utcnow().replace(tzinfo=pytz.utc)
     )
     db.session.add(transaction)
     db.session.commit()

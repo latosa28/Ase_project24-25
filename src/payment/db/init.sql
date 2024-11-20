@@ -11,5 +11,5 @@ CREATE TABLE IF NOT EXISTS transactions (
     amount FLOAT NOT NULL,           -- Importo pagato in USD
     currency_amount FLOAT NOT NULL,  -- Quantità di valuta speciale (CURRENCY)
     status VARCHAR(20) NOT NULL,     -- Stato della transazione (successo/fallito)
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Data di creazione della transazione
+    creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Data di creazione della transazione
 );
