@@ -8,29 +8,19 @@ topology_template:
       type: micro.nodes.Service
       requirements:
       - interaction: account_db
-      - interaction:
-          node: currency
-          relationship: c
-      - interaction:
-          node: collection
-          relationship: c
+      - interaction: currency
+      - interaction: collection
     collection:
       type: micro.nodes.Service
       requirements:
       - interaction: collection_db
-      - interaction:
-          node: currency
-          relationship: c
+      - interaction: currency
     market:
       type: micro.nodes.Service
       requirements:
       - interaction: market_db
-      - interaction:
-          node: currency
-          relationship: c
-      - interaction:
-          node: collection
-          relationship: c
+      - interaction: currency
+      - interaction: collection
     api_gateway:
       type: micro.nodes.MessageRouter
       requirements:
@@ -38,7 +28,6 @@ topology_template:
       - interaction: collection
       - interaction: market
       - interaction: currency
-      - interaction: payment
     collection_db:
       type: micro.nodes.Datastore
     account_db:
@@ -50,15 +39,6 @@ topology_template:
       requirements:
       - interaction: currency_db
     currency_db:
-      type: micro.nodes.Datastore
-    payment:
-      type: micro.nodes.Service
-      requirements:
-      - interaction: payment_db
-      - interaction:
-          node: currency
-          relationship: c
-    payment_db:
       type: micro.nodes.Datastore
   groups:
     adad:
