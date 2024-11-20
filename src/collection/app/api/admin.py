@@ -70,7 +70,6 @@ def update_item(admin_id, item_id):
         return jsonify({"message": "Item not found"}), 404
 
 
-
 @admin_api.route("/admin/<int:admin_id>/item/", methods=["PUT"])
 def add_item(admin_id):
     # Recupera i dati dal corpo della richiesta

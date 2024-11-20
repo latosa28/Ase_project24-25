@@ -12,7 +12,7 @@ URL = "http://collection:5002"
 @collection_bp.route('/admin/collection', methods=['GET'])
 @token_required
 def get_items(current_admin_id):
-    response = requests.get(URL + f'/admin/{current_admin_id}/collection')
+    response = requests.get(f'{URL}/admin/{current_admin_id}/collection')
     return response.json(), response.status_code
 
 
@@ -20,7 +20,7 @@ def get_items(current_admin_id):
 @collection_bp.route('/admin/item/<int:item_id>', methods=['GET'])
 @token_required
 def get_item_by_id(current_admin_id, item_id):
-    response = requests.get(URL + f'/admin/{current_admin_id}/item/{item_id}')
+    response = requests.get(f'{URL}/admin/{current_admin_id}/item/{item_id}')
     return response.json(), response.status_code
 
 
@@ -28,7 +28,7 @@ def get_item_by_id(current_admin_id, item_id):
 @collection_bp.route('/admin/item/<int:item_id>', methods=['POST'])
 @token_required
 def update_item(current_admin_id, item_id):
-    response = requests.post(URL + f"{URL}/admin/{current_admin_id}/item/{item_id}", json=request.get_json())
+    response = requests.post(f'{URL}/admin/{current_admin_id}/item/{item_id}', json=request.get_json())
     return response.json(), response.status_code
 
 
@@ -36,12 +36,12 @@ def update_item(current_admin_id, item_id):
 @collection_bp.route('/admin/item/', methods=['PUT'])
 @token_required
 def add_item(current_admin_id):
-    response = requests.put(URL + f"{URL}/admin/{current_admin_id}/item/", json=request.get_json())
+    response = requests.put(f'{URL}/admin/{current_admin_id}/item/', json=request.get_json())
     return response.json(), response.status_code
 
 
 @collection_bp.route('/admin/item/<int:item_id>', methods=['DELETE'])
 @token_required
 def delete_item(current_admin_id, item_id):
-    response = requests.get(URL + f"{URL}/admin/{current_admin_id}/item/{item_id}")
+    response = requests.get(f'{URL}/admin/{current_admin_id}/item/{item_id}')
     return response.json(), response.status_code
