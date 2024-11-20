@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Microservice for payment (test version)
+  payment_test:
+    build:
+      context: ./payment
+      dockerfile: Dockerfile
+    container_name: payment_test
+    ports:
+      - "5007:5007"  # Espone la porta 5007 del container sulla stessa porta dell'host
+    environment:
+      - FLASK_ENV=testing
+      - DB_HOST=payment_db
+      - DB_PORT=3306
+      - DB_NAME=${DB_PAYMENT_NAME}
+      - DB_USER=${DB_PAYMENT_USER}
+      - DB_PASSWORD=${DB_PAYMENT_PASSWORD}
+    depends_on:
+      payment_db:
+        condition: service_healthy  # Garantisce che il DB sia attivo prima di avviare il servizio
+
+  # MySQL for the payment microservice (test database)
+  payment_db:
+    image: mysql:8
+    container_name: payment_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_PAYMENT_NAME}
+      - MYSQL_USER=${DB_PAYMENT_USER}
+      - MYSQL_PASSWORD=${DB_PAYMENT_PASSWORD}
+    ports:
+      - "3306:3306"  # Esponi la porta del DB per connetterti dal tuo host
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - test_payment_db_data:/var/lib/mysql
+      - ./payment/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  test_payment_db_data:
