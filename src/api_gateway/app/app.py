@@ -1,12 +1,14 @@
 from flask import Flask
 
-from app.services.account.routes import account_bp
-from app.services.authentication.routes import auth_bp
-from app.services.collection.routes import collection_bp
-from app.services.market.routes import market_bp
-from app.services.currency.routes import currency_bp
+from conf.config import load_config
+from services.account.routes import account_bp
+from services.authentication.routes import auth_bp
+from services.collection.routes import collection_bp
+from services.currency.routes import currency_bp
+from services.market.routes import market_bp
 
 app = Flask(__name__)
+load_config(app)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(account_bp)

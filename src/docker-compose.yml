@@ -17,7 +17,8 @@ services:
       - DB_USER=${DB_COLLECTION_USER}  # Database user from .env
       - DB_PASSWORD=${DB_COLLECTION_PASSWORD}  # Database password from .env
     depends_on:
-      - collection_db  # Ensure the database starts before the service
+      collection_db:
+        condition: service_healthy
 
   # Microservice for accounts
   account:
@@ -35,7 +36,8 @@ services:
       - DB_USER=${DB_ACCOUNT_USER}  # Database user from .env
       - DB_PASSWORD=${DB_ACCOUNT_PASSWORD}  # Database password from .env
     depends_on:
-      - account_db  # Ensure the database starts before the service
+      account_db:
+        condition: service_healthy
 
   # Microservice for the market
   market:
@@ -53,7 +55,8 @@ services:
       - DB_USER=${DB_MARKET_USER}  # Database user from .env
       - DB_PASSWORD=${DB_MARKET_PASSWORD}  # Database password from .env
     depends_on:
-      - market_db  # Ensure the database starts before the service
+      market_db:
+        condition: service_healthy
 
   # Microservice for currency (not accessible from the API Gateway)
   currency:
@@ -71,7 +74,8 @@ services:
       - DB_USER=${DB_CURRENCY_USER}  # Database user from .env
       - DB_PASSWORD=${DB_CURRENCY_PASSWORD}  # Database password from .env
     depends_on:
-      - currency_db  # Ensure the database starts before the service
+      currency_db:
+        condition: service_healthy
 
   # Public API Gateway (accessible externally)
   api_gateway:
@@ -106,7 +110,8 @@ services:
       - DB_USER=${DB_ADMIN_USER}  # Database user from .env
       - DB_PASSWORD=${DB_ADMIN_PASSWORD}  # Database password from .env
     depends_on:
-      - admin_db  # Ensure the database starts before the service
+      admin_db:
+        condition: service_healthy
 
   # Admin API Gateway (accessible only from the private network)
   admin_api_gateway:
@@ -138,6 +143,11 @@ services:
       - collection_db_data:/var/lib/mysql
       - ./collection/db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./collection/db/images:/collection_db/items_images
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - app-network
 
@@ -150,6 +160,11 @@ services:
       - MYSQL_DATABASE=${DB_ACCOUNT_NAME}  # Database name from .env
       - MYSQL_USER=${DB_ACCOUNT_USER}  # User for this service from .env
       - MYSQL_PASSWORD=${DB_ACCOUNT_PASSWORD}  # Password for this user from .env
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - account_db_data:/var/lib/mysql
       - ./account/db/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -168,6 +183,11 @@ services:
     volumes:
       - market_db_data:/var/lib/mysql
       - ./market/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - app-network
 
@@ -180,6 +200,11 @@ services:
       - MYSQL_DATABASE=${DB_CURRENCY_NAME}  # Database name from .env
       - MYSQL_USER=${DB_CURRENCY_USER}  # User for this service from .env
       - MYSQL_PASSWORD=${DB_CURRENCY_PASSWORD}  # Password for this user from .env
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - currency_db_data:/var/lib/mysql
       - ./currency/db/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -195,6 +220,11 @@ services:
       - MYSQL_DATABASE=${DB_ADMIN_NAME}  # Database name from .env
       - MYSQL_USER=${DB_ADMIN_USER}  # User for this service from .env
       - MYSQL_PASSWORD=${DB_ADMIN_PASSWORD}  # Password for this user from .env
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - admin_db_data:/var/lib/mysql
       - ./admin_account/db/init.sql:/docker-entrypoint-initdb.d/init.sql

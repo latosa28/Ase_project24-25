@@ -1,10 +1,10 @@
 import requests
 from flask import Blueprint, request, jsonify
 import jwt
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 from datetime import datetime, timedelta
 
-from app.utils.auth import token_required
+from utils.auth import token_required
 
 auth_bp = Blueprint('authentication', __name__)
 

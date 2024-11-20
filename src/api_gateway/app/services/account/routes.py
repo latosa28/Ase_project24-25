@@ -2,7 +2,7 @@ import requests
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 
-from app.utils.auth import token_required
+from utils.auth import token_required
 
 account_bp = Blueprint('account', __name__)
 
@@ -42,6 +42,7 @@ def create_account():
             return jsonify({'message': 'Failed to retrieve user_id!'}), 400
     else:
         return jsonify({'message': 'Failed to create account!'}), 400
+
 
 @account_bp.route('/user/<int:user_id>', methods=['DELETE'])
 @token_required

@@ -2,7 +2,6 @@ import pytz
 from flask import Blueprint, jsonify, request, current_app
 from datetime import datetime
 import logging
-import requests
 
 from helpers.currency import CurrencyHelper
 from helpers.collection import CollectionHelper

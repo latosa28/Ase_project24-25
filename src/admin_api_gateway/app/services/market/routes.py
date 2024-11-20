@@ -1,7 +1,7 @@
 import requests
 from flask import Blueprint, jsonify, request
 
-from app.utils.auth import token_required
+from utils.auth import token_required
 
 market_bp = Blueprint('market', __name__)
 
