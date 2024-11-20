@@ -1,3 +1,4 @@
+import logging
 import requests
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
@@ -7,7 +8,7 @@ from utils.auth import token_required
 admin_account_bp = Blueprint('admin_account', __name__)
 
 URL = "http://admin_account:5006"
-
+URL1 = "http://account:5003"
 
 # Route to create a new account
 @admin_account_bp.route('/admin', methods=['POST'])
@@ -61,7 +62,17 @@ def get_admin_by_id(current_admin_id):
     response = requests.get(URL + f'/admin/{current_admin_id}')
     return response.json(), response.status_code
 
+@admin_account_bp.route('/admin/users', methods=['GET'])
+@token_required
+def get_all_users(current_admin):
+        response = requests.get(URL1 + '/admin/users')
+        return response.json(), response.status_code
 
-
+@admin_account_bp.route('/admin/<int:admin_id>/user/<int:user_id>', methods=['POST'])
+@token_required
+def modify_user(current_admin, admin_id, user_id):
+        response = requests.post(URL1 + f'/admin/{admin_id}/user/{user_id}', json=request.get_json())
+        return response.json(), response.status_code
+    
 
 
