@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+cryptography
+pymysql
+mysql-connector-python
+requests
