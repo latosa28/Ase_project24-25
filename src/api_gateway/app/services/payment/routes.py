@@ -7,8 +7,8 @@ payment_bp = Blueprint('payment', __name__)
 URL = "http://payment:5007"
 
 
-@payment_bp.route('/user/<int:user_id>/payment', methods=['POST'])
+@payment_bp.route('/user/payment', methods=['POST'])
 @token_required
-def pay(user, user_id):
-    response = requests.post(f'{URL}/user/{user_id}/payment', json=request.get_json())
+def pay(current_user_id):
+    response = requests.post(f'{URL}/user/{current_user_id}/payment', json=request.get_json())
     return response.json(), response.status_code

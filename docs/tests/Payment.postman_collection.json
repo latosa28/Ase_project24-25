@@ -1,0 +1,57 @@
+{
+	"info": {
+		"_postman_id": "4dd345f8-c763-4d11-a079-cecc33c7bed7",
+		"name": "Payment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "39564474"
+	},
+	"item": [
+		{
+			"name": "payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 for successful payment\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains message and currency_received\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message', 'Payment successful');\r",
+							"    pm.expect(jsonData).to.have.property('currency_received');\r",
+							"    pm.expect(jsonData.currency_received).to.eql(50);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "{{jwt_token1}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"card_number\": \"4111111111111111\",\r\n    \"card_expiry\": \"12/26\",\r\n    \"card_cvc\": \"123\",\r\n    \"amount\": 10\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5007/user/1/payment"
+			},
+			"response": []
+		}
+	]
+}

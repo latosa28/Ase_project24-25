@@ -5,7 +5,7 @@ from models.models import User, db
 admin_api = Blueprint('admin_api', __name__)
 
 
-@admin_api.route('/admin/users', methods=['GET'])
+@admin_api.route('/users', methods=['GET'])
 def get_all_users():
     all_users = User.query.all()
     return jsonify([{"username": user.username, "email": user.email} for user in all_users]), 200

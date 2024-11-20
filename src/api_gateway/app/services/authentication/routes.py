@@ -34,7 +34,7 @@ def login():
 
     # Genera il JWT token
     token = jwt.encode({
-        'username': username,
+        'user_id': user["user_id"],
         'exp': datetime.utcnow() + timedelta(hours=1)
     }, 'mysecretkey', algorithm="HS256")
 
@@ -44,6 +44,6 @@ def login():
 # Endpoint to logout (POST request to invalidate the token on the client-side)
 @auth_bp.route('/user/auth', methods=['DELETE'])
 @token_required
-def logout(current_user):
+def logout(current_user_id):
     # Invalidate the token on the client side (simple approach)
     return jsonify({'message': 'Successfully logged out!'}), 200

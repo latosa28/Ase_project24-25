@@ -305,7 +305,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/1"
+						"url": "http://localhost:5001/user"
 					},
 					"response": []
 				},
@@ -732,7 +732,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/4/roll"
+						"url": "http://localhost:5001/user/roll"
 					},
 					"response": []
 				},
@@ -771,7 +771,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/4/roll"
+						"url": "http://localhost:5001/user/roll"
 					},
 					"response": []
 				},
@@ -810,7 +810,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/roll"
+						"url": "http://localhost:5001/user/roll"
 					},
 					"response": []
 				},
@@ -987,6 +987,58 @@
 			]
 		},
 		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 for successful payment\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains message and currency_received\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('message', 'Payment successful');\r",
+									"    pm.expect(jsonData).to.have.property('currency_received');\r",
+									"    pm.expect(jsonData.currency_received).to.eql(50);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token1}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"card_number\": \"4111111111111111\",\r\n    \"card_expiry\": \"12/26\",\r\n    \"card_cvc\": \"123\",\r\n    \"amount\": 10\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5001/user/payment"
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Currency",
 			"item": [
 				{
@@ -1003,7 +1055,7 @@
 									"pm.test(\"Verifica che il saldo esista\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
-									"    pm.expect(jsonData.amount).to.eql(460);\r",
+									"    pm.expect(jsonData.amount).to.eql(510);\r",
 									"});\r",
 									""
 								],
@@ -1021,7 +1073,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/4/amount"
+						"url": "http://localhost:5001/user/amount"
 					},
 					"response": []
 				},
@@ -1057,7 +1109,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/amount"
+						"url": "http://localhost:5001/user/amount"
 					},
 					"response": []
 				},
@@ -1094,7 +1146,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/3/amount"
+						"url": "http://localhost:5001/user/amount"
 					},
 					"response": []
 				}
@@ -1136,7 +1188,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/3/market_list"
+						"url": "http://localhost:5001/user/market_list"
 					},
 					"response": []
 				},
@@ -1173,7 +1225,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/3/transactions_history"
+						"url": "http://localhost:5001/user/transactions_history"
 					},
 					"response": []
 				},
@@ -1252,7 +1304,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/4/instance/1/auction"
+						"url": "http://localhost:5001/user/instance/1/auction"
 					},
 					"response": []
 				},
@@ -1301,7 +1353,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/market_list"
+						"url": "http://localhost:5001/user/market_list"
 					},
 					"response": []
 				},
@@ -1352,7 +1404,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/2/market/1/bid"
+						"url": "http://localhost:5001/user/market/1/bid"
 					},
 					"response": []
 				},
@@ -1388,7 +1440,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/amount"
+						"url": "http://localhost:5001/user/amount"
 					},
 					"response": []
 				},
@@ -1439,7 +1491,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/3/market/1/bid"
+						"url": "http://localhost:5001/user/market/1/bid"
 					},
 					"response": []
 				},
@@ -1475,7 +1527,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/amount"
+						"url": "http://localhost:5001/user/amount"
 					},
 					"response": []
 				},
@@ -1662,7 +1714,7 @@
 									"pm.test(\"Verifica che il saldo esista\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
-									"    pm.expect(jsonData.amount).to.eql(710);\r",
+									"    pm.expect(jsonData.amount).to.eql(760);\r",
 									"});\r",
 									""
 								],
@@ -1680,7 +1732,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/4/amount"
+						"url": "http://localhost:5001/user/amount"
 					},
 					"response": []
 				},
@@ -1716,7 +1768,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/amount"
+						"url": "http://localhost:5001/user/amount"
 					},
 					"response": []
 				},
@@ -1752,7 +1804,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/3/amount"
+						"url": "http://localhost:5001/user/amount"
 					},
 					"response": []
 				},
@@ -1802,7 +1854,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/4/transactions_history"
+						"url": "http://localhost:5001/user/transactions_history"
 					},
 					"response": []
 				},
@@ -1838,7 +1890,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/transactions_history"
+						"url": "http://localhost:5001/user/transactions_history"
 					},
 					"response": []
 				},
@@ -1888,7 +1940,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/3/transactions_history"
+						"url": "http://localhost:5001/user/transactions_history"
 					},
 					"response": []
 				}
