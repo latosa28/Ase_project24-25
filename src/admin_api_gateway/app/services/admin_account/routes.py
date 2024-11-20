@@ -44,10 +44,10 @@ def create_account():
         return jsonify({'message': 'Failed to create account!'}), 400
 
 
-@admin_account_bp.route('/admin/<int:admin_id>', methods=['DELETE'])
+@admin_account_bp.route('/admin>', methods=['DELETE'])
 @token_required
-def delete_admin(current_admin,admin_id):
-    response = requests.delete(URL + f'/admin/{admin_id}')
+def delete_admin(current_admin_id):
+    response = requests.delete(URL + f'/admin/{current_admin_id}')
 
     if response.status_code == 200:
         return jsonify({'message': 'Account deleted successfully'}), 200
@@ -57,8 +57,8 @@ def delete_admin(current_admin,admin_id):
 
 @admin_account_bp.route('/admin/<int:admin_id>', methods=['GET'])
 @token_required
-def get_admin_by_id(curent_admin, admin_id):
-    response = requests.get(URL + f'/admin/{admin_id}')
+def get_admin_by_id(current_admin_id):
+    response = requests.get(URL + f'/admin/{current_admin_id}')
     return response.json(), response.status_code
 
 
