@@ -43,6 +43,6 @@ jobs:
     # Step finale per eseguire i test di integrazione
     - name: Run Integration Tests
       run: |
-        ./src/docker-compose.yml up --build -d
+        docker-compose -f ./src/docker-compose.yml up --build -d
         newman run ./docs/tests/Integration_test.postman_collection.json
-        ./src/docker-compose.yml down -v
+        docker-compose -f ./src/docker-compose.yml down -v
