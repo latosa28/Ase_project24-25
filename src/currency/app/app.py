@@ -1,12 +1,16 @@
 from flask import Flask, jsonify, request
 import os
 
+from helpers.token import token_authorized
+from helpers.auth import AuthHelper
 from models.models import db, Currency
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
+public_key = AuthHelper.get_jwt_public_key()
+app.config["jwt_public_key"] = public_key
 
 
 def create_currency_row(user_id, amount):
@@ -16,7 +20,8 @@ def create_currency_row(user_id, amount):
 
 
 # Endpoint per ottenere il saldo di un utente
-@app.route('/user/<user_id>/amount', methods=['GET'])
+@app.route('/user/<int:user_id>/amount', methods=['GET'])
+@token_authorized
 def get_amount(user_id):
     amount = Currency.query.filter_by(user_id=user_id).first()
     if amount:

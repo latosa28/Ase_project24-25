@@ -2,7 +2,6 @@ Flask
 Flask-SQLAlchemy
 Flask-Migrate
 flask-marshmallow
-cryptography
 marshmallow-sqlalchemy
 pymysql
 requests

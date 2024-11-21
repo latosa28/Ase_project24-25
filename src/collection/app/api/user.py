@@ -44,7 +44,7 @@ def _serialize_user_collection(user_item_joined):
 
 
 # Route: Visualizzare la collezione di un utente
-@user_api.route("/user/<int:user_id>/collection", methods=["GET"])
+@user_api.route("/user/<int:user_id>/mycollection", methods=["GET"])
 @token_required
 def get_user_collection(user_id):
     user_item_joined = (
@@ -124,6 +124,7 @@ def _get_item_probabilities():
 
 # Route: Roll per un nuovo gacha
 @user_api.route("/user/<int:user_id>/roll", methods=["PUT"])
+@token_authorized
 def roll_gacha(user_id):
     item_probabilities = _get_item_probabilities()  # Ottieni le probabilità calcolate
 

@@ -2,6 +2,7 @@ Flask
 Flask-SQLAlchemy
 mysql-connector-python
 requests
-cryptography
 pymysql
 apscheduler
+PyJWT
+cryptography

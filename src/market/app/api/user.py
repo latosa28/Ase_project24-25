@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request, current_app
 from datetime import datetime
 import logging
 
+from helpers.token import token_authorized
 from helpers.currency import CurrencyHelper
 from helpers.collection import CollectionHelper
 from models.models import Market, db
@@ -10,8 +11,9 @@ from models.models import Market, db
 user_api = Blueprint('user_api', __name__)
 
 
-@user_api.route("/market_list", methods=["GET"])
-def get_market_list():
+@user_api.route("/user/<int:user_id>/market_list", methods=["GET"])
+@token_authorized
+def get_market_list(user_id):
     markets = Market.query.filter(
         Market.status == 'open'
     ).all()
@@ -20,6 +22,7 @@ def get_market_list():
 
 
 @user_api.route("/user/<int:user_id>/transactions_history", methods=["GET"])
+@token_authorized
 def get_transactions_history(user_id):
     transactions = Market.query.filter(
         (Market.seller_user_id == user_id) | (Market.buyer_user_id == user_id)
@@ -29,6 +32,7 @@ def get_transactions_history(user_id):
 
 
 @user_api.route("/user/<int:user_id>/market/<int:market_id>/bid", methods=["PUT"])
+@token_authorized
 def place_bid(user_id, market_id):
     date_now = datetime.utcnow()
     bid_amount = request.json.get("bid_amount")
@@ -72,6 +76,7 @@ def place_bid(user_id, market_id):
 
 
 @user_api.route("/user/<int:user_id>/instance/<int:instance_id>/auction", methods=["PUT"])
+@token_authorized
 def set_auction(user_id, instance_id):
     utc_tz = pytz.utc
     date_now = datetime.utcnow().replace(tzinfo=utc_tz)
