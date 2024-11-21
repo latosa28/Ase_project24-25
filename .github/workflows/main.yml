@@ -35,17 +35,11 @@ jobs:
         sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
 
-    # Step per elencare i file nella cartella src (prima di buildare i docker-compose)
-    - name: List files in src directory
+    # Step per eseguire il listing completo del repository (debug)
+    - name: List all files in the repository
       run: |
-        echo "Listing files in src directory:"
-        ls -l ../../src
-
-    # Step per elencare i file nella cartella docs/tests (prima di eseguire i test)
-    - name: List files in tests directory
-      run: |
-        echo "Listing files in docs/tests directory:"
-        ls -l ../../docs/tests
+        echo "Listing all files in the repository:"
+        ls -R /home/runner/work/Ase_project24-25
 
     # Step per eseguire i test del servizio Account
     - name: Build and Test Account Service
