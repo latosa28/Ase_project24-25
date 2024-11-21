@@ -34,12 +34,11 @@ jobs:
       run: |
         sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
-
-    # Step per eseguire il listing completo del repository (debug)
-    - name: List all files in the repository
+        
+    - name: Print current working directory
       run: |
-        echo "Listing all files in the repository:"
-        ls -R /home/runner/work/Ase_project24-25
+        echo "Current working directory:"
+        pwd
 
     # Step per eseguire i test del servizio Account
     - name: Build and Test Account Service
