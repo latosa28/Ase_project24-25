@@ -7,3 +7,5 @@ marshmallow-sqlalchemy
 pymysql
 requests
 mysql-connector-python
+PyJWT
+cryptography

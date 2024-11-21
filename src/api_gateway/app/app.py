@@ -2,7 +2,7 @@ from flask import Flask
 
 from conf.config import load_config
 from services.account.routes import account_bp
-from services.authentication.routes import auth_bp
+from services.auth.routes import auth_bp
 from services.collection.routes import collection_bp
 from services.currency.routes import currency_bp
 from services.market.routes import market_bp
