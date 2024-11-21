@@ -98,3 +98,20 @@ jobs:
     - name: Tear Down Payment Service
       run: |
         docker-compose -f ./src/docker-compose.payment.yml down -v
+
+    # Step per build del servizio Market
+    - name: Build Payment Service
+      run: |
+        docker-compose -f ./src/docker-compose.market.yml build
+
+    # Step per run del servizio Payment e eseguire i test
+    - name: Run and Test Payment Service
+      run: |
+        docker-compose -f ./src/docker-compose.market.yml up -d
+        newman run ./docs/tests/Market.postman_collection.json
+
+    # Step per down del servizio Payment
+    - name: Tear Down Payment Service
+      run: |
+        docker-compose -f ./src/docker-compose.market.yml down -v
+
