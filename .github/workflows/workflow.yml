@@ -11,58 +11,62 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Step per clonare il repository
     - name: Checkout Repository
       uses: actions/checkout@v4
 
+    # Step per configurare Node.js (necessario per installare Newman)
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '16'
 
+    # Step per installare Newman, lo strumento per eseguire i test di Postman
     - name: Install Newman
       run: npm install -g newman
 
+    # Step per configurare Docker Buildx
     - name: Set up Docker
       uses: docker/setup-buildx-action@v3
 
-    # Run tests for Account service
+    # Step per eseguire i test del servizio Account
     - name: Build and Test Account Service
       run: |
-        docker-compose -f docker-compose.account.yml up --build -d
-        newman run ./tests/Account_Test.postman_collection.json
-        docker-compose -f docker-compose.account.yml down -v
+        docker-compose -f src/docker-compose.account.yml up --build -d
+        newman run ./docs/tests/Account_Test.postman_collection.json
+        docker-compose -f src/docker-compose.account.yml down
 
-    # Run tests for Collection service
+    # Step per eseguire i test del servizio Collection
     - name: Build and Test Collection Service
       run: |
-        docker-compose -f docker-compose.collection.yml up --build -d
-        newman run ./tests/Collection_Test.postman_collection.json
-        docker-compose -f docker-compose.collection.yml down -v 
+        docker-compose -f src/docker-compose.collection.yml up --build -d
+        newman run ./docs/tests/Collection_Test.postman_collection.json
+        docker-compose -f src/docker-compose.collection.yml down
 
-    # Run tests for Currency service
+    # Step per eseguire i test del servizio Currency
     - name: Build and Test Currency Service
       run: |
-        docker-compose -f docker-compose.currency.yml up --build -d
-        newman run ./tests/Currency_Test.postman_collection.json
-        docker-compose -f docker-compose.currency.yml down -v 
+        docker-compose -f src/docker-compose.currency.yml up --build -d
+        newman run ./docs/tests/Currency_Test.postman_collection.json
+        docker-compose -f src/docker-compose.currency.yml down
 
-    # Run tests for Market service
+    # Step per eseguire i test del servizio Market
     - name: Build and Test Market Service
       run: |
-        docker-compose -f docker-compose.market.yml up --build -d
-        newman run ./tests/Market_Test.postman_collection.json
-        docker-compose -f docker-compose.market.yml down -v
+        docker-compose -f src/docker-compose.market.yml up --build -d
+        newman run ./docs/tests/Market_Test.postman_collection.json
+        docker-compose -f src/docker-compose.market.yml down
 
-    # Run tests for Payment service
+    # Step per eseguire i test del servizio Payment
     - name: Build and Test Payment Service
       run: |
-        docker-compose -f docker-compose.payment.yml up --build -d 
-        newman run ./tests/Payment.postman_collection.json
-        docker-compose -f docker-compose.payment.yml down -v
+        docker-compose -f src/docker-compose.payment.yml up --build -d
+        newman run ./docs/tests/Payment.postman_collection.json
+        docker-compose -f src/docker-compose.payment.yml down
 
-    # Run Integration Tests at the end
+    # Step finale per eseguire i test di integrazione
     - name: Run Integration Tests
       run: |
-        docker-compose up --build -d 
-        newman run ./tests/Integration_test.postman_collection.json
-        docker-compose -f docker-compose.yml down -v
+        docker-compose -f src/docker-compose.yml up --build -d
+        newman run ./docs/tests/Integration_test.postman_collection.json
+        docker-compose -f src/docker-compose.yml down
