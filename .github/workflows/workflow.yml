@@ -1,0 +1,68 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '16'
+
+    - name: Install Newman
+      run: npm install -g newman
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3
+
+    # Run tests for Account service
+    - name: Build and Test Account Service
+      run: |
+        docker-compose -f docker-compose.account.yml up --build -d
+        newman run ./tests/Account_Test.postman_collection.json
+        docker-compose -f docker-compose.account.yml down -v
+
+    # Run tests for Collection service
+    - name: Build and Test Collection Service
+      run: |
+        docker-compose -f docker-compose.collection.yml up --build -d
+        newman run ./tests/Collection_Test.postman_collection.json
+        docker-compose -f docker-compose.collection.yml down -v 
+
+    # Run tests for Currency service
+    - name: Build and Test Currency Service
+      run: |
+        docker-compose -f docker-compose.currency.yml up --build -d
+        newman run ./tests/Currency_Test.postman_collection.json
+        docker-compose -f docker-compose.currency.yml down -v 
+
+    # Run tests for Market service
+    - name: Build and Test Market Service
+      run: |
+        docker-compose -f docker-compose.market.yml up --build -d
+        newman run ./tests/Market_Test.postman_collection.json
+        docker-compose -f docker-compose.market.yml down -v
+
+    # Run tests for Payment service
+    - name: Build and Test Payment Service
+      run: |
+        docker-compose -f docker-compose.payment.yml up --build -d 
+        newman run ./tests/Payment.postman_collection.json
+        docker-compose -f docker-compose.payment.yml down -v
+
+    # Run Integration Tests at the end
+    - name: Run Integration Tests
+      run: |
+        docker-compose up --build -d 
+        newman run ./tests/Integration_test.postman_collection.json
+        docker-compose -f docker-compose.yml down -v
