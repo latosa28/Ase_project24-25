@@ -35,44 +35,56 @@ jobs:
         sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
 
-    # Step per eseguire i test del servizio Account (uso del percorso assoluto)
+    # Step per elencare i file nella cartella src (prima di buildare i docker-compose)
+    - name: List files in src directory
+      run: |
+        echo "Listing files in src directory:"
+        ls -l ../../src
+
+    # Step per elencare i file nella cartella docs/tests (prima di eseguire i test)
+    - name: List files in tests directory
+      run: |
+        echo "Listing files in docs/tests directory:"
+        ls -l ../../docs/tests
+
+    # Step per eseguire i test del servizio Account
     - name: Build and Test Account Service
       run: |
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.account.yml up --build -d
-        newman run /home/runner/work/Ase_project24-25/docs/tests/Account_Test.postman_collection.json
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.account.yml down -v
+        docker-compose -f ../../src/docker-compose.account.yml up --build -d
+        newman run ../../docs/tests/Account_Test.postman_collection.json
+        docker-compose -f ../../src/docker-compose.account.yml down -v
 
     # Step per eseguire i test del servizio Collection
     - name: Build and Test Collection Service
       run: |
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.collection.yml up --build -d
-        newman run /home/runner/work/Ase_project24-25/docs/tests/Collection_Test.postman_collection.json
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.collection.yml down -v
+        docker-compose -f ../../src/docker-compose.collection.yml up --build -d
+        newman run ../../docs/tests/Collection_Test.postman_collection.json
+        docker-compose -f ../../src/docker-compose.collection.yml down -v
 
     # Step per eseguire i test del servizio Currency
     - name: Build and Test Currency Service
       run: |
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.currency.yml up --build -d
-        newman run /home/runner/work/Ase_project24-25/docs/tests/Currency_Test.postman_collection.json
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.currency.yml down -v
+        docker-compose -f ../../src/docker-compose.currency.yml up --build -d
+        newman run ../../docs/tests/Currency_Test.postman_collection.json
+        docker-compose -f ../../src/docker-compose.currency.yml down -v
 
     # Step per eseguire i test del servizio Market
     - name: Build and Test Market Service
       run: |
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.market.yml up --build -d
-        newman run /home/runner/work/Ase_project24-25/docs/tests/Market_Test.postman_collection.json
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.market.yml down -v
+        docker-compose -f ../../src/docker-compose.market.yml up --build -d
+        newman run ../../docs/tests/Market_Test.postman_collection.json
+        docker-compose -f ../../src/docker-compose.market.yml down -v
 
     # Step per eseguire i test del servizio Payment
     - name: Build and Test Payment Service
       run: |
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.payment.yml up --build -d
-        newman run /home/runner/work/Ase_project24-25/docs/tests/Payment.postman_collection.json
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.payment.yml down -v
+        docker-compose -f ../../src/docker-compose.payment.yml up --build -d
+        newman run ../../docs/tests/Payment.postman_collection.json
+        docker-compose -f ../../src/docker-compose.payment.yml down -v
 
     # Step finale per eseguire i test di integrazione
     - name: Run Integration Tests
       run: |
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.yml up --build -d
-        newman run /home/runner/work/Ase_project24-25/docs/tests/Integration_test.postman_collection.json
-        docker-compose -f /home/runner/work/Ase_project24-25/src/docker-compose.yml down -v
+        docker-compose -f ../../src/docker-compose.yml up --build -d
+        newman run ../../docs/tests/Integration_test.postman_collection.json
+        docker-compose -f ../../src/docker-compose.yml down -v
