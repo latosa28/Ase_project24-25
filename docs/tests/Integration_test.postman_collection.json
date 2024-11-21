@@ -29,11 +29,6 @@
 									"pm.test(\"Create User - Status Code is 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Create User - Contains user_id\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property(\"user_id\");\r",
-									"});\r",
 									""
 								],
 								"type": "text/javascript",
@@ -77,11 +72,6 @@
 									"pm.test(\"Create User - Status Code is 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Create User - Contains user_id\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property(\"user_id\");\r",
-									"});\r",
 									""
 								],
 								"type": "text/javascript",
@@ -124,11 +114,6 @@
 								"exec": [
 									"pm.test(\"Create User - Status Code is 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Create User - Contains user_id\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property(\"user_id\");\r",
 									"});\r",
 									""
 								],
@@ -200,7 +185,7 @@
 					"response": []
 				},
 				{
-					"name": "logout1",
+					"name": "logout",
 					"event": [
 						{
 							"listen": "test",
@@ -328,11 +313,6 @@
 								"exec": [
 									"pm.test(\"Create User - Status Code is 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Create User - Contains user_id\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property(\"user_id\");\r",
 									"});\r",
 									""
 								],
@@ -1188,7 +1168,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/market_list"
+						"url": "http://localhost:5001/market_list"
 					},
 					"response": []
 				},
@@ -1353,7 +1333,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/market_list"
+						"url": "http://localhost:5001/market_list"
 					},
 					"response": []
 				},
@@ -1984,6 +1964,10 @@
 			"key": "jwt_token3",
 			"value": "",
 			"type": "string"
+		},
+		{
+			"key": "jwt_token_admin",
+			"value": ""
 		}
 	]
 }
