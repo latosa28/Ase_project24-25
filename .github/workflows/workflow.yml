@@ -21,13 +21,19 @@ jobs:
       with:
         node-version: '16'
 
-    # Step per installare Newman, lo strumento per eseguire i test di Postman
+    # Step per installare Newman
     - name: Install Newman
       run: npm install -g newman
 
     # Step per configurare Docker Buildx
     - name: Set up Docker
       uses: docker/setup-buildx-action@v3
+
+    # Step per installare Docker Compose
+    - name: Install Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
 
     # Step per eseguire i test del servizio Account
     - name: Build and Test Account Service
