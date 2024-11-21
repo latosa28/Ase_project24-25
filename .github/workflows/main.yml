@@ -49,6 +49,6 @@ jobs:
     # Step finale per eseguire i test di integrazione
     - name: Run Integration Tests
       run: |
-        sleep 2
+        sleep 5
         newman run ./docs/tests/Integration_test.postman_collection.json
         docker-compose -f ./src/docker-compose.yml down -v
