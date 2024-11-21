@@ -39,10 +39,16 @@ jobs:
       run: |
         echo "Current working directory:"
         pwd
+        
+    # Step per buildare il Docker Compose degli integration tests
+    - name: build integration tests compose
+      run:  |
+        docker-compose -f ./src/docker-compose.yml build
+        docker-compose -f ./src/docker-compose.yml up -d
 
     # Step finale per eseguire i test di integrazione
     - name: Run Integration Tests
       run: |
-        docker-compose -f ./src/docker-compose.yml up --build -d
+        sleep 5
         newman run ./docs/tests/Integration_test.postman_collection.json
         docker-compose -f ./src/docker-compose.yml down -v
