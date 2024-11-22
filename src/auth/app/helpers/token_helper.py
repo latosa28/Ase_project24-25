@@ -23,7 +23,7 @@ def decode_token(token):
     return decoded_token
 
 
-def generate_token(user_id):
+def generate_token_response(user_id):
     # Define the token payload with standard OAuth claims
     payload = {
         "iss": MY_APP,  # Issuer: your auth server's URL
@@ -37,7 +37,7 @@ def generate_token(user_id):
     }
     # Generate the access token
     access_token = jwt.encode(payload, private_key, algorithm="RS256")
-    return access_token
+    return {'access_token': access_token, 'token_type': 'bearer'}
 
 
 def get_token_user_id():
