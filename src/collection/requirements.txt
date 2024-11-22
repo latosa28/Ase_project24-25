@@ -1,8 +1,6 @@
 Flask
 Flask-SQLAlchemy
 Flask-Migrate
-flask-marshmallow
-marshmallow-sqlalchemy
 pymysql
 requests
 mysql-connector-python
