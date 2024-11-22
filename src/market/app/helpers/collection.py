@@ -34,8 +34,6 @@ class CollectionHelper:
             response = requests.get(
                 f"{self.base_url}/user/{user_id}/instance/{instance_id}"
             )
-            if response.status_code != 200:
-                raise Exception(response.reason)
             return response
 
 
