@@ -40,25 +40,41 @@ def generate_token(user_id):
     return access_token
 
 
-# Funzione per validare il token
+def get_token_user_id():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing!'}), 403
+
+    token = auth_header.removeprefix("Bearer ").strip()
+
+    try:
+        data = decode_token(token)
+        token_user_id = data['sub']
+    except Exception:
+        return jsonify({'message': 'Token is invalid!'}), 403
+    return token_user_id
+
+
 def token_required(f):
     @wraps(f)
-    def decorator(*args, **kwargs):
-        auth_header = request.headers.get('Authorization')
-        if not auth_header:
-            return jsonify({'message': 'Token is missing!'}), 403
-
-        token = auth_header.removeprefix("Bearer ").strip()
-
-        try:
-            data = decode_token(token)
-            token_user_id = data['sub']
-        except Exception:
-            return jsonify({'message': 'Token is invalid!'}), 403
-
+    def wrapper(*args, **kwargs):
+        token_user_id = get_token_user_id()
         user_id = kwargs.get('user_id')
         if int(token_user_id) != user_id:
             return jsonify({'message': 'Unauthorized Access'}), 403
 
         return f(*args, **kwargs)
-    return decorator
+    return wrapper
+
+
+def admin_token_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        token_user_id = get_token_user_id()
+        user_id = kwargs.get('admin_id')
+        if int(token_user_id) != user_id:
+            return jsonify({'message': 'Unauthorized Access'}), 403
+
+        return f(*args, **kwargs)
+    return wrapper
+

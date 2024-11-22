@@ -49,3 +49,17 @@ def token_required(f):
         get_token_user_id()
         return f(*args, **kwargs)
     return decorator
+
+
+def admin_token_authorized(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        token_user_id = get_token_user_id()
+        user_id = kwargs.get('admin_id')
+        if int(token_user_id) != user_id:
+            return jsonify({'message': 'Unauthorized Access'}), 403
+
+        return f(*args, **kwargs)
+    return decorator
+
+

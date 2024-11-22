@@ -16,13 +16,7 @@ def convert_to_special_currency(amount):
 
 
 def simulate_payment(card_number, card_expiry, card_cvc, amount):
-    # Simula un pagamento con una probabilità del 99% di successo
-    success_probability = 0.99  # 99% di successo
-
-    if random.random() < success_probability:
-        return True  # Successo
-    else:
-        return False  # Fallimento
+    return True
 
 
 # Route to buy currency

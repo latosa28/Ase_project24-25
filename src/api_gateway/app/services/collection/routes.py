@@ -1,6 +1,5 @@
 import requests
 from flask import Blueprint, request
-from utils.auth import token_required
 
 collection_bp = Blueprint('collection', __name__)
 
