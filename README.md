@@ -1,3 +1,4 @@
+
 # Ase_project24-25
 ## Get Started
 
@@ -56,3 +57,34 @@ Steps to get the project up and running:
    ```
 
 
+## TESTING
+
+### Unit Test:
+To run the unit tests for a single microservice, first import the JSON files for the microservices into Postman, which are located in the `docs/tests` folder.  
+To start the individual microservice, navigate to the `src` folder in the terminal and run the following command:
+
+```bash
+docker-compose -f docker-compose.{microservice_name}.yml up --build
+```
+
+Then, run the imported collection in Postman.  
+Finally, execute the following command to stop the microservice:
+
+```bash
+docker-compose -f docker-compose.{microservice_name}.yml down -v
+```
+
+### Integration Test:
+To run the integration tests, first import the JSON file `Integration_test.postman_collection.json` into Postman, which is also located in the `docs/tests` folder.  
+To start the application, navigate to the `src` folder in the terminal and run the following command:
+
+```bash
+docker-compose up --build
+```
+
+Then, run the imported collection in Postman.  
+Finally, execute the following command to stop all services:
+
+```bash
+docker-compose down -v
+```
