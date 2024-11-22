@@ -54,7 +54,7 @@
 							"}).replace(\",\", \"\");\r",
 							"\r",
 							"// Imposta la variabile \"end_date\" con il nuovo valore\r",
-							"pm.variables.set(\"end_date\", formattedDate);\r",
+							"pm.collectionVariables.set(\"end_date\", formattedDate);\r",
 							""
 						],
 						"type": "text/javascript",
@@ -208,16 +208,39 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [
-					{
-						"key": "X-Auth-Token",
-						"value": "{{jwt_token}}",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"url": "http://localhost:5004/user/1/transactions_history"
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "end_date",
+			"value": "",
+			"type": "string"
 		}
 	]
 }
