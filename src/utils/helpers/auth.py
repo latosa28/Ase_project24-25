@@ -1,6 +1,5 @@
 import json
 import requests
-from flask import current_app
 from jwt.algorithms import RSAAlgorithm
 
 AUTH_URL = "http://auth:5011"
