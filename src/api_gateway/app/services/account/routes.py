@@ -2,7 +2,6 @@ import requests
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 
-from utils.auth import token_required
 
 account_bp = Blueprint('account', __name__)
 
@@ -53,7 +52,6 @@ def delete_user(user_id):
 
 
 @account_bp.route('/user', methods=['GET'])
-@token_required
 def get_user_by_id(current_user_id):
     response = requests.get(URL + f'/user/{current_user_id}')
     return response.json(), response.status_code

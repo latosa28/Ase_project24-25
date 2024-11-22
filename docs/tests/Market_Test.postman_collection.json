@@ -115,14 +115,8 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [
-					{
-						"key": "X-Auth-Token",
-						"value": "{{jwt_token}}",
-						"type": "text"
-					}
-				],
-				"url": "http://localhost:5004/market_list"
+				"header": [],
+				"url": "http://localhost:5004/user/1/market_list"
 			},
 			"response": []
 		},

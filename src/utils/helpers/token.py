@@ -38,6 +38,8 @@ def token_authorized(f):
             return f(*args, **kwargs)
         token_user_id = get_token_user_id()
         user_id = kwargs.get('user_id')
+        if token_user_id is None:
+            return jsonify({'message': 'Unauthorized Access'}), 403
         if int(token_user_id) != user_id:
             return jsonify({'message': 'Unauthorized Access'}), 403
 
@@ -61,8 +63,10 @@ def admin_token_authorized(f):
         if current_app.config['ENV'] == 'testing':
             return f(*args, **kwargs)
         token_user_id = get_token_user_id()
-        user_id = kwargs.get('admin_id')
-        if int(token_user_id) != user_id:
+        admin_id = kwargs.get('admin_id')
+        if token_user_id is None:
+            return jsonify({'message': 'Unauthorized Access'}), 403
+        if int(token_user_id) != admin_id:
             return jsonify({'message': 'Unauthorized Access'}), 403
 
         return f(*args, **kwargs)

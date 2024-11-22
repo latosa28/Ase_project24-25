@@ -1,6 +1,5 @@
 import requests
 from flask import Blueprint, request
-from utils.auth import token_required
 
 payment_bp = Blueprint('payment', __name__)
 

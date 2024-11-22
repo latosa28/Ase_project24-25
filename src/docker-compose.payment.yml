@@ -4,8 +4,8 @@ services:
   # Microservice for payment (test version)
   payment_test:
     build:
-      context: ./payment
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./payment/Dockerfile
     container_name: payment_test
     ports:
       - "5007:5007"  # Espone la porta 5007 del container sulla stessa porta dell'host

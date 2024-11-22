@@ -2,10 +2,12 @@ FROM python:3.12-slim
 
 WORKDIR /service
 
-COPY requirements.txt .
+COPY currency/requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY app/ .
+COPY currency/app .
+COPY utils/ ./utils
+
 
 EXPOSE 5005
 

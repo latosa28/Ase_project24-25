@@ -4,8 +4,8 @@ services:
   # Microservice for account (test version)
   account_test:
     build:
-      context: ./account
-      dockerfile: Dockerfile  
+      context: .
+      dockerfile: ./account/Dockerfile
     container_name: account_test
     ports:  # Port binding
       - "5003:5003"  # Expose container port 5003 on host port 5003

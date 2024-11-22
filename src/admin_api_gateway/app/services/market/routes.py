@@ -1,8 +1,6 @@
 import logging
 import requests
-from flask import Blueprint, jsonify, request
-
-from utils.auth import token_required
+from flask import Blueprint, request
 
 market_bp = Blueprint('market', __name__)
 
@@ -34,7 +32,6 @@ def get_auction(admin_id, market_id):
 
 
 @market_bp.route('/admin/<int:admin_id>/market/<int:market_id>', methods=['POST'])
-@token_required
 def cancel_auction(admin_id, market_id):
     response = requests.post(f"{URL}/admin/{admin_id}/market/{market_id}", headers=request.headers)
     return response.json(), response.status_code

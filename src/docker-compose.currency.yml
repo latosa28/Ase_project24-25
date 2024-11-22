@@ -4,8 +4,8 @@ services:
   # Microservice for currency (test version)
   currency_test:
     build:
-      context: ./currency
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./currency/Dockerfile
     container_name: currency_test
     ports:  # Binding della porta
       - "5005:5005"  # Espone la porta 5005 del container sulla porta 5005 dell'host

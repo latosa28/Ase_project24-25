@@ -1,8 +1,6 @@
 Flask
 Flask-SQLAlchemy
-Flask-Migrate
-pymysql
+cryptography
 requests
-mysql-connector-python
 PyJWT
 cryptography

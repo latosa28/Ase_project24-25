@@ -4,8 +4,8 @@ services:
   # Microservice for market (test version)
   market_test:
     build:
-      context: ./market
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./market/Dockerfile
     container_name: market_test
     ports:  # Binding della porta
       - "5004:5004"  # Espone la porta 5004 del container sulla porta 5004 dell'host
