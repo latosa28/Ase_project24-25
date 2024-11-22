@@ -100,18 +100,18 @@ jobs:
         docker-compose -f ./src/docker-compose.payment.yml down -v
 
     # Step per build del servizio Market
-    - name: Build Payment Service
+    - name: Build Market Service
       run: |
         docker-compose -f ./src/docker-compose.market.yml build
 
-    # Step per run del servizio Payment e eseguire i test
-    - name: Run and Test Payment Service
+    # Step per run del servizio Market e eseguire i test
+    - name: Run and Test Market Service
       run: |
         docker-compose -f ./src/docker-compose.market.yml up -d
-        newman run ./docs/tests/Market.postman_collection.json
+        newman run ./docs/tests/Market_Test.postman_collection.json
 
-    # Step per down del servizio Payment
-    - name: Tear Down Payment Service
+    # Step per down del servizio Market
+    - name: Tear Down Market Service
       run: |
         docker-compose -f ./src/docker-compose.market.yml down -v
 
