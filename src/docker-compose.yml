@@ -11,7 +11,9 @@ services:
       - app-network
   # Microservice for collections
   collection:
-    build: ./collection
+    build:
+      context: .
+      dockerfile: ./collection/Dockerfile
     container_name: collection
     expose:
       - "5002"  # Exposed only within the Docker network
@@ -30,7 +32,9 @@ services:
 
   # Microservice for accounts
   account:
-    build: ./account
+    build:
+      context: .
+      dockerfile: ./account/Dockerfile
     container_name: account
     expose:
       - "5003"  # Exposed only within the Docker network
@@ -49,7 +53,9 @@ services:
 
   # Microservice for the market
   market:
-    build: ./market
+    build:
+      context: .
+      dockerfile: ./market/Dockerfile
     container_name: market
     expose:
       - "5004"  # Exposed only within the Docker network
@@ -68,7 +74,9 @@ services:
 
   # Microservice for currency
   currency:
-    build: ./currency
+    build:
+      context: .
+      dockerfile: ./currency/Dockerfile
     container_name: currency
     expose:
       - "5005"  # Exposed only within the Docker network
@@ -87,7 +95,9 @@ services:
 
   # Microservice for payment
   payment:
-    build: ./payment
+    build:
+      context: .
+      dockerfile: ./payment/Dockerfile
     container_name: payment
     expose:
       - "5007"  # Exposed only within the Docker network

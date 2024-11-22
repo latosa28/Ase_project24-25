@@ -5,7 +5,7 @@ import pytz
 from flask import Blueprint, jsonify, request, current_app
 
 from helpers.currency import CurrencyHelper
-from helpers.token import token_required
+from utils.helpers.token import token_required
 from models.models import db, Transactions
 
 user_api = Blueprint('user_api', __name__)

@@ -2,7 +2,7 @@ import logging
 from flask import Flask
 from api.admin import admin_api
 from api.user import user_api
-from helpers.auth import AuthHelper
+from utils.helpers.auth import AuthHelper
 from conf.config import load_config
 from helpers.scheduler import SchedulerHelper
 from models.models import db

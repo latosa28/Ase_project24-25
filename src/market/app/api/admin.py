@@ -1,7 +1,7 @@
 import logging
 from flask import Blueprint, jsonify
 
-from helpers.token import admin_token_authorized
+from utils.helpers.token import admin_token_authorized
 from models.models import Market, db
 
 admin_api = Blueprint('admin_api', __name__)

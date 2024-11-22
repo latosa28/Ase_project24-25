@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, request, current_app
 from datetime import datetime
 import logging
 
-from helpers.token import token_authorized
+from utils.helpers.token import token_authorized
 from helpers.currency import CurrencyHelper
 from helpers.collection import CollectionHelper
 from models.models import Market, db

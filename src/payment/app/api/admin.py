@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from helpers.token import admin_token_authorized
+from utils.helpers.token import admin_token_authorized
 from models.models import Transactions
 
 admin_api = Blueprint("admin_api", __name__)
