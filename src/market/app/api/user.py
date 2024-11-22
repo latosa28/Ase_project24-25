@@ -89,9 +89,6 @@ def set_auction(user_id, instance_id):
     if start_bid <= 0:
         return jsonify({"message": "start_bid must be a positive number"}), 400
 
-    CollectionHelper().get_instance(user_id, instance_id)
-
-
     auction = Market.query.filter((Market.status == 'open') & (Market.istance_id == instance_id)).first()
     if auction:
         return jsonify({"message": "Auction already open"}), 400
