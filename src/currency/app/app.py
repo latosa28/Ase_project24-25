@@ -8,8 +8,10 @@ from models.models import db, Currency
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+flask_env = os.getenv('FLASK_ENV', 'production')
+app.config['ENV'] = flask_env
 db.init_app(app)
-public_key = AuthHelper.get_jwt_public_key()
+public_key = AuthHelper.get_jwt_public_key(app.config['ENV'])
 app.config["jwt_public_key"] = public_key
 
 

@@ -14,7 +14,7 @@ app = Flask(__name__)
 def setup():
     load_config(app)
     db.init_app(app)
-    public_key = AuthHelper.get_jwt_public_key()
+    public_key = AuthHelper.get_jwt_public_key(app.config['ENV'])
     app.config["jwt_public_key"] = public_key
     SchedulerHelper(app).start_scheduler()
 
