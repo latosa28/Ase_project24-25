@@ -2,8 +2,9 @@ Flask
 Flask-SQLAlchemy
 Flask-Migrate
 flask-marshmallow
-cryptography
 marshmallow-sqlalchemy
 pymysql
 requests
 mysql-connector-python
+PyJWT
+cryptography

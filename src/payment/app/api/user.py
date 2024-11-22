@@ -5,6 +5,7 @@ import pytz
 from flask import Blueprint, jsonify, request, current_app
 
 from helpers.currency import CurrencyHelper
+from helpers.token import token_required
 from models.models import db, Transactions
 
 user_api = Blueprint('user_api', __name__)
@@ -16,17 +17,12 @@ def convert_to_special_currency(amount):
 
 
 def simulate_payment(card_number, card_expiry, card_cvc, amount):
-    # Simula un pagamento con una probabilità del 99% di successo
-    success_probability = 0.99  # 99% di successo
-
-    if random.random() < success_probability:
-        return True  # Successo
-    else:
-        return False  # Fallimento
+    return True
 
 
 # Route to buy currency
 @user_api.route('/user/<int:user_id>/payment', methods=['POST'])
+@token_required
 def payment(user_id):
     data = request.get_json()
 

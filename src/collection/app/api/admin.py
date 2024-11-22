@@ -3,6 +3,7 @@ import logging
 from flask import Blueprint, jsonify, request, current_app
 from sqlalchemy.exc import IntegrityError
 
+from helpers.token import admin_token_authorized
 from models.models import Item, db, UserItem
 
 admin_api = Blueprint("admin_api", __name__)
@@ -10,6 +11,7 @@ admin_api = Blueprint("admin_api", __name__)
 
 # Route to get all items
 @admin_api.route("/admin/<int:admin_id>/collection", methods=["GET"])
+@admin_token_authorized
 def get_items(admin_id):
     items = Item.query.all()
     if items:
@@ -18,6 +20,7 @@ def get_items(admin_id):
 
 # Route to get a specific item by ID
 @admin_api.route("/admin/<int:admin_id>/item/<int:item_id>", methods=["GET"])
+@admin_token_authorized
 def get_item_by_id(admin_id, item_id):
     item = Item.query.get(item_id)
     if item:
@@ -34,6 +37,7 @@ def _check_rarity(rarity):
 
 
 @admin_api.route("/admin/<int:admin_id>/item/<int:item_id>", methods=["POST"])
+@admin_token_authorized
 def update_item(admin_id, item_id):
     # Recupera i dati dal corpo della richiesta
     image_path = request.json.get("image_path")
@@ -71,6 +75,7 @@ def update_item(admin_id, item_id):
 
 
 @admin_api.route("/admin/<int:admin_id>/item/", methods=["PUT"])
+@admin_token_authorized
 def add_item(admin_id):
     # Recupera i dati dal corpo della richiesta
     image_path = request.json.get("image_path")
@@ -100,6 +105,7 @@ def add_item(admin_id):
 
 
 @admin_api.route("/admin/<int:admin_id>/item/<int:item_id>", methods=["DELETE"])
+@admin_token_authorized
 def delete_item(admin_id, item_id):
     item = Item.query.get(item_id)
     if item:

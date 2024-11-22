@@ -5,6 +5,7 @@ from datetime import datetime
 from flask import Blueprint, jsonify, current_app, request
 from sqlalchemy.exc import IntegrityError
 from helpers.currency import CurrencyHelper
+from helpers.token import token_required, token_authorized
 
 from models.models import db, Item, UserItem
 
@@ -12,16 +13,18 @@ user_api = Blueprint("user_api", __name__)
 
 
 # Route to get all items
-@user_api.route("/collection", methods=["GET"])
-def get_items():
+@user_api.route("/user/<int:user_id>/collection", methods=["GET"])
+@token_authorized
+def get_items(user_id):
     items = Item.query.all()
     if items:
         return jsonify([item.serialize() for item in items]), 200
 
 
 # Route to get a specific item by ID
-@user_api.route("/item/<int:item_id>", methods=["GET"])
-def get_item_by_id(item_id):
+@user_api.route("/user/<int:user_id>/item/<int:item_id>", methods=["GET"])
+@token_authorized
+def get_item_by_id(user_id, item_id):
     item = Item.query.get(item_id)
     if item:
         return jsonify(item.serialize()), 200
@@ -41,7 +44,8 @@ def _serialize_user_collection(user_item_joined):
 
 
 # Route: Visualizzare la collezione di un utente
-@user_api.route("/user/<int:user_id>/collection", methods=["GET"])
+@user_api.route("/user/<int:user_id>/mycollection", methods=["GET"])
+@token_required
 def get_user_collection(user_id):
     user_item_joined = (
         db.session.query(UserItem).join(Item).filter(UserItem.user_id == user_id).all()
@@ -62,6 +66,7 @@ def get_user_collection(user_id):
 
 # Route: Ottenere informazioni su una specifica istanza della collezione di un utente
 @user_api.route("/user/<int:user_id>/instance/<int:instance_id>", methods=["GET"])
+@token_required
 def get_user_item_instance(user_id, instance_id):
     user_item_joined = (
         db.session.query(UserItem)
@@ -119,6 +124,7 @@ def _get_item_probabilities():
 
 # Route: Roll per un nuovo gacha
 @user_api.route("/user/<int:user_id>/roll", methods=["PUT"])
+@token_authorized
 def roll_gacha(user_id):
     item_probabilities = _get_item_probabilities()  # Ottieni le probabilità calcolate
 

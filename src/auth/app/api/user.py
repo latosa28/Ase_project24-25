@@ -1,18 +1,17 @@
+import base64
+
 import requests
-from flask import Blueprint, request, jsonify
-import jwt
-from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta
+from flask import Blueprint, jsonify, request
+from werkzeug.security import check_password_hash
 
-from utils.auth import token_required
+from helpers.token_helper import public_key, generate_token, token_required
 
-auth_bp = Blueprint('authentication', __name__)
+user_api = Blueprint("user_api", __name__)
 
 ACCOUNT_URL = "http://account:5003"
 
 
-# login
-@auth_bp.route('/user/auth', methods=['POST'])
+@user_api.route('/user/auth', methods=['POST'])
 def login():
     data = request.get_json()
 
@@ -33,17 +32,18 @@ def login():
         return jsonify({'message': 'Invalid password!'}), 401
 
     # Genera il JWT token
-    token = jwt.encode({
-        'user_id': user["user_id"],
-        'exp': datetime.utcnow() + timedelta(hours=1)
-    }, 'mysecretkey', algorithm="HS256")
+    token = generate_token(user["user_id"])
 
     return jsonify({'token': token})
 
 
 # Endpoint to logout (POST request to invalidate the token on the client-side)
-@auth_bp.route('/user/auth', methods=['DELETE'])
+@user_api.route('/user/<int:user_id>/auth', methods=['DELETE'])
 @token_required
-def logout(current_user_id):
-    # Invalidate the token on the client side (simple approach)
+def logout(user_id):
     return jsonify({'message': 'Successfully logged out!'}), 200
+
+
+
+
+

@@ -42,10 +42,9 @@ def create_account():
         return jsonify({'message': 'Failed to create account!'}), 400
 
 
-@account_bp.route('/user', methods=['DELETE'])
-@token_required
-def delete_user(current_user_id):
-    response = requests.delete(URL + f'/user/{current_user_id}')
+@account_bp.route('/user/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    response = requests.delete(URL + f'/user/{user_id}',headers=request.headers)
 
     if response.status_code == 200:
         return jsonify({'message': 'Account deleted successfully'}), 200

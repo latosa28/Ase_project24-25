@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  # Microservice for auth
+  auth:
+    build: ./auth
+    container_name: auth
+    expose:
+      - "5011"  # Exposed only within the Docker network
+    networks:
+      - app-network
   # Microservice for collections
   collection:
     build: ./collection

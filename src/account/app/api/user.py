@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, request
 
 from helpers.currency import CurrencyHelper
 from models.models import User, db
+from helpers.token import token_required, token_authorized
 
 user_api = Blueprint('user_api', __name__)
 
@@ -41,6 +42,7 @@ def create_user():
 
 # Route to delete an existing user by ID
 @user_api.route('/user/<int:user_id>', methods=['DELETE'])
+@token_authorized
 def delete_user(user_id):
     user = User.query.get(user_id)
     if user:
