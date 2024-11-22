@@ -16,12 +16,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"function delay(ms) {\r",
-									"    return new Promise(resolve => setTimeout(resolve, ms));\r",
-									"}\r",
 									"\r",
-									"delay(30000).then(() => {\r",
-									"});\r",
 									""
 								],
 								"type": "text/javascript",
@@ -207,15 +202,15 @@
 						}
 					],
 					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token1}}"
 							}
-						],
-						"url": "http://localhost:5001/user/auth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:5001/user/1/auth"
 					},
 					"response": []
 				},
@@ -288,15 +283,15 @@
 						}
 					],
 					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token1}}"
 							}
-						],
-						"url": "http://localhost:5001/user"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:5001/user/1"
 					},
 					"response": []
 				},
@@ -332,7 +327,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"testuser1\",\r\n  \"email\": \"testuser1@example.com\",\r\n  \"password\": \"TestPassword123\"\r\n}",
+							"raw": "{\r\n  \"username\": \"testuser4\",\r\n  \"email\": \"testuser4@example.com\",\r\n  \"password\": \"TestPassword123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -367,7 +362,7 @@
 									"    \r",
 									"    // Salva il token come variabile d'ambiente\r",
 									"    if (responseJson.token) {\r",
-									"        pm.collectionVariables.set(\"jwt_token1\", responseJson.token);\r",
+									"        pm.collectionVariables.set(\"jwt_token4\", responseJson.token);\r",
 									"        console.log(\"JWT Token saved: \" + responseJson.token)\r",
 									"    }\r",
 									"});\r",
@@ -383,7 +378,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"testuser1\",\r\n    \"password\": \"TestPassword123\"\r\n}\r\n",
+							"raw": "{\r\n    \"username\": \"testuser4\",\r\n    \"password\": \"TestPassword123\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -524,15 +519,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/collection"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/4/collection"
 					},
 					"response": []
 				},
@@ -561,20 +556,20 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/item/1"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/4/item/3"
 					},
 					"response": []
 				},
 				{
-					"name": "user_collection1",
+					"name": "user_collection4",
 					"event": [
 						{
 							"listen": "test",
@@ -598,15 +593,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/user/1/collection"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/4/mycollection"
 					},
 					"response": []
 				},
@@ -634,6 +629,12 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
 						"method": "GET",
 						"header": [
 							{
@@ -642,7 +643,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/collection"
+						"url": "http://localhost:5001/user/2/mycollection"
 					},
 					"response": []
 				},
@@ -671,15 +672,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token3}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
 							}
-						],
-						"url": "http://localhost:5001/user/3/collection"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/3/mycollection"
 					},
 					"response": []
 				},
@@ -710,15 +711,15 @@
 						}
 					],
 					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/user/roll"
+						},
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:5001/user/4/roll"
 					},
 					"response": []
 				},
@@ -749,15 +750,15 @@
 						}
 					],
 					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/user/roll"
+						},
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:5001/user/4/roll"
 					},
 					"response": []
 				},
@@ -788,15 +789,15 @@
 						}
 					],
 					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token2}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
 							}
-						],
-						"url": "http://localhost:5001/user/roll"
+						},
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:5001/user/2/roll"
 					},
 					"response": []
 				},
@@ -834,15 +835,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/user/4/collection"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/4/mycollection"
 					},
 					"response": []
 				},
@@ -888,7 +889,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/collection"
+						"url": "http://localhost:5001/user/2/mycollection"
 					},
 					"response": []
 				},
@@ -919,14 +920,14 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
+						},
+						"method": "GET",
+						"header": [],
 						"url": "http://localhost:5001/user/4/instance/1"
 					},
 					"response": []
@@ -958,14 +959,14 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token2}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
 							}
-						],
+						},
+						"method": "GET",
+						"header": [],
 						"url": "http://localhost:5001/user/2/instance/3"
 					},
 					"response": []
@@ -1001,6 +1002,12 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -1018,7 +1025,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/payment"
+						"url": "http://localhost:5001/user/4/payment"
 					},
 					"response": []
 				}
@@ -1051,15 +1058,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/user/amount"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/4/amount"
 					},
 					"response": []
 				},
@@ -1087,6 +1094,12 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
 						"method": "GET",
 						"header": [
 							{
@@ -1095,7 +1108,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/amount"
+						"url": "http://localhost:5001/user/2/amount"
 					},
 					"response": []
 				},
@@ -1124,15 +1137,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token3}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
 							}
-						],
-						"url": "http://localhost:5001/user/amount"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/3/amount"
 					},
 					"response": []
 				}
@@ -1166,15 +1179,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token3}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/market_list"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/4/market_list"
 					},
 					"response": []
 				},
@@ -1203,15 +1216,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token3}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/user/transactions_history"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/4/transactions_history"
 					},
 					"response": []
 				},
@@ -1273,14 +1286,14 @@
 						}
 					],
 					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
+						},
+						"method": "PUT",
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n  \"end_date\": \"{{end_date}}\",\r\n  \"start_bid\": 100.0\r\n}\r\n",
@@ -1290,7 +1303,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/instance/1/auction"
+						"url": "http://localhost:5001/user/4/instance/1/auction"
 					},
 					"response": []
 				},
@@ -1331,15 +1344,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token2}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
 							}
-						],
-						"url": "http://localhost:5001/market_list"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/2/market_list"
 					},
 					"response": []
 				},
@@ -1373,14 +1386,14 @@
 						}
 					],
 					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token2}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
 							}
-						],
+						},
+						"method": "PUT",
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n  \"bid_amount\": 200\r\n}\r\n",
@@ -1390,7 +1403,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/market/1/bid"
+						"url": "http://localhost:5001/user/2/market/1/bid"
 					},
 					"response": []
 				},
@@ -1418,15 +1431,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token2}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
 							}
-						],
-						"url": "http://localhost:5001/user/amount"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/2/amount"
 					},
 					"response": []
 				},
@@ -1460,14 +1473,14 @@
 						}
 					],
 					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token3}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
 							}
-						],
+						},
+						"method": "PUT",
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n  \"bid_amount\": 250\r\n}\r\n",
@@ -1477,7 +1490,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/market/1/bid"
+						"url": "http://localhost:5001/user/3/market/1/bid"
 					},
 					"response": []
 				},
@@ -1505,15 +1518,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token2}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
 							}
-						],
-						"url": "http://localhost:5001/user/amount"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/2/amount"
 					},
 					"response": []
 				},
@@ -1562,7 +1575,7 @@
 									"    return new Promise(resolve => setTimeout(resolve, ms));\r",
 									"}\r",
 									"\r",
-									"delay(75000).then(() => {\r",
+									"delay(70000).then(() => {\r",
 									"});\r",
 									""
 								],
@@ -1572,15 +1585,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/user/4/collection"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/4/mycollection"
 					},
 					"response": []
 				},
@@ -1623,15 +1636,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token2}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
 							}
-						],
-						"url": "http://localhost:5001/user/2/collection"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/2/mycollection"
 					},
 					"response": []
 				},
@@ -1674,15 +1687,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token3}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
 							}
-						],
-						"url": "http://localhost:5001/user/3/collection"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/3/mycollection"
 					},
 					"response": []
 				},
@@ -1710,15 +1723,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/user/amount"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/4/amount"
 					},
 					"response": []
 				},
@@ -1746,15 +1759,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token2}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
 							}
-						],
-						"url": "http://localhost:5001/user/amount"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/2/amount"
 					},
 					"response": []
 				},
@@ -1782,15 +1795,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token3}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
 							}
-						],
-						"url": "http://localhost:5001/user/amount"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/3/amount"
 					},
 					"response": []
 				},
@@ -1832,15 +1845,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token1}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
 							}
-						],
-						"url": "http://localhost:5001/user/transactions_history"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/4/transactions_history"
 					},
 					"response": []
 				},
@@ -1868,15 +1881,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token2}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
 							}
-						],
-						"url": "http://localhost:5001/user/transactions_history"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/2/transactions_history"
 					},
 					"response": []
 				},
@@ -1918,15 +1931,15 @@
 						}
 					],
 					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Auth-Token",
-								"value": "{{jwt_token3}}",
-								"type": "text"
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
 							}
-						],
-						"url": "http://localhost:5001/user/transactions_history"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5001/user/3/transactions_history"
 					},
 					"response": []
 				}
@@ -1973,6 +1986,10 @@
 		},
 		{
 			"key": "jwt_token_admin",
+			"value": ""
+		},
+		{
+			"key": "jwt_token4",
 			"value": ""
 		}
 	]

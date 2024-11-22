@@ -41,7 +41,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5002/collection"
+				"url": "http://localhost:5002/user/1/collection"
 			},
 			"response": []
 		},
@@ -72,7 +72,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5002/item/1"
+				"url": "http://localhost:5002/user/1/item/1"
 			},
 			"response": []
 		},
@@ -145,7 +145,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5002/user/1/collection"
+				"url": "http://localhost:5002/user/1/mycollection"
 			},
 			"response": []
 		},

@@ -33,13 +33,7 @@
 			],
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "X-Auth-Token",
-						"value": "{{jwt_token1}}",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"card_number\": \"4111111111111111\",\r\n    \"card_expiry\": \"12/26\",\r\n    \"card_cvc\": \"123\",\r\n    \"amount\": 10\r\n}\r\n",
