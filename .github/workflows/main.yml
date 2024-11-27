@@ -45,18 +45,6 @@ jobs:
       run: |
         docker-compose -f ./src/docker-compose.market.yml up -d
 
-    - name: Wait for Market Service
-      run: |
-        echo "Waiting for Market Service to be ready..."
-        for i in {1..30}; do
-          if curl -s http://localhost:5004 > /dev/null; then
-            echo "Market Service is up!"
-            break
-          fi
-          echo "Service not ready, retrying in 5 seconds..."
-          sleep 5
-        done
-
     - name: Run Market Tests
       run: |
         newman run ./docs/tests/Market_Test.postman_collection.json
