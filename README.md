@@ -1,43 +1,89 @@
 # Ase_project24-25
 ## Get Started
 
-Passaggi per avviare il progetto
-1. Assicurati di avere i prerequisiti installati
-Prima di iniziare, verifica di avere installato sul tuo sistema:
+Steps to get the project up and running:
 
-Docker (versione >= 20.10): Installazione Docker
-Docker Compose (versione >= 1.29): Installazione Docker Compose
-Per controllare le versioni installate, usa i seguenti comandi:
+1. **Ensure prerequisites are installed**  
+   Before starting, make sure you have the following installed on your system:
 
-docker --version
-docker-compose --version
+   - **Docker** (version >= 20.10): [Docker Installation](https://docs.docker.com/get-docker/)  
+   - **Docker Compose** (version >= 1.29): [Docker Compose Installation](https://docs.docker.com/compose/install/)
 
-2. Clona la repository
-Clona la repository del progetto e accedi alla directory principale:
+   To check the installed versions, use the following commands:
 
-git clone https://github.com/latosa28/Ase_project24-25
-cd nome-repository
+   ```bash
+   docker --version
+   docker-compose --version
+   ```
 
-3. Avvia i servizi
-Costruisci ed esegui tutti i container con il comando:
+2. **Clone the repository**  
+   Clone the project repository and navigate to the main directory:
 
+   ```bash
+   git clone https://github.com/latosa28/Ase_project24-25
+   cd Ase_project24-25/src
+   ```
+
+3. **Start the services**  
+   Build and run all the containers with the command:
+
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Access the Services**  
+   Once started, the services are accessible through the following ports:
+
+   | Service               | Port   | Access URL                  |
+   |-----------------------|--------|-----------------------------|
+   | **Public API Gateway** | 5001   | http://localhost:5001       |
+   | **Admin API Gateway**  | 5010   | http://localhost:5010       |
+
+5. **Stop the services**  
+   To stop all containers, run:
+
+   ```bash
+   docker-compose down
+   ```
+
+   This command stops and removes all containers, networks, and volumes created.
+
+6. **Clean up containers**  
+   If you want to remove all containers and persistent data (such as databases), run:
+
+   ```bash
+   docker-compose down --volumes
+   ```
+
+
+## TESTING
+
+### Unit Test:
+To run the unit tests for a single microservice, first import the JSON files for the microservices into Postman, which are located in the `docs/tests` folder.  
+To start the individual microservice, navigate to the `src` folder in the terminal and run the following command:
+
+```bash
+docker-compose -f docker-compose.{microservice_name}.yml up --build
+```
+
+Then, run the imported collection in Postman.  
+Finally, execute the following command to stop the microservice:
+
+```bash
+docker-compose -f docker-compose.{microservice_name}.yml down -v
+```
+
+### Integration Test:
+To run the integration tests, first import the JSON file `Integration_test.postman_collection.json` into Postman, which is also located in the `docs/tests` folder.  
+To start the application, navigate to the `src` folder in the terminal and run the following command:
+
+```bash
 docker-compose up --build
+```
 
-4.Accesso ai Servizi
-Una volta avviati, i servizi sono accessibili tramite le seguenti porte:
+Then, run the imported collection in Postman.  
+Finally, execute the following command to stop all services:
 
-Servizio	        Porta	Accesso
-Public API Gateway	5001	http://localhost:5001
-Admin API Gateway	5010	http://localhost:5010
-
-5.Arrestare i servizi
-Per fermare tutti i container, esegui:
-
-docker-compose down
-Questo comando arresta ed elimina tutti i container, le reti e i volumi creati.
-
-Pulizia dei container
-Se desideri rimuovere tutti i container e i dati persistenti (come i database), esegui:
-
-docker-compose down --volumes
-
+```bash
+docker-compose down -v
+```
