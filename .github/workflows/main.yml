@@ -40,22 +40,17 @@ jobs:
       run: |
         docker-compose -f ./src/docker-compose.market.yml build
 
-    # Step per controllare i log del servizio Market
-    - name: Check Market Service Logs
-      run: |
-        docker-compose -f ./src/docker-compose.market.yml logs
-
     # Step per run del servizio Market e eseguire i test
     - name: Run and Test Market Service
       run: |
         docker-compose -f ./src/docker-compose.market.yml up -d
 
-    - name: Run Market Tests
+    # Step per run del servizio Market e eseguire i test
+    - name: Run and Test Market Service
       run: |
-        newman run ./docs/tests/Market_Test.postman_collection.json
-
-    - name: Check Market Logs
-      run: docker logs market_test
+        docker-compose -f ./src/docker-compose.market.yml up -d
+        sleep 10  # Aggiungi un ritardo
+        newman run ./docs/tests/Market_Test.postman_collection.json --verbose
 
     # Step per down del servizio Market
     - name: Tear Down Market Service
