@@ -7,92 +7,46 @@ on:
     branches: [ "main" ]
 
 jobs:
-  ci:
+  market_test:
     runs-on: ubuntu-latest
-
     steps:
-    # Step per clonare il repository
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # Step per configurare Node.js (necessario per installare Newman)
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '16'
 
-    # Step per installare Newman
     - name: Install Newman
       run: npm install -g newman
 
-    # Step per configurare Docker Buildx
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v3
-
-    # Step per installare Docker Compose
-    - name: Install Docker Compose
+    - name: Run Market Service
       run: |
-        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose -f ./src/docker-compose.market.yml up -d
 
-    # Step per build del servizio Account
-    - name: Build Account Service
+    - name: Wait for Market Service
       run: |
-        docker-compose -f ./src/docker-compose.account.yml build
+        echo "Waiting for Market Service to be ready..."
+        for i in {1..30}; do
+          if curl -s http://localhost:5004 > /dev/null; then
+            echo "Market Service is up!"
+            break
+          fi
+          echo "Service not ready, retrying in 5 seconds..."
+          sleep 5
+        done
 
-    # Step per run del servizio Account e eseguire i test
-    - name: Run and Test Account Service
+    - name: Run Market Tests
       run: |
-        docker-compose -f ./src/docker-compose.account.yml up -d
-        newman run ./docs/tests/Account_Test.postman_collection.json
+        newman run ./docs/tests/Market_Test.postman_collection.json --env-var baseUrl=http://market_test:5004
 
-    # Step per down del servizio Account
-    - name: Tear Down Account Service
-      run: |
-        docker-compose -f ./src/docker-compose.account.yml down -v
+    - name: Check Market Logs
+      run: docker logs market_test
 
-    # Step per build del servizio Collection
-    - name: Build Collection Service
+    - name: Tear Down Market Service
       run: |
-        docker-compose -f ./src/docker-compose.collection.yml build
-
-    # Step per run del servizio Collection e eseguire i test
-    - name: Run and Test Collection Service
-      run: |
-        docker-compose -f ./src/docker-compose.collection.yml up -d
-        newman run ./docs/tests/Collection_Test.postman_collection.json
-
-    # Step per down del servizio Collection
-    - name: Tear Down Collection Service
-      run: |
-        docker-compose -f ./src/docker-compose.collection.yml down -v
-
-    # Step per build del servizio Currency
-    - name: Build Currency Service
-      run: |
-        docker-compose -f ./src/docker-compose.currency.yml build
-
-    # Step per run del servizio Currency e eseguire i test
-    - name: Run and Test Currency Service
-      run: |
-        docker-compose -f ./src/docker-compose.currency.yml up -d
-        newman run ./docs/tests/Currency_Test.postman_collection.json
-
-    # Step per down del servizio Currency
-    - name: Tear Down Currency Service
-      run: |
-        docker-compose -f ./src/docker-compose.currency.yml down -v
-
-    # Step per build del servizio Payment
-    - name: Build Payment Service
-      run: |
-        docker-compose -f ./src/docker-compose.payment.yml build
-
-    # Step per run del servizio Payment e eseguire i test
-    - name: Run and Test Payment Service
-      run: |
-        docker-compose -f ./src/docker-compose.payment.yml up -d
-        newman run ./docs/tests/Payment.postman_collection.json
+        docker-compose -f ./src/docker-compose.market.yml down -v
 
     # Step per down del servizio Payment
     - name: Tear Down Payment Service
