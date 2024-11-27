@@ -40,6 +40,11 @@ jobs:
       run: |
         docker-compose -f ./src/docker-compose.market.yml build
 
+    # Step per controllare i log del servizio Market
+    - name: Check Market Service Logs
+      run: |
+        docker-compose -f ./src/docker-compose.market.yml logs
+
     # Step per run del servizio Market e eseguire i test
     - name: Run and Test Market Service
       run: |
