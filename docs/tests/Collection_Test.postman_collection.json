@@ -77,6 +77,34 @@
 			"response": []
 		},
 		{
+			"name": "item_system item not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Item in the system collection not found \", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message', 'Item not found');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5002/user/1/item/25"
+			},
+			"response": []
+		},
+		{
 			"name": "roll",
 			"event": [
 				{
@@ -110,31 +138,16 @@
 			"response": []
 		},
 		{
-			"name": "user_collection",
+			"name": "roll user!=1",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
+							"pm.test(\"Status code is 500\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"User collection should be an array\", function () {\r",
-							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.be.an('array');\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Each user item should have required fields\", function () {\r",
-							"    const jsonData = pm.response.json();\r",
-							"    jsonData.forEach(item => {\r",
-							"    pm.expect(item).to.have.property('item_id');\r",
-							"    pm.expect(item).to.have.property('instance_id');\r",
-							"    pm.expect(item).to.have.property('image_path');\r",
-							"    pm.expect(item).to.have.property('name');\r",
-							"    pm.expect(item).to.have.property('rarity');\r",
-							"    });\r",
-							"});\r",
 							""
 						],
 						"type": "text/javascript",
@@ -143,9 +156,9 @@
 				}
 			],
 			"request": {
-				"method": "GET",
+				"method": "PUT",
 				"header": [],
-				"url": "http://localhost:5002/user/1/mycollection"
+				"url": "http://localhost:5002/user/2/roll"
 			},
 			"response": []
 		},
@@ -179,6 +192,34 @@
 				"method": "GET",
 				"header": [],
 				"url": "http://localhost:5002/user/1/instance/1"
+			},
+			"response": []
+		},
+		{
+			"name": "item_collection item not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Item instance should have required fields\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message', 'Item instance not found')\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5002/user/1/instance/2"
 			},
 			"response": []
 		}

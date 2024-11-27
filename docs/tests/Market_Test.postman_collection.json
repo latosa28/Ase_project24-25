@@ -17,8 +17,9 @@
 							"    pm.response.to.have.status(201);\r",
 							"});\r",
 							"\r",
-							"const jsonData = pm.response.json();\r",
+							"\r",
 							"pm.test(\"Verifica che l'asta sia stata creata con successo\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property('istance_id');\r",
 							"    pm.expect(jsonData).to.have.property('start_date');\r",
 							"    pm.expect(jsonData).to.have.property('end_date');\r",
@@ -79,6 +80,121 @@
 			"response": []
 		},
 		{
+			"name": "auction already open",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verifica che la risposta sia 400 \", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verifica che l'asta sia stata creata con successo\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message','Auction already open');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Ottieni l'orario attuale\r",
+							"const currentDate = new Date();\r",
+							"\r",
+							"// Aggiungi 1 minuto all'orario attuale\r",
+							"currentDate.setMinutes(currentDate.getMinutes() + 1);\r",
+							"\r",
+							"// Format la data nel formato \"dd/MM/yyyy HH:mm\"\r",
+							"const formattedDate = currentDate.toLocaleString(\"it-IT\", {\r",
+							"    day: \"2-digit\",\r",
+							"    month: \"2-digit\",\r",
+							"    year: \"numeric\",\r",
+							"    hour: \"2-digit\",\r",
+							"    minute: \"2-digit\"\r",
+							"}).replace(\",\", \"\");\r",
+							"\r",
+							"// Imposta la variabile \"end_date\" con il nuovo valore\r",
+							"pm.collectionVariables.set(\"end_date\", formattedDate);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"end_date\": \"{{end_date}}\",\r\n  \"start_bid\": 100.0\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5004/user/1/instance/1/auction"
+			},
+			"response": []
+		},
+		{
+			"name": "auction missing requirements",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verifica che la risposta sia 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Missing requirements\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message','end_date and start_bid are mandatory');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"end_date\": \"{{end_date}}\" \r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5004/user/1/instance/1/auction"
+			},
+			"response": []
+		},
+		{
 			"name": "market_list",
 			"event": [
 				{
@@ -89,8 +205,9 @@
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"const jsonData = pm.response.json();\r",
+							"\r",
 							"pm.test(\"Verifica che la lista delle aste sia un array\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.be.an('array');\r",
 							"});\r",
 							"\r",
@@ -131,8 +248,9 @@
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"const jsonData = pm.response.json();\r",
+							"\r",
 							"pm.test(\"Verifica che l'importo offerto sia corretto\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property('istance_id');\r",
 							"    pm.expect(jsonData).to.have.property('start_date');\r",
 							"    pm.expect(jsonData).to.have.property('end_date');\r",
@@ -166,6 +284,84 @@
 			"response": []
 		},
 		{
+			"name": "bid owner bid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verifica che la risposta sia 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Seller cannot bid on his auction\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message','You cannot bid on your own auction');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"bid_amount\": 300\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5004/user/1/market/1/bid"
+			},
+			"response": []
+		},
+		{
+			"name": "bid missing requirements",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verifica che la risposta sia 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Bid is mandatory\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message','bid is mandatory');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"bid_amoun\": 300\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5004/user/2/market/1/bid"
+			},
+			"response": []
+		},
+		{
 			"name": "transaction_history",
 			"event": [
 				{
@@ -176,8 +372,9 @@
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"const jsonData = pm.response.json();\r",
+							"\r",
 							"pm.test(\"Verifica che la lista delle transazioni sia un array\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.be.an('array');\r",
 							"});\r",
 							"\r",
