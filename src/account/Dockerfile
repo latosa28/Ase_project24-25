@@ -6,7 +6,7 @@ COPY account/requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY account/app .
-COPY utils/ ./utils
+COPY utils/src .
 
 EXPOSE 5003
 

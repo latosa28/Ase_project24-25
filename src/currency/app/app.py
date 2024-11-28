@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
 import os
 
-from utils.helpers.token import token_authorized
-from utils.helpers.auth import AuthHelper
+from utils_helpers.token import token_authorized
+from utils_helpers.auth import AuthHelper
 from models.models import db, Currency
 
 app = Flask(__name__)

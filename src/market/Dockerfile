@@ -6,7 +6,7 @@ COPY market/requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY market/app .
-COPY utils/ ./utils
+COPY utils/src .
 
 EXPOSE 5004
 

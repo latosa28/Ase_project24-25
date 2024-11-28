@@ -3,7 +3,7 @@ import logging
 from flask import Blueprint, jsonify, request, current_app
 from sqlalchemy.exc import IntegrityError
 
-from utils.helpers.token import admin_token_authorized
+from utils_helpers.token import admin_token_authorized
 from models.models import Item, db, UserItem
 
 admin_api = Blueprint("admin_api", __name__)

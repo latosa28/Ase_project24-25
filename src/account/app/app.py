@@ -1,7 +1,7 @@
 import logging
 from flask import Flask
 
-from utils.helpers.auth import AuthHelper
+from utils_helpers.auth import AuthHelper
 from api.admin import admin_api
 from api.user import user_api
 from conf.config import load_config

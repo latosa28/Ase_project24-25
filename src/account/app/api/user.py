@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request
 
 from helpers.currency import CurrencyHelper
 from models.models import User, db
-from utils.helpers.token import token_required, token_authorized
+from utils_helpers.token import token_required, token_authorized
 
 user_api = Blueprint('user_api', __name__)
 

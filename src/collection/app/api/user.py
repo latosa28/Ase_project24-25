@@ -5,7 +5,7 @@ from datetime import datetime
 from flask import Blueprint, jsonify, current_app, request
 from sqlalchemy.exc import IntegrityError
 from helpers.currency import CurrencyHelper
-from utils.helpers.token import token_required, token_authorized
+from utils_helpers.token import token_required, token_authorized
 
 from models.models import db, Item, UserItem
 
