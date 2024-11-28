@@ -41,6 +41,43 @@
 			"response": []
 		},
 		{
+			"name": "add_amount amount not valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verifica stato 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Not valid amount\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", 'Amount must be a valid number');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"amount\": \"cinquanta\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5005/user/1/add_amount"
+			},
+			"response": []
+		},
+		{
 			"name": "get_amount",
 			"event": [
 				{
@@ -73,6 +110,36 @@
 			"response": []
 		},
 		{
+			"name": "get_amount user not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica che la richiesta abbia avuto successo\r",
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"// Verifica che la risposta contenga l'ID utente e l'importo\r",
+							"pm.test(\"User not found\", function () {\r",
+							"    const jsonData = pm.response.json('error', 'User not found');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5005/user/2/amount"
+			},
+			"response": []
+		},
+		{
 			"name": "sub_amount",
 			"event": [
 				{
@@ -96,6 +163,43 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n  \"amount\": 50\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5005/user/1/sub_amount"
+			},
+			"response": []
+		},
+		{
+			"name": "sub_amount insufficient balance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verifica stato 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Insufficient balance\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", 'Insufficient balance');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"amount\": 100\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"

@@ -46,6 +46,45 @@
 				"url": "http://localhost:5007/user/1/payment"
 			},
 			"response": []
+		},
+		{
+			"name": "payment missing required fields",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400 for unsuccessful payment\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains message and currency_received\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('error', 'Missing required fields');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"card_number\": \"4111111111111111\",\r\n    \"card_expiry\": \"12/26\",\r\n    \"amount\": 10\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5007/user/1/payment"
+			},
+			"response": []
 		}
 	]
 }

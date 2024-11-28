@@ -8,19 +8,21 @@ topology_template:
       type: micro.nodes.Service
       requirements:
       - interaction: account_db
+      - interaction: auth
       - interaction: currency
-      - interaction: collection
     collection:
       type: micro.nodes.Service
       requirements:
       - interaction: collection_db
       - interaction: currency
+      - interaction: auth
     market:
       type: micro.nodes.Service
       requirements:
       - interaction: market_db
       - interaction: currency
       - interaction: collection
+      - interaction: auth
     api_gateway:
       type: micro.nodes.MessageRouter
       requirements:
@@ -28,6 +30,8 @@ topology_template:
       - interaction: collection
       - interaction: market
       - interaction: currency
+      - interaction: payment
+      - interaction: auth
     collection_db:
       type: micro.nodes.Datastore
     account_db:
@@ -38,13 +42,44 @@ topology_template:
       type: micro.nodes.Service
       requirements:
       - interaction: currency_db
+      - interaction: auth
     currency_db:
       type: micro.nodes.Datastore
+    admin_gateway:
+      type: micro.nodes.MessageRouter
+      requirements:
+      - interaction: payment
+      - interaction: admin_account
+      - interaction: account
+      - interaction: collection
+      - interaction: market
+      - interaction: auth
+    payment:
+      type: micro.nodes.Service
+      requirements:
+      - interaction: currency
+      - interaction: payment_db
+      - interaction: auth
+    admin_db:
+      type: micro.nodes.Datastore
+    payment_db:
+      type: micro.nodes.Datastore
+    admin_account:
+      type: micro.nodes.Service
+      requirements:
+      - interaction: admin_db
+      - interaction: auth
+    auth:
+      type: micro.nodes.Service
+      requirements:
+      - interaction: account
+      - interaction: admin_account
   groups:
     adad:
       type: micro.groups.Edge
       members:
       - api_gateway
+      - admin_gateway
   relationship_templates:
     t:
       type: micro.relationships.InteractsWith

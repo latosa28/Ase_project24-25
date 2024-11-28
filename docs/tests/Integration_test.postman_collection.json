@@ -16,7 +16,12 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
+									"function delay(ms) {\r",
+									"    return new Promise(resolve => setTimeout(resolve, ms));\r",
+									"}\r",
 									"\r",
+									"delay(15000).then(() => {\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript",
