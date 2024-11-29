@@ -2,7 +2,7 @@ import requests
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 
-from utils.src.errors.errors import HTTPBadRequestError
+from errors.errors import HTTPBadRequestError
 
 
 account_bp = Blueprint('account', __name__)

@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 import os
 
 from errors.error_handler import register_errors
-from utils.src.errors.errors import HTTPBadRequestError, HTTPNotFoundError
+from errors.errors import HTTPBadRequestError, HTTPNotFoundError
 from utils_helpers.config import load_config
 from utils_helpers.token import token_authorized
 from utils_helpers.auth import AuthHelper

@@ -4,7 +4,7 @@ import pytz
 from flask import Blueprint, jsonify, request, current_app
 
 from helpers.currency import CurrencyHelper
-from utils.src.errors.errors import HTTPBadRequestError, HTTPInternalServerError
+from errors.errors import HTTPBadRequestError, HTTPInternalServerError
 from utils_helpers.token import token_required
 
 from models.models import db, Transactions

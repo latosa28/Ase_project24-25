@@ -1,7 +1,7 @@
 import logging
 from flask import Blueprint, jsonify
 
-from utils.src.errors.errors import HTTPBadRequestError, HTTPNotFoundError
+from errors.errors import HTTPBadRequestError, HTTPNotFoundError
 from utils_helpers.token import admin_token_authorized
 from models.models import Market, db
 

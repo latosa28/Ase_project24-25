@@ -53,7 +53,8 @@
 							"\r",
 							"pm.test(\"Not valid amount\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"error\", 'Amount must be a valid number');\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", 'bad_request');\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", 'Amount must be a valid number');\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -123,7 +124,9 @@
 							"\r",
 							"// Verifica che la risposta contenga l'ID utente e l'importo\r",
 							"pm.test(\"User not found\", function () {\r",
-							"    const jsonData = pm.response.json('error', 'User not found');\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", 'not_found');\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", 'User not found');\r",
 							"});\r",
 							""
 						],
@@ -186,7 +189,8 @@
 							"\r",
 							"pm.test(\"Insufficient balance\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"error\", 'Insufficient balance');\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", 'bad_request');\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", 'Insufficient balance');\r",
 							"});"
 						],
 						"type": "text/javascript",
