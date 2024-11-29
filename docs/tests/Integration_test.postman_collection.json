@@ -20,9 +20,8 @@
 									"    return new Promise(resolve => setTimeout(resolve, ms));\r",
 									"}\r",
 									"\r",
-									"delay(15000).then(() => {\r",
-									"});\r",
-									""
+									"delay(10000).then(() => {\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -527,12 +526,12 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "{{jwt_token4}}"
+								"token": "{{jwt_token1}}"
 							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/collection"
+						"url": "http://localhost:5001/user/1/collection"
 					},
 					"response": []
 				},
@@ -601,7 +600,7 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "{{jwt_token4}}"
+								"token": "{{jwt_token1}}"
 							}
 						},
 						"method": "GET",
@@ -1266,24 +1265,24 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"// Ottieni l'orario attuale\r",
 									"const currentDate = new Date();\r",
 									"\r",
-									"// Aggiungi 1 minuto all'orario attuale\r",
+									"// Aggiungi 1 minuto alla data corrente\r",
 									"currentDate.setMinutes(currentDate.getMinutes() + 1);\r",
+									"console.log(currentDate);\r",
+									"// Imposta il fuso orario per Roma (Europe/Rome) utilizzando toLocaleString\r",
+									"const options = {\r",
+									"  timeZone: 'Europe/Rome',\r",
+									"  year: 'numeric',\r",
+									"  month: '2-digit',\r",
+									"  day: '2-digit',\r",
+									"  hour: '2-digit',\r",
+									"  minute: '2-digit'\r",
+									"};\r",
 									"\r",
-									"// Format la data nel formato \"dd/MM/yyyy HH:mm\"\r",
-									"const formattedDate = currentDate.toLocaleString(\"it-IT\", {\r",
-									"    day: \"2-digit\",\r",
-									"    month: \"2-digit\",\r",
-									"    year: \"numeric\",\r",
-									"    hour: \"2-digit\",\r",
-									"    minute: \"2-digit\"\r",
-									"}).replace(\",\", \"\");\r",
-									"\r",
-									"// Imposta la variabile \"end_date\" con il nuovo valore\r",
-									"pm.variables.set(\"end_date\", formattedDate);\r",
-									""
+									"const formattedDate = currentDate.toLocaleString('it-IT', options).replace(',', '');\r",
+									"// Imposta la variabile \"end_date\" con la data formattata\r",
+									"pm.collectionVariables.set(\"end_date\", formattedDate);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1995,6 +1994,10 @@
 		},
 		{
 			"key": "jwt_token4",
+			"value": ""
+		},
+		{
+			"key": "end_date",
 			"value": ""
 		}
 	]

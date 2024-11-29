@@ -35,22 +35,6 @@ jobs:
         sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
 
-    # Step per build del servizio Market
-    - name: Build Market Service
-      run: |
-       docker-compose -f ./src/docker-compose.market.yml build
-
-    # Step per run del servizio Market e eseguire i test
-    - name: Run and Test Market Service
-      run: |
-        docker-compose -f ./src/docker-compose.market.yml up -d
-        newman run ./docs/tests/Market_Test.postman_collection.json
-
-    # Step per down del servizio Market
-    - name: Tear Down Market Service
-      run: |
-        docker-compose -f ./src/docker-compose.market.yml down -v
-
     # Step per build del servizio Account
     - name: Build Account Service
       run: |
@@ -98,6 +82,22 @@ jobs:
     - name: Tear Down Currency Service
       run: |
         docker-compose -f ./src/docker-compose.currency.yml down -v
+
+    # Step per build del servizio Market
+    - name: Build Market Service
+    run: |
+     docker-compose -f ./src/docker-compose.market.yml build
+
+    # Step per run del servizio Market e eseguire i test
+    - name: Run and Test Market Service
+    run: |
+      docker-compose -f ./src/docker-compose.market.yml up -d
+      newman run ./docs/tests/Market_Test.postman_collection.json
+
+    # Step per down del servizio Market
+    - name: Tear Down Market Service
+    run: |
+      docker-compose -f ./src/docker-compose.market.yml down -v
 
     # Step per build del servizio Payment
     - name: Build Payment Service
