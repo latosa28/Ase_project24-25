@@ -20,7 +20,7 @@
 									"    return new Promise(resolve => setTimeout(resolve, ms));\r",
 									"}\r",
 									"\r",
-									"delay(10000).then(() => {\r",
+									"delay(15000).then(() => {\r",
 									"});"
 								],
 								"type": "text/javascript",
