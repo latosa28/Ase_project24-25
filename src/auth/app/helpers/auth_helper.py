@@ -82,4 +82,4 @@ class AuthHelper:
             raise HTTPBadRequestError("User not found", "invalid_request",)
 
         data = response.json()
-        return {"sub": user_id, **data}, 200
+        return {"sub": str(user_id), **data}, 200

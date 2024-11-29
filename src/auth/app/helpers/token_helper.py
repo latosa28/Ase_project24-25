@@ -1,7 +1,7 @@
 from functools import wraps
 
 import jwt
-from flask import jsonify, request
+from flask import request
 
 from errors.errors import HTTPBadRequestError, HTTPUnauthorizedError, HTTPForbiddenError
 from helpers.auth_helper import public_key, MY_APP
