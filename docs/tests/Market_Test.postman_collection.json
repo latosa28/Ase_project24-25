@@ -54,7 +54,6 @@
 							"};\r",
 							"\r",
 							"const formattedDate = currentDate.toLocaleString('it-IT', options).replace(',', '');\r",
-							"console.log(formattedDate);\r",
 							"// Imposta la variabile \"end_date\" con la data formattata\r",
 							"pm.collectionVariables.set(\"end_date\", formattedDate);"
 						],
@@ -75,7 +74,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/1/instance/6/auction"
+				"url": "http://localhost:5004/user/1/instance/1/auction"
 			},
 			"response": []
 		},
@@ -121,7 +120,6 @@
 							"};\r",
 							"\r",
 							"const formattedDate = currentDate.toLocaleString('it-IT', options).replace(',', '');\r",
-							"console.log(formattedDate);\r",
 							"// Imposta la variabile \"end_date\" con la data formattata\r",
 							"pm.collectionVariables.set(\"end_date\", formattedDate);"
 						],
@@ -188,7 +186,6 @@
 							"};\r",
 							"\r",
 							"const formattedDate = currentDate.toLocaleString('it-IT', options).replace(',', '');\r",
-							"console.log(formattedDate);\r",
 							"// Imposta la variabile \"end_date\" con la data formattata\r",
 							"pm.collectionVariables.set(\"end_date\", formattedDate);"
 						],
