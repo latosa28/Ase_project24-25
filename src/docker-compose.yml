@@ -3,7 +3,9 @@ version: '3.8'
 services:
   # Microservice for auth
   auth:
-    build: ./auth
+    build:
+      context: .
+      dockerfile: ./auth/Dockerfile
     container_name: auth
     expose:
       - "5011"  # Exposed only within the Docker network
@@ -116,7 +118,9 @@ services:
 
   # Public API Gateway (accessible externally)
   api_gateway:
-    build: ./api_gateway
+    build:
+      context: .
+      dockerfile: ./api_gateway/Dockerfile
     container_name: api_gateway
     ports:
       - "5001:5000"  # Exposed port for public client
@@ -134,7 +138,9 @@ services:
 
   # Admin service (accessible only from the private network and through api_gateway_admin)
   admin_account:
-    build: ./admin_account
+    build:
+      context: .
+      dockerfile: ./admin_account/Dockerfile
     container_name: admin_account
     expose:
       - "5006"  # Exposed only within the Docker network
@@ -153,7 +159,9 @@ services:
 
   # Admin API Gateway (accessible only from the private network)
   admin_api_gateway:
-    build: ./admin_api_gateway
+    build:
+      context: .
+      dockerfile: ./admin_api_gateway/Dockerfile
     container_name: admin_api_gateway
     ports:
       - "5010:5010"  

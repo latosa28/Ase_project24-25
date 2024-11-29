@@ -2,10 +2,11 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY admin_api_gateway/requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY app/ .
+COPY admin_api_gateway/app/ .
+COPY utils/src .
 
 EXPOSE 5010
 

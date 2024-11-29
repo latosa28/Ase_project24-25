@@ -1,13 +1,14 @@
-import base64
 import logging
 from flask import Flask
 
 from api.others import others_api
 from api.admin import admin_api
 from api.user import user_api
+from errors.error_handler import register_errors
 
 logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
+register_errors(app)
 
 
 app.register_blueprint(user_api)

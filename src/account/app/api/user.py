@@ -2,6 +2,7 @@ import logging
 
 from flask import Blueprint, jsonify, request
 
+from errors.errors import HTTPBadRequestError, HTTPError, HTTPInternalServerError, HTTPNotFoundError
 from helpers.currency import CurrencyHelper
 from models.models import User, db
 from utils_helpers.token import token_required, token_authorized
@@ -17,11 +18,11 @@ def create_user():
     password = request.json.get('password')
 
     if not username or not email or not password:
-        return jsonify({"message": "Missing data"}), 400
+        raise HTTPBadRequestError("Missing Data")
 
     user = User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first()
     if user:
-        return jsonify({"message": "User with this username or email already exists"}), 400
+        raise HTTPBadRequestError("Invalid Credentials")
 
     new_user = User(username=username, email=email, password=password)
 
@@ -33,11 +34,12 @@ def create_user():
             return jsonify({"user_id": new_user.user_id}), 201
         else:
             db.session.rollback()
-            return jsonify({"message": response.json().get('error', 'An error occurred')}), response.status_code
+            data = response.json()
+            raise HTTPError(response.status_code, data.get('error'), data.get('error_description'))
     except Exception as e:
         db.session.rollback()
         logging.error(f"Error while creating user: {str(e)}")
-        return jsonify({"message": "An error occurred while processing your request."}), 400
+        raise HTTPInternalServerError()
 
 
 # Route to delete an existing user by ID
@@ -47,17 +49,14 @@ def delete_user(user_id):
     user = User.query.get(user_id)
     if user:
         try:
-            # Delete the user and commit the changes
             db.session.delete(user)
             db.session.commit()
-            return jsonify({"message": "User deleted successfully"}), 200
+            return jsonify({}), 200
         except Exception as e:
-            # In case of an error, rollback the transaction
             db.session.rollback()
-            return jsonify({"message": str(e)}), 500
+            raise HTTPInternalServerError()
     else:
-        # If the user is not found, return a 404 error
-        return jsonify({"message": "User not found"}), 404
+        raise HTTPNotFoundError("User not found")
 
 
 # Route to get user details by ID
@@ -65,10 +64,9 @@ def delete_user(user_id):
 def get_user_by_id(user_id):
     user = User.query.get(user_id)
     if user:
-        return jsonify({"username": user.username, "email": user.email}), 200
+        return jsonify({"name": user.username, "email": user.email}), 200
     else:
-        # If the user is not found, return a 404 error
-        return jsonify({"message": "User not found"}), 404
+        raise HTTPNotFoundError("User not found")
 
 
 # Route to get user details by username
@@ -78,6 +76,6 @@ def get_user_by_username(username):
     if user:
         return jsonify(user.serialize()), 200
     else:
-        return jsonify({"message": "User not found"}), 404
+        raise HTTPNotFoundError("User not found")
 
 

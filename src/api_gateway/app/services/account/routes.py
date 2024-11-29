@@ -26,29 +26,13 @@ def create_account():
         'email': email,
         'password': password
     })
-
-    if response.status_code == 201:
-        response_data = response.json()
-        user_id = response_data.get('user_id')
-
-        if user_id:
-            return jsonify({
-                'message': 'Account created successfully!'
-            }), 201
-        else:
-            return jsonify({'message': 'Failed to retrieve user_id!'}), 400
-    else:
-        return jsonify({'message': 'Failed to create account!'}), 400
+    return response.json(), response.status_code
 
 
 @account_bp.route('/user/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     response = requests.delete(URL + f'/user/{user_id}',headers=request.headers)
-
-    if response.status_code == 200:
-        return jsonify({'message': 'Account deleted successfully'}), 200
-    else:
-        return jsonify({'message': 'Failed to delete account!'}), 400
+    return response.json(), response.status_code
 
 
 @account_bp.route('/user', methods=['GET'])

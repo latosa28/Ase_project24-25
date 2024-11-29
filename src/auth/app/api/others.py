@@ -2,7 +2,7 @@ import base64
 
 from flask import jsonify, Blueprint
 
-from helpers.token_helper import public_key
+from helpers.auth_helper import public_key
 
 
 others_api = Blueprint("others_api", __name__)
