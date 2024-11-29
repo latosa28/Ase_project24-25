@@ -1,32 +1,33 @@
 from locust import HttpUser, task, between
 import random
 import json
-import math
-import logging
+import time
 
 class GachaTestUser(HttpUser):
-    wait_time = between(0.1, 0.2)
-    user_counter = 0  # Contatore statico per ID univoci
+    wait_time = between(0.1, 0.2)  # Tempo di attesa tra le richieste
+    user_counter = 0  # Contatore per assegnare un ID univoco a ogni utente
 
     def on_start(self):
-        """Inizializza l'utente e la sua collezione."""
+        """Inizializza l'utente, esegue il login e predispone i dati necessari."""
         self.__class__.user_counter += 1
         self.user_id = self.__class__.user_counter
         self.username = f"user_{self.user_id}"
         self.email = f"user_{self.user_id}@example.com"
         self.password = "password123"
 
-        # Crea e autentica un nuovo utente
+        # Attendi brevemente per evitare di sovraccaricare il server
+        time.sleep(self.user_id * 0.5)
+
         if not self.create_user():
-            return  # Se la creazione dell'utente fallisce, termina
+            return  # Interrompe se la creazione fallisce
 
         if not self.login():
-            return  # Se il login fallisce, termina
+            return  # Interrompe se il login fallisce
 
-        # Aggiungi soldi al saldo dell'utente
-        if not self.add_funds(10000):  # Ad esempio, aggiungiamo 100 unità di denaro
-            return  # Se l'aggiunta di denaro fallisce, termina
+        if not self.add_funds(10000): 
+            return  # Interrompe se l'aggiunta di fondi fallisce
 
+        # Inizializza le statistiche di raccolta
         self.rarity_counts = {
             "superultrarare": 0,
             "ultrarare": 0,
@@ -78,7 +79,7 @@ class GachaTestUser(HttpUser):
         })
 
         if response.status_code == 200:
-            print(f"Aggiunti {amount} soldi all'utente {self.username}.")
+            print(f"Aggiunti {amount} currency all'utente {self.username}.")
             return True
         else:
             print(f"Errore nell'aggiunta di denaro per l'utente {self.username}: {response.text}")
@@ -100,15 +101,15 @@ class GachaTestUser(HttpUser):
             print(f"Roll fallito per utente {self.user_id}. Status: {response.status_code}")
 
     def on_stop(self):
-        print("\n--- Riassunto delle statistiche finali ---")
+        """Riassume i risultati ottenuti alla fine del test."""
+        print(f"--- Riassunto statistiche finali Utente {self.user_id} ---")
         print(f"Totale roll effettuati: {self.total_rolls}")
 
-        # Stampa la distribuzione delle rarità ottenute
         for rarity, count in self.rarity_counts.items():
             percentage = (count / self.total_rolls) * 100 if self.total_rolls > 0 else 0
             print(f"{rarity}: {count} ({percentage:.2f}%)")
 
-
+        # Distribuzione attesa
         expected_distribution = {
             "superultrarare": 0.05,
             "ultrarare": 0.5,
@@ -117,7 +118,7 @@ class GachaTestUser(HttpUser):
             "common": 54.45
         }
 
-        # Calcola e stampa i risultati del confronto
+        # Confronto tra distribuzione attesa e reale
         for rarity, expected_percentage in expected_distribution.items():
             actual_percentage = (self.rarity_counts.get(rarity, 0) / self.total_rolls) * 100 if self.total_rolls > 0 else 0
             print(f"\nConfronto per {rarity}:")

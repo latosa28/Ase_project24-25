@@ -1,32 +1,31 @@
 from locust import HttpUser, task, between
 import random
 import json
-import math
-import logging
+import time
 
 class GachaTestUser(HttpUser):
-    wait_time = between(0.1, 0.2)
+    wait_time = between(0.5, 0.6)
     user_counter = 0  # Contatore statico per ID univoci
 
     def on_start(self):
-        """Inizializza l'utente e la sua collezione."""
+        """Inizializza l'utente e configura i dati necessari."""
         self.__class__.user_counter += 1
         self.user_id = self.__class__.user_counter
         self.username = f"user_{self.user_id}"
         self.email = f"user_{self.user_id}@example.com"
         self.password = "password123"
 
+        time.sleep(self.user_id * 0.5)
+
         # Crea e autentica un nuovo utente
         if not self.create_user():
-            return  # Se la creazione dell'utente fallisce, termina
-
+            return
         if not self.login():
-            return  # Se il login fallisce, termina
+            return
+        if not self.add_funds(10000):
+            return
 
-        # Aggiungi soldi al saldo dell'utente
-        if not self.add_funds(1000):  # Ad esempio, aggiungiamo 100 unità di denaro
-            return  # Se l'aggiunta di denaro fallisce, termina
-
+        # Inizializza statistiche locali
         self.rarity_counts = {
             "superultrarare": 0,
             "ultrarare": 0,
@@ -37,13 +36,12 @@ class GachaTestUser(HttpUser):
         self.total_rolls = 0
 
     def create_user(self):
-        """Crea un nuovo utente con dati univoci."""
+        """Crea un nuovo utente."""
         response = self.client.post("/user", json={
             "username": self.username,
             "email": self.email,
             "password": self.password
         })
-
         if response.status_code == 201:
             print(f"Utente {self.username} creato con successo.")
             return True
@@ -52,16 +50,13 @@ class GachaTestUser(HttpUser):
             return False
 
     def login(self):
-        """Effettua il login dell'utente per ottenere un token."""
+        """Effettua il login per ottenere il token di autorizzazione."""
         response = self.client.post("/user/auth", json={
             "username": self.username,
             "password": self.password
         })
-
         if response.status_code == 200:
-            self.headers = {
-                "Authorization": f"Bearer {response.json()['token']}"
-            }
+            self.headers = {"Authorization": f"Bearer {response.json()['token']}"}
             print(f"Utente {self.username} loggato con successo.")
             return True
         else:
@@ -76,7 +71,6 @@ class GachaTestUser(HttpUser):
             "card_cvc": "123",
             "amount": amount
         })
-
         if response.status_code == 200:
             print(f"Aggiunti {amount} soldi all'utente {self.username}.")
             return True
@@ -108,26 +102,30 @@ class GachaTestUser(HttpUser):
             print(f"Roll fallito per utente {self.user_id}. Status: {response.status_code}")
 
     @task(1)
-    def view_collection(self):
-        """Visualizza la collezione dell'utente."""
-        response = self.client.get(f"/user/{self.user_id}/mycollection", headers=self.headers)
-        
-        # Verifica se la risposta contiene una collezione non vuota
-        collection = response.json()  # Supponiamo che la risposta sia in formato JSON
-        if not collection:
-            print(f"La collezione dell'utente {self.user_id} è vuota o malformata.")
-        else:
-            print(f"Collezione dell'utente {self.user_id}: {len(collection)} oggetti trovati.")
+    def view_my_collection(self):
+        """Visualizza la collezione personale dell'utente."""
+        self.client.get(f"/user/{self.user_id}/mycollection", headers=self.headers)
 
     @task(1)
-    def get_item_instance(self):
-        """Visualizza i dettagli di un'istanza di oggetto."""
-        instance_id = self.get_instance_id()
-        if instance_id:
-            response = self.client.get(f"/user/{self.user_id}/instance/{instance_id}", headers=self.headers)
-            if response.status_code != 200:
-                print(f"Errore nel recupero dell'istanza {instance_id}: {response.status_code}")
-        else:
-            print("Nessuna istanza disponibile per l'utente.")
+    def view_system_collection(self):
+        """Recupera la collezione globale del sistema."""
+        self.client.get(f"/user/{self.user_id}/collection", headers=self.headers)
 
-       
+    @task(1)
+    def get_item_details(self):
+        """Recupera i dettagli di un Pokémon specifico dalla collezione globale."""
+        # Recupera la collezione globale
+        response = self.client.get(f"/user/{self.user_id}/collection", headers=self.headers)
+        if response.status_code == 200:
+            system_collection = response.json()
+            if system_collection:
+                # Scegli un Pokémon casuale e ottieni i suoi dettagli
+                item_id = random.choice(system_collection)["item_id"]
+                self.client.get(f"/user/{self.user_id}/item/{item_id}", headers=self.headers)
+
+    def on_stop(self):
+        """Riassume i risultati al termine del test."""
+        print(f"\n--- Risultati Utente {self.user_id} ---")
+        print(f"Roll Totali: {self.total_rolls}")
+        for rarity, count in self.rarity_counts.items():
+            print(f"{rarity.capitalize()}: {count}")
