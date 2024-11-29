@@ -1,6 +1,7 @@
 import logging
 from flask import Blueprint, jsonify
 
+from utils.src.errors.errors import HTTPBadRequestError, HTTPNotFoundError
 from utils_helpers.token import admin_token_authorized
 from models.models import Market, db
 
@@ -35,7 +36,7 @@ def get_auction(admin_id, market_id):
     auction = Market.query.filter(Market.market_id == market_id).first()
         
     if not auction:
-        return jsonify({"message": "Auction not found"}), 404
+        raise HTTPNotFoundError("Auction not found")
 
     return jsonify(auction.serialize()), 200
 
@@ -47,10 +48,10 @@ def cancel_auction(admin_id, market_id):
         auction = Market.query.filter(Market.market_id == market_id).first()
 
         if not auction:
-            return jsonify({"message": "Auction not found"}), 404
+            raise HTTPNotFoundError("Auction not found")
 
         if auction.status == 'closed':
-            return jsonify({"message": "Auction is already closed"}), 400
+            raise HTTPBadRequestError("Auction is already closed")
 
         auction.status = 'closed'
         db.session.commit()
@@ -58,10 +59,8 @@ def cancel_auction(admin_id, market_id):
     except Exception as e:
         logging.error(f"Error while closing auction: {str(e)}")
         db.session.rollback()
-        return (
-            jsonify({"message": "An error occurred while processing your request."}),
-            400,
-        )
+        raise HTTPBadRequestError("An error occurred while processing your request.")
+        
 
 
 

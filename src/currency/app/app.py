@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 import os
 
 from errors.error_handler import register_errors
+from utils.src.errors.errors import HTTPBadRequestError, HTTPNotFoundError
 from utils_helpers.config import load_config
 from utils_helpers.token import token_authorized
 from utils_helpers.auth import AuthHelper
@@ -34,7 +35,8 @@ def get_amount(user_id):
     amount = Currency.query.filter_by(user_id=user_id).first()
     if amount:
         return jsonify({"user_id": user_id, "amount": amount.amount}), 200
-    return jsonify({"error": "User not found"}), 404
+    raise HTTPNotFoundError("User not found")
+    
 
 
 # Endpoint per aggiungere una quantità al saldo di un utente
@@ -44,7 +46,7 @@ def add_amount(user_id):
     try:
         amount_to_add = float(data.get("amount"))
     except (TypeError, ValueError):
-        return jsonify({"error": "Amount must be a valid number"}), 400
+        raise HTTPBadRequestError("Amount must be a valid number")
 
     amount = Currency.query.filter_by(user_id=user_id).first()
     
@@ -64,20 +66,20 @@ def sub_amount(user_id):
     try:
         amount_to_sub = float(data.get("amount"))
     except (TypeError, ValueError):
-        return jsonify({"error": "Amount must be a valid number"}), 400
+        raise HTTPBadRequestError("Amount must be a valid number")
 
     amount = Currency.query.filter_by(user_id=user_id).first()
 
     if amount is None:
         create_currency_row(user_id, 0)
-        return jsonify({"error": "User balance was zero - cannot subtract requested amount"}), 400
+        raise HTTPBadRequestError("User balance was zero - cannot subtract requested amount")
 
     if amount.amount >= amount_to_sub:
         amount.amount -= amount_to_sub
         db.session.commit()
         return jsonify({}), 200
     else:
-        return jsonify({"error": "Insufficient balance"}), 400
+        raise HTTPBadRequestError("Insufficient balance")
 
 
 if __name__ == '__main__':

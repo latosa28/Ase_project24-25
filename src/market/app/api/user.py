@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request, current_app
 from datetime import datetime
 import logging
 
+from utils.src.errors.errors import HTTPBadRequestError, HTTPForbiddenError, HTTPNotFoundError
 from utils_helpers.token import token_authorized
 from helpers.currency import CurrencyHelper
 from helpers.collection import CollectionHelper
@@ -38,22 +39,22 @@ def place_bid(user_id, market_id):
     bid_amount = request.json.get("bid_amount")
 
     if not bid_amount:
-        return jsonify({"message": "bid is mandatory"}), 400
+        raise HTTPBadRequestError("bid is mandatory")
 
     auction = Market.query.filter(Market.market_id == market_id).first()
     if not auction:
-        return jsonify({"message": "Auction not found"}), 404
+        raise HTTPNotFoundError("Auction not found")
 
     if date_now > auction.end_date:
-        return jsonify({"message": "Auction expired"}), 400
+        raise HTTPBadRequestError("Auction expired")
 
     # Verifica che l'utente non stia facendo un'offerta sulla propria asta
     if auction.seller_user_id == user_id:
-        return jsonify({"message": "You cannot bid on your own auction"}), 403
+        raise HTTPForbiddenError("You cannot bid on your own auction")
 
     # Verifica che l'offerta sia maggiore di quella attuale
     if bid_amount <= auction.bid:
-        return jsonify({"message": "Bid must be higher than the current bid"}), 400
+        raise HTTPBadRequestError("Bid must be higher than the current bid")
     try:
         CurrencyHelper().sub_amount(user_id, bid_amount)
         old_buyer_user_id = auction.buyer_user_id
@@ -84,14 +85,14 @@ def set_auction(user_id, instance_id):
     start_bid = request.json.get("start_bid")
 
     if not end_date or not start_bid:
-        return jsonify({"message": "end_date and start_bid are mandatory"}), 400
+        raise HTTPBadRequestError("end_date and start_bid are mandatory")
 
     if start_bid <= 0:
-        return jsonify({"message": "start_bid must be a positive number"}), 400
+        raise HTTPBadRequestError("start_bid must be a positive number")
 
     auction = Market.query.filter((Market.status == 'open') & (Market.istance_id == instance_id)).first()
     if auction:
-        return jsonify({"message": "Auction already open"}), 400
+        raise HTTPBadRequestError("Auction already open")
 
     try:
         end_date = datetime.strptime(end_date, current_app.config["date_format"])
@@ -99,22 +100,14 @@ def set_auction(user_id, instance_id):
         end_date = local_tz.localize(end_date)
         end_date_utc = end_date.astimezone(pytz.utc)
     except ValueError as e:
-        return (
-            jsonify(
-                {
-                    "message": "end_date format is wrong, correct format is dd/mm/YYYY HH:MM "
-                }
-            ),
-            400,
-        )
+        raise HTTPBadRequestError("end_date format is wrong, correct format is dd/mm/YYYY HH:MM ")
 
     if not end_date > date_now:
-        return jsonify({"message": "end_date must be in the future"}), 400
+        raise HTTPBadRequestError("end_date must be in the future")
 
     response = CollectionHelper().get_instance(user_id, instance_id)   
     if response.status_code != 200:
-        return jsonify({"message": "Unauthorized or invalid instance"}), 403
-
+        raise HTTPForbiddenError("Unauthorized or invalid instance")
     new_auction = Market(
         istance_id=instance_id,
         seller_user_id=user_id,

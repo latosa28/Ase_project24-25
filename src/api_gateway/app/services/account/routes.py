@@ -2,6 +2,8 @@ import requests
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 
+from utils.src.errors.errors import HTTPBadRequestError
+
 
 account_bp = Blueprint('account', __name__)
 
@@ -14,7 +16,7 @@ def create_account():
     data = request.get_json()
 
     if not data or not data.get('username') or not data.get('email') or not data.get('password'):
-        return jsonify({'message': 'Missing required fields!'}), 400
+        raise HTTPBadRequestError("Missing required fields!")
 
     username = data['username']
     email = data['email']

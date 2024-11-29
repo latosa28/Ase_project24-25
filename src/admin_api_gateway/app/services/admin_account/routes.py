@@ -2,6 +2,8 @@ import requests
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 
+from utils.src.errors.errors import HTTPBadRequestError
+
 
 admin_account_bp = Blueprint('admin_account', __name__)
 
@@ -14,7 +16,7 @@ def create_account():
     data = request.get_json()
 
     if not data or not data.get('username') or not data.get('email') or not data.get('password'):
-        return jsonify({'message': 'Missing required fields!'}), 400
+        raise HTTPBadRequestError("Missing required fields!")
 
     username = data['username']
     email = data['email']
@@ -36,9 +38,9 @@ def create_account():
                 'message': 'Account created successfully!'
             }), 201
         else:
-            return jsonify({'message': 'Failed to retrieve user_id!'}), 400
+            raise HTTPBadRequestError("Failed to retrieve user_id!")
     else:
-        return jsonify({'message': 'Failed to create account!'}), 400
+        raise HTTPBadRequestError("Failed to create account!")
 
 
 @admin_account_bp.route('/admin/<int:admin_id>', methods=['DELETE'])
@@ -48,7 +50,7 @@ def delete_admin(admin_id):
     if response.status_code == 200:
         return jsonify({'message': 'Account deleted successfully'}), 200
     else:
-        return jsonify({'message': 'Failed to delete account!'}), 400
+        raise HTTPBadRequestError("Failed to delete account!")
 
 
 @admin_account_bp.route('/admin/<int:admin_id>', methods=['GET'])
