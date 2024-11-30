@@ -1,5 +1,4 @@
 import os
-import string
 import subprocess
 
 # Lista di microservizi e gateway

@@ -15,7 +15,13 @@ services:
       - DB_PORT=3306
       - DB_NAME=${DB_PAYMENT_NAME}
       - DB_USER=${DB_PAYMENT_USER}
-      - DB_PASSWORD=${DB_PAYMENT_PASSWORD}
+    secrets:
+      - db_payment_password
+      - payment_cert
+      - payment_key
+      - mysql_ca_cert
+      - payment_db_cert
+      - payment_db_key
     depends_on:
       payment_db:
         condition: service_healthy  # Garantisce che il DB sia attivo prima di avviare il servizio
@@ -25,10 +31,17 @@ services:
     image: mysql:8
     container_name: payment_db
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
       - MYSQL_DATABASE=${DB_PAYMENT_NAME}
       - MYSQL_USER=${DB_PAYMENT_USER}
-      - MYSQL_PASSWORD=${DB_PAYMENT_PASSWORD}
+      - MYSQL_PASSWORD_FILE=/run/secrets/db_payment_password
+    command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/payment_db_cert --ssl-key=/run/secrets/payment_db_key
+    secrets:
+      - db_payment_password
+      - mysql_ca_cert
+      - payment_db_cert
+      - payment_db_key
+      - db_root_password
     ports:
       - "3306:3306"  # Esponi la porta del DB per connetterti dal tuo host
     healthcheck:
@@ -42,3 +55,23 @@ services:
 
 volumes:
   test_payment_db_data:
+
+secrets:
+  # DB Password secrets
+  db_payment_password:
+    file: ./secrets/payment/db_password.txt
+  db_root_password:
+    file: ./secrets/mysql/db_password.txt
+
+  # Microservices certificates
+  payment_cert:
+    file: ./secrets/payment/cert.pem
+  payment_key:
+    file: ./secrets/payment/key.pem
+
+  mysql_ca_cert:
+    file: ./secrets/mysql/mysql_ca_cert.pem
+  payment_db_cert:
+    file: ./secrets/payment/db_cert.pem
+  payment_db_key:
+    file: ./secrets/payment/db_key.pem

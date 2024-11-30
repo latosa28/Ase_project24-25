@@ -1,4 +1,4 @@
-import requests
+from utils_helpers.http_client import HttpClient
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 
@@ -7,7 +7,7 @@ from errors.errors import HTTPBadRequestError
 
 account_bp = Blueprint('account', __name__)
 
-URL = "http://account:5003"
+URL = "https://account:5003"
 
 
 # Route to create a new account
@@ -23,7 +23,7 @@ def create_account():
     password = generate_password_hash(data['password'], method='pbkdf2:sha256')
 
     # Send request to account service to create the user
-    response = requests.post(URL + '/user', json={
+    response = HttpClient.post(URL + '/user', json={
         'username': username,
         'email': email,
         'password': password
@@ -33,13 +33,13 @@ def create_account():
 
 @account_bp.route('/user/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    response = requests.delete(URL + f'/user/{user_id}',headers=request.headers)
+    response = HttpClient.delete(URL + f'/user/{user_id}',headers=request.headers)
     return response.json(), response.status_code
 
 
 @account_bp.route('/user', methods=['GET'])
 def get_user_by_id(current_user_id):
-    response = requests.get(URL + f'/user/{current_user_id}')
+    response = HttpClient.get(URL + f'/user/{current_user_id}')
     return response.json(), response.status_code
 
 

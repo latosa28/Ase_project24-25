@@ -50,7 +50,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5003/user"
+				"url": "https://localhost:5003/user"
 			},
 			"response": []
 		},
@@ -99,7 +99,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5003/user"
+				"url": "https://localhost:5003/user"
 			},
 			"response": []
 		},
@@ -148,7 +148,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5003/user"
+				"url": "https://localhost:5003/user"
 			},
 			"response": []
 		},
@@ -178,7 +178,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5003/user/1"
+				"url": "https://localhost:5003/user/1"
 			},
 			"response": []
 		},
@@ -208,7 +208,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5003/user/2"
+				"url": "https://localhost:5003/user/2"
 			},
 			"response": []
 		},
@@ -239,7 +239,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5003/user/username/testuser"
+				"url": "https://localhost:5003/user/username/testuser"
 			},
 			"response": []
 		},
@@ -269,7 +269,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5003/user/username/testuser5"
+				"url": "https://localhost:5003/user/username/testuser5"
 			},
 			"response": []
 		},
@@ -299,7 +299,7 @@
 						"type": "text"
 					}
 				],
-				"url": "http://localhost:5003/user/1"
+				"url": "https://localhost:5003/user/1"
 			},
 			"response": []
 		},
@@ -335,7 +335,7 @@
 						"type": "text"
 					}
 				],
-				"url": "http://localhost:5003/user/5"
+				"url": "https://localhost:5003/user/5"
 			},
 			"response": []
 		}

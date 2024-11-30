@@ -1,5 +1,5 @@
 {
-    "currency": "http://currency:5005",
+    "currency": "https://currency:5005",
     "db_conf": {
         "db_password_secret": "db_account_password",
         "ca_cert_secret": "mysql_ca_cert",

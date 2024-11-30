@@ -10,9 +10,11 @@ from utils_helpers.config import load_config
 logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
 
+
 def setup():
-    load_config(app)
+    load_config(app, db_conf=False)
     register_errors(app)
+
 
 setup()
 app.register_blueprint(user_api)

@@ -41,7 +41,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5002/user/1/collection"
+				"url": "https://localhost:5002/user/1/collection"
 			},
 			"response": []
 		},
@@ -72,7 +72,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5002/user/1/item/1"
+				"url": "https://localhost:5002/user/1/item/1"
 			},
 			"response": []
 		},
@@ -101,7 +101,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5002/user/1/item/25"
+				"url": "https://localhost:5002/user/1/item/25"
 			},
 			"response": []
 		},
@@ -134,7 +134,7 @@
 			"request": {
 				"method": "PUT",
 				"header": [],
-				"url": "http://localhost:5002/user/1/roll"
+				"url": "https://localhost:5002/user/1/roll"
 			},
 			"response": []
 		},
@@ -163,7 +163,7 @@
 			"request": {
 				"method": "PUT",
 				"header": [],
-				"url": "http://localhost:5002/user/2/roll"
+				"url": "https://localhost:5002/user/2/roll"
 			},
 			"response": []
 		},
@@ -196,7 +196,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5002/user/1/instance/1"
+				"url": "https://localhost:5002/user/1/instance/1"
 			},
 			"response": []
 		},
@@ -225,7 +225,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5002/user/1/instance/2"
+				"url": "https://localhost:5002/user/1/instance/2"
 			},
 			"response": []
 		}

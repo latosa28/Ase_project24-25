@@ -15,7 +15,13 @@ services:
       - DB_PORT=3306
       - DB_NAME=${DB_CURRENCY_NAME}
       - DB_USER=${DB_CURRENCY_USER}
-      - DB_PASSWORD=${DB_CURRENCY_PASSWORD}
+    secrets:
+      - db_currency_password
+      - currency_cert
+      - currency_key
+      - mysql_ca_cert
+      - currency_db_cert
+      - currency_db_key
     depends_on:
       currency_db:
         condition: service_healthy  # Ensure the database starts before the service
@@ -25,10 +31,17 @@ services:
     image: mysql:8
     container_name: currency_db
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
       - MYSQL_DATABASE=${DB_CURRENCY_NAME}
       - MYSQL_USER=${DB_CURRENCY_USER}
-      - MYSQL_PASSWORD=${DB_CURRENCY_PASSWORD}
+      - MYSQL_PASSWORD_FILE=/run/secrets/db_currency_password
+    command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/currency_db_cert --ssl-key=/run/secrets/currency_db_key
+    secrets:
+      - db_currency_password
+      - mysql_ca_cert
+      - currency_db_cert
+      - currency_db_key
+      - db_root_password
     ports:
       - "3306:3306"
     healthcheck:
@@ -42,3 +55,23 @@ services:
 
 volumes:
   test_currency_db_data:
+    
+secrets:
+  # DB Password secrets
+  db_currency_password:
+    file: ./secrets/currency/db_password.txt
+  db_root_password:
+    file: ./secrets/mysql/db_password.txt
+
+  # Microservices certificates
+  currency_cert:
+    file: ./secrets/currency/cert.pem
+  currency_key:
+    file: ./secrets/currency/key.pem
+
+  mysql_ca_cert:
+    file: ./secrets/mysql/mysql_ca_cert.pem
+  currency_db_cert:
+    file: ./secrets/currency/db_cert.pem
+  currency_db_key:
+    file: ./secrets/currency/db_key.pem

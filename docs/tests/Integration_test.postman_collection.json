@@ -48,7 +48,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user"
+						"url": "https://localhost:5001/user"
 					},
 					"response": []
 				},
@@ -91,7 +91,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user"
+						"url": "https://localhost:5001/user"
 					},
 					"response": []
 				},
@@ -134,7 +134,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user"
+						"url": "https://localhost:5001/user"
 					},
 					"response": []
 				},
@@ -179,7 +179,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/auth"
+						"url": "https://localhost:5001/user/auth"
 					},
 					"response": []
 				},
@@ -208,7 +208,7 @@
 						},
 						"method": "DELETE",
 						"header": [],
-						"url": "http://localhost:5001/user/1/auth"
+						"url": "https://localhost:5001/user/1/auth"
 					},
 					"response": []
 				},
@@ -253,7 +253,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/auth"
+						"url": "https://localhost:5001/user/auth"
 					},
 					"response": []
 				},
@@ -283,7 +283,7 @@
 						},
 						"method": "DELETE",
 						"header": [],
-						"url": "http://localhost:5001/user/1"
+						"url": "https://localhost:5001/user/1"
 					},
 					"response": []
 				},
@@ -326,7 +326,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user"
+						"url": "https://localhost:5001/user"
 					},
 					"response": []
 				}
@@ -376,7 +376,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/auth"
+						"url": "https://localhost:5001/user/auth"
 					},
 					"response": []
 				},
@@ -421,7 +421,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/auth"
+						"url": "https://localhost:5001/user/auth"
 					},
 					"response": []
 				},
@@ -466,7 +466,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/auth"
+						"url": "https://localhost:5001/user/auth"
 					},
 					"response": []
 				},
@@ -481,7 +481,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/userinfo"
+						"url": "https://localhost:5001/userinfo"
 					},
 					"response": []
 				}
@@ -531,7 +531,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/collection"
+						"url": "https://localhost:5001/user/4/collection"
 					},
 					"response": []
 				},
@@ -568,7 +568,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/item/3"
+						"url": "https://localhost:5001/user/4/item/3"
 					},
 					"response": []
 				},
@@ -605,7 +605,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/mycollection"
+						"url": "https://localhost:5001/user/4/mycollection"
 					},
 					"response": []
 				},
@@ -647,7 +647,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/mycollection"
+						"url": "https://localhost:5001/user/2/mycollection"
 					},
 					"response": []
 				},
@@ -684,7 +684,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/3/mycollection"
+						"url": "https://localhost:5001/user/3/mycollection"
 					},
 					"response": []
 				},
@@ -723,7 +723,7 @@
 						},
 						"method": "PUT",
 						"header": [],
-						"url": "http://localhost:5001/user/4/roll"
+						"url": "https://localhost:5001/user/4/roll"
 					},
 					"response": []
 				},
@@ -762,7 +762,7 @@
 						},
 						"method": "PUT",
 						"header": [],
-						"url": "http://localhost:5001/user/4/roll"
+						"url": "https://localhost:5001/user/4/roll"
 					},
 					"response": []
 				},
@@ -801,7 +801,7 @@
 						},
 						"method": "PUT",
 						"header": [],
-						"url": "http://localhost:5001/user/2/roll"
+						"url": "https://localhost:5001/user/2/roll"
 					},
 					"response": []
 				},
@@ -847,7 +847,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/mycollection"
+						"url": "https://localhost:5001/user/4/mycollection"
 					},
 					"response": []
 				},
@@ -893,7 +893,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/mycollection"
+						"url": "https://localhost:5001/user/2/mycollection"
 					},
 					"response": []
 				},
@@ -932,7 +932,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/instance/1"
+						"url": "https://localhost:5001/user/4/instance/1"
 					},
 					"response": []
 				},
@@ -971,7 +971,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/2/instance/3"
+						"url": "https://localhost:5001/user/2/instance/3"
 					},
 					"response": []
 				}
@@ -1029,7 +1029,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/4/payment"
+						"url": "https://localhost:5001/user/4/payment"
 					},
 					"response": []
 				}
@@ -1070,7 +1070,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/amount"
+						"url": "https://localhost:5001/user/4/amount"
 					},
 					"response": []
 				},
@@ -1112,7 +1112,7 @@
 								"type": "text"
 							}
 						],
-						"url": "http://localhost:5001/user/2/amount"
+						"url": "https://localhost:5001/user/2/amount"
 					},
 					"response": []
 				},
@@ -1149,7 +1149,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/3/amount"
+						"url": "https://localhost:5001/user/3/amount"
 					},
 					"response": []
 				}
@@ -1191,7 +1191,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/market_list"
+						"url": "https://localhost:5001/user/4/market_list"
 					},
 					"response": []
 				},
@@ -1228,7 +1228,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/transactions_history"
+						"url": "https://localhost:5001/user/4/transactions_history"
 					},
 					"response": []
 				},
@@ -1307,7 +1307,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/4/instance/1/auction"
+						"url": "https://localhost:5001/user/4/instance/1/auction"
 					},
 					"response": []
 				},
@@ -1356,7 +1356,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/2/market_list"
+						"url": "https://localhost:5001/user/2/market_list"
 					},
 					"response": []
 				},
@@ -1407,7 +1407,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/2/market/1/bid"
+						"url": "https://localhost:5001/user/2/market/1/bid"
 					},
 					"response": []
 				},
@@ -1443,7 +1443,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/2/amount"
+						"url": "https://localhost:5001/user/2/amount"
 					},
 					"response": []
 				},
@@ -1494,7 +1494,7 @@
 								}
 							}
 						},
-						"url": "http://localhost:5001/user/3/market/1/bid"
+						"url": "https://localhost:5001/user/3/market/1/bid"
 					},
 					"response": []
 				},
@@ -1530,7 +1530,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/2/amount"
+						"url": "https://localhost:5001/user/2/amount"
 					},
 					"response": []
 				},
@@ -1597,7 +1597,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/mycollection"
+						"url": "https://localhost:5001/user/4/mycollection"
 					},
 					"response": []
 				},
@@ -1648,7 +1648,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/2/mycollection"
+						"url": "https://localhost:5001/user/2/mycollection"
 					},
 					"response": []
 				},
@@ -1699,7 +1699,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/3/mycollection"
+						"url": "https://localhost:5001/user/3/mycollection"
 					},
 					"response": []
 				},
@@ -1735,7 +1735,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/amount"
+						"url": "https://localhost:5001/user/4/amount"
 					},
 					"response": []
 				},
@@ -1771,7 +1771,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/2/amount"
+						"url": "https://localhost:5001/user/2/amount"
 					},
 					"response": []
 				},
@@ -1807,7 +1807,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/3/amount"
+						"url": "https://localhost:5001/user/3/amount"
 					},
 					"response": []
 				},
@@ -1857,7 +1857,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/4/transactions_history"
+						"url": "https://localhost:5001/user/4/transactions_history"
 					},
 					"response": []
 				},
@@ -1893,7 +1893,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/2/transactions_history"
+						"url": "https://localhost:5001/user/2/transactions_history"
 					},
 					"response": []
 				},
@@ -1943,7 +1943,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5001/user/3/transactions_history"
+						"url": "https://localhost:5001/user/3/transactions_history"
 					},
 					"response": []
 				}

@@ -43,7 +43,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5007/user/1/payment"
+				"url": "https://localhost:5007/user/1/payment"
 			},
 			"response": []
 		},
@@ -83,7 +83,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5007/user/1/payment"
+				"url": "https://localhost:5007/user/1/payment"
 			},
 			"response": []
 		}

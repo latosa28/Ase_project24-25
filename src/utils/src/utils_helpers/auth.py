@@ -1,6 +1,7 @@
 import json
-import requests
 from jwt.algorithms import RSAAlgorithm
+
+from utils_helpers.http_client import HttpClient
 
 AUTH_URL = "https://auth:5011"
 
@@ -14,7 +15,7 @@ class AuthHelper:
         if env == 'testing':
             return ""
 
-        response = requests.get(f"{AUTH_URL}/.well-known/jwks.json", verify=False)
+        response = HttpClient.get(f"{AUTH_URL}/.well-known/jwks.json")
 
         if response.status_code == 200:
             jwks = response.json()
