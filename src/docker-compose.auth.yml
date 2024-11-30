@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  auth_test:
+    build:
+      context: .
+      dockerfile: ./auth/Dockerfile
+    container_name: auth_test
+    ports:  
+      - "5011:5011"  
+    environment:
+      - FLASK_ENV=testing
+      - DB_HOST=localhost  
+      - DB_PORT=3306
+      - DB_NAME=${DB_AUTH_NAME}  
+      - DB_USER=${DB_AUTH_USER}  
+      - DB_PASSWORD=${DB_AUTH_PASSWORD}  
+
