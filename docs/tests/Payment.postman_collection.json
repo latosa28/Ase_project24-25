@@ -60,7 +60,8 @@
 							"\r",
 							"pm.test(\"Response contains message and currency_received\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('error', 'Missing required fields');\r",
+							"    pm.expect(jsonData).to.have.property('error','bad_request');\r",
+							"    pm.expect(jsonData).to.have.property('error_description', 'Missing required fields');\r",
 							"});\r",
 							"\r",
 							""

@@ -4,8 +4,10 @@ from datetime import datetime
 
 from flask import Blueprint, jsonify, current_app, request
 from sqlalchemy.exc import IntegrityError
+
+from errors.errors import HTTPNotFoundError, HTTPBadRequestError, HTTPInternalServerError
 from helpers.currency import CurrencyHelper
-from utils.helpers.token import token_required, token_authorized
+from utils_helpers.token import token_required, token_authorized
 
 from models.models import db, Item, UserItem
 
@@ -29,7 +31,7 @@ def get_item_by_id(user_id, item_id):
     if item:
         return jsonify(item.serialize()), 200
     else:
-        return jsonify({"message": "Item not found"}), 404
+        raise HTTPNotFoundError("Item not found")
 
 
 def _serialize_user_collection(user_item_joined):
@@ -78,7 +80,7 @@ def get_user_item_instance(user_id, instance_id):
     if user_item_joined:
         return jsonify(_serialize_user_collection(user_item_joined)), 200
     else:
-        return jsonify({"message": "Item instance not found"}), 404
+        raise HTTPNotFoundError("Item instance not found")
 
 
 @user_api.route("/user/<int:user_id>/instance/<int:instance_id>", methods=["POST"])
@@ -86,7 +88,7 @@ def move_instance(user_id, instance_id):
     new_user_id = request.json.get("new_user_id")
 
     if not new_user_id:
-        return jsonify({"message": "New User id is mandatory"}), 400
+        raise HTTPBadRequestError("New User id is mandatory")
 
     user_item = UserItem.query.filter_by(
         user_id=user_id, instance_id=instance_id
@@ -129,7 +131,7 @@ def roll_gacha(user_id):
     item_probabilities = _get_item_probabilities()  # Ottieni le probabilità calcolate
 
     if not item_probabilities:
-        return jsonify({"message": "No items available for gacha"}), 404
+        raise HTTPInternalServerError()
 
     # Estrazione casuale di un item basato sulle probabilità calcolate
     items, probabilities = zip(*item_probabilities)
@@ -149,6 +151,6 @@ def roll_gacha(user_id):
         except IntegrityError as e:
             db.session.rollback()
             logging.error(f"Error while rolling gacha: {str(e)}")
-            return jsonify({"message": "An error occurred during roll"}), 400
+            raise HTTPInternalServerError("An error occurred during roll")
 
     return response.json(), response.status_code

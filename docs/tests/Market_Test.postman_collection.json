@@ -92,7 +92,8 @@
 							"\r",
 							"pm.test(\"Auction already open\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('message','Auction already open');\r",
+							"    pm.expect(jsonData).to.have.property('error','bad_request');\r",
+							"    pm.expect(jsonData).to.have.property('error_description','Auction already open');\r",
 							"});\r",
 							""
 						],
@@ -158,7 +159,8 @@
 							"\r",
 							"pm.test(\"Missing requirements\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('message','end_date and start_bid are mandatory');\r",
+							"     pm.expect(jsonData).to.have.property('error','bad_request');\r",
+							"    pm.expect(jsonData).to.have.property('error_description','end_date and start_bid are mandatory');\r",
 							"});\r",
 							""
 						],
@@ -313,7 +315,8 @@
 							"\r",
 							"pm.test(\"Seller cannot bid on his auction\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('message','You cannot bid on your own auction');\r",
+							"    pm.expect(jsonData).to.have.property('error','forbidden');\r",
+							"    pm.expect(jsonData).to.have.property('error_description','You cannot bid on your own auction');\r",
 							"});\r",
 							""
 						],
@@ -349,10 +352,10 @@
 							"    pm.response.to.have.status(400);\r",
 							"});\r",
 							"\r",
-							"\r",
 							"pm.test(\"Bid is mandatory\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('message','bid is mandatory');\r",
+							"    pm.expect(jsonData).to.have.property('error','bad_request');\r",
+							"    pm.expect(jsonData).to.have.property('error_description','bid is mandatory');\r",
 							"});\r",
 							""
 						],

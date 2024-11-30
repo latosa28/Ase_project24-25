@@ -12,6 +12,12 @@ def login():
     return response.json(), response.status_code
 
 
+@auth_bp.route('/userinfo', methods=['GET'])
+def userinfo():
+    response = requests.get(f'{URL}/admin/userinfo', headers=request.headers)
+    return response.json(), response.status_code
+
+
 @auth_bp.route('/admin/<int:admin_id>/auth', methods=['DELETE'])
 def logout(admin_id):
     response = requests.delete(f'{URL}/admin/{admin_id}/auth', headers=request.headers)

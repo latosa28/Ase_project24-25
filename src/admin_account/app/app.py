@@ -1,8 +1,10 @@
 import logging
 from flask import Flask, request, jsonify
 
-from conf.config import load_config
+from errors.error_handler import register_errors
+from errors.errors import HTTPBadRequestError, HTTPInternalServerError, HTTPNotFoundError
 from models.models import Admin, db
+from utils_helpers.config import load_config
 
 logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
@@ -10,6 +12,7 @@ app = Flask(__name__)
 
 def setup():
     load_config(app)
+    register_errors(app)
     db.init_app(app)
 
 
@@ -24,17 +27,14 @@ def create_admin():
     password = request.json.get("password")
 
     if not username or not email or not password:
-        return jsonify({"message": "Missing data"}), 400
+        raise HTTPBadRequestError("Missing Data")
 
     admin = (
         Admin.query.filter_by(username=username).first()
         or Admin.query.filter_by(email=email).first()
     )
     if admin:
-        return (
-            jsonify({"message": "User with this username or email already exists"}),
-            400,
-        )
+        raise HTTPBadRequestError("Invalid Credentials")
 
     new_admin = Admin(username=username, email=email, password=password)
 
@@ -45,10 +45,7 @@ def create_admin():
     except Exception as e:
         db.session.rollback()
         logging.error(f"Error while creating admin: {str(e)}")
-        return (
-            jsonify({"message": "An error occurred while processing your request."}),
-            400,
-        )
+        raise HTTPInternalServerError()
 
 
 # Route to delete an existing user by ID
@@ -62,9 +59,9 @@ def delete_admin(admin_id):
             return jsonify({"message": "Admin deleted successfully"}), 200
         except Exception as e:
             db.session.rollback()
-            return jsonify({"message": str(e)}), 500
+            raise HTTPInternalServerError()
     else:
-        return jsonify({"message": "Admin not found"}), 404
+        raise HTTPNotFoundError("Admin not found")
 
 
 # Route to get user details by ID
@@ -72,10 +69,9 @@ def delete_admin(admin_id):
 def get_admin_by_id(admin_id):
     admin = Admin.query.get(admin_id)
     if admin:
-        return jsonify({"username": admin.username, "email": admin.email}), 200
+        return jsonify({"name": admin.username, "email": admin.email}), 200
     else:
-        # If the user is not found, return a 404 error
-        return jsonify({"message": "Admin not found"}), 404
+        raise HTTPNotFoundError("Admin not found")
 
 
 # Route to get user details by ID
@@ -85,7 +81,7 @@ def get_admin_by_username(username):
     if admin:
         return jsonify(admin.serialize()), 200
     else:
-        return jsonify({"message": "Admin not found"}), 404
+        raise HTTPNotFoundError("Admin not found")
 
 
 # Run the application

@@ -89,7 +89,8 @@
 							"\r",
 							"pm.test(\"Item in the system collection not found \", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('message', 'Item not found');\r",
+							"     pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
+							"    pm.expect(jsonData).to.have.property('error_description', 'Item not found');\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -148,7 +149,11 @@
 							"    pm.response.to.have.status(500);\r",
 							"});\r",
 							"\r",
-							""
+							"pm.test(\"Service Unavailable\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", \"service_unavailable\");\r",
+							"    pm.expect(jsonData).to.have.property('error_description', 'Service Unavailable');\r",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -208,7 +213,8 @@
 							"\r",
 							"pm.test(\"Item instance should have required fields\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('message', 'Item instance not found')\r",
+							"     pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
+							"    pm.expect(jsonData).to.have.property('error_description', 'Item instance not found')\r",
 							"});"
 						],
 						"type": "text/javascript",

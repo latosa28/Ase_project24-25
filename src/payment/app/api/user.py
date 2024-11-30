@@ -1,11 +1,12 @@
-import random
 from datetime import datetime
 
 import pytz
 from flask import Blueprint, jsonify, request, current_app
 
 from helpers.currency import CurrencyHelper
-from utils.helpers.token import token_required
+from errors.errors import HTTPBadRequestError, HTTPInternalServerError
+from utils_helpers.token import token_required
+
 from models.models import db, Transactions
 
 user_api = Blueprint('user_api', __name__)
@@ -27,7 +28,7 @@ def payment(user_id):
     data = request.get_json()
 
     if 'card_number' not in data or 'card_expiry' not in data or 'card_cvc' not in data or 'amount' not in data:
-        return jsonify({'error': 'Missing required fields'}), 400
+        raise HTTPBadRequestError("Missing required fields")
 
     card_number = data['card_number']
     card_expiry = data['card_expiry']
@@ -59,4 +60,4 @@ def payment(user_id):
             'currency_received': currency_amount if response.status_code == 200 else 0,
         }), 200
     else:
-        return jsonify({'error': 'Payment failed'}), 500
+        raise HTTPInternalServerError("Payment failed")

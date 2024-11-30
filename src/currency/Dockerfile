@@ -6,7 +6,7 @@ COPY currency/requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY currency/app .
-COPY utils/ ./utils
+COPY utils/src .
 
 
 EXPOSE 5005

@@ -2,6 +2,8 @@ from functools import wraps
 import jwt
 from flask import request, jsonify, current_app
 
+from errors.errors import HTTPUnauthorizedError, HTTPForbiddenError
+
 MY_APP = "http://localhost"
 
 
@@ -16,7 +18,7 @@ def decode_token(token, public_key):
     return decoded_token
 
 
-def get_token_user_id():
+def get_token_info():
     auth_header = request.headers.get('Authorization')
     if not auth_header:
         return jsonify({'message': 'Token is missing!'}), 403
@@ -25,10 +27,10 @@ def get_token_user_id():
 
     try:
         data = decode_token(token, current_app.config["jwt_public_key"])
-        token_user_id = data['sub']
+        token_user_id = data.get('sub')
         return token_user_id
     except Exception:
-        return jsonify({'message': 'Token is invalid!'}), 403
+        raise HTTPUnauthorizedError("Invalid token", "invalid_token")
 
 
 def token_authorized(f):
@@ -36,12 +38,10 @@ def token_authorized(f):
     def decorator(*args, **kwargs):
         if current_app.config['ENV'] == 'testing':
             return f(*args, **kwargs)
-        token_user_id = get_token_user_id()
+        token_user_id = get_token_info()
         user_id = kwargs.get('user_id')
-        if token_user_id is None:
-            return jsonify({'message': 'Unauthorized Access'}), 403
         if int(token_user_id) != user_id:
-            return jsonify({'message': 'Unauthorized Access'}), 403
+            raise HTTPForbiddenError("Unauthorized Access", "unauthorized")
 
         return f(*args, **kwargs)
     return decorator
@@ -52,7 +52,7 @@ def token_required(f):
     def decorator(*args, **kwargs):
         if current_app.config['ENV'] == 'testing':
             return f(*args, **kwargs)
-        get_token_user_id()
+        get_token_info()
         return f(*args, **kwargs)
     return decorator
 
@@ -62,12 +62,10 @@ def admin_token_authorized(f):
     def decorator(*args, **kwargs):
         if current_app.config['ENV'] == 'testing':
             return f(*args, **kwargs)
-        token_user_id = get_token_user_id()
+        token_user_id = get_token_info()
         admin_id = kwargs.get('admin_id')
-        if token_user_id is None:
-            return jsonify({'message': 'Unauthorized Access'}), 403
         if int(token_user_id) != admin_id:
-            return jsonify({'message': 'Unauthorized Access'}), 403
+            raise HTTPForbiddenError("Unauthorized Access", "unauthorized")
 
         return f(*args, **kwargs)
     return decorator

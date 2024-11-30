@@ -77,7 +77,8 @@
 							"\r",
 							"pm.test(\"Create User - Fail\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"message\", 'Missing data');\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", 'bad_request');\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", 'Missing Data');\r",
 							"});\r",
 							""
 						],
@@ -125,7 +126,8 @@
 							"\r",
 							"pm.test(\"Create User - Fail\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"message\", 'User with this username or email already exists');\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", 'bad_request');\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", 'Invalid Credentials');\r",
 							"});\r",
 							""
 						],
@@ -163,7 +165,7 @@
 							"\r",
 							"pm.test(\"Get User by ID - User Data is Correct\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"username\", \"testuser\");\r",
+							"    pm.expect(jsonData).to.have.property(\"name\", \"testuser\");\r",
 							"    pm.expect(jsonData).to.have.property(\"email\", \"testuser@example.com\");\r",
 							"});\r",
 							""
@@ -193,7 +195,8 @@
 							"\r",
 							"pm.test(\"Get User by ID - Fail\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"message\", \"User not found\");\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", \"User not found\");\r",
 							"});\r",
 							""
 						],
@@ -222,6 +225,7 @@
 							"\r",
 							"pm.test(\"Get User by Username - User Data is Correct\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
+							"     pm.expect(jsonData).to.have.property(\"user_id\", 1);\r",
 							"    pm.expect(jsonData).to.have.property(\"username\", \"testuser\");\r",
 							"    pm.expect(jsonData).to.have.property(\"email\", \"testuser@example.com\");\r",
 							"});\r",
@@ -252,7 +256,8 @@
 							"\r",
 							"pm.test(\"Get User by Username - Fail\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"message\", \"User not found\");\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", \"User not found\");\r",
 							"});\r",
 							""
 						],
@@ -264,7 +269,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5003/user/username/testuser1"
+				"url": "http://localhost:5003/user/username/testuser5"
 			},
 			"response": []
 		},
@@ -277,11 +282,6 @@
 						"exec": [
 							"pm.test(\"Delete User - Status Code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Delete User - Correct Message\", function () {\r",
-							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.message).to.eql(\"User deleted successfully\");\r",
 							"});\r",
 							""
 						],
@@ -316,7 +316,8 @@
 							"\r",
 							"pm.test(\"Delete User - Fail\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.message).to.eql(\"User not found\");\r",
+							"     pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", \"User not found\");\r",
 							"});\r",
 							""
 						],
@@ -334,7 +335,7 @@
 						"type": "text"
 					}
 				],
-				"url": "http://localhost:5003/user/2"
+				"url": "http://localhost:5003/user/5"
 			},
 			"response": []
 		}

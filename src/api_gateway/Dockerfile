@@ -2,10 +2,11 @@ FROM python:3.12-slim
 
 WORKDIR /service
 
-COPY requirements.txt .
+COPY api_gateway/requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY app/ .
+COPY api_gateway/app/ .
+COPY utils/src .
 
 EXPOSE 5000
 
