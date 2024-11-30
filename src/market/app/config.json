@@ -1,9 +1,12 @@
 {
-    "auction_end":
-    {
-        "job_frequency_second": 10
-    },
+    "auction_end": {"job_frequency_second": 10},
     "date_format": "%d/%m/%Y %H:%M",
     "currency": "http://currency:5005",
-    "collection": "http://collection:5002"
+    "collection": "http://collection:5002",
+    "db_conf": {
+        "db_password_secret": "db_market_password",
+        "ca_cert_secret": "mysql_ca_cert",
+        "client_cert_secret": "market_db_cert",
+        "client_key_secret": "market_db_key"
+    }
 }

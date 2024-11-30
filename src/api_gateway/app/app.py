@@ -7,10 +7,8 @@ from services.collection.routes import collection_bp
 from services.currency.routes import currency_bp
 from services.market.routes import market_bp
 from services.payment.routes import payment_bp
-from utils_helpers.config import load_config
 
 app = Flask(__name__)
-load_config(app)
 register_errors(app)
 
 app.register_blueprint(auth_bp)

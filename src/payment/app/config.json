@@ -1,4 +1,10 @@
 {
     "currency_conversion_rate": 5,
-    "currency": "http://currency:5005"
+    "currency": "http://currency:5005",
+    "db_conf": {
+        "db_password_secret": "db_payment_password",
+        "ca_cert_secret": "mysql_ca_cert",
+        "client_cert_secret": "payment_db_cert",
+        "client_key_secret": "payment_db_key"
+    }
 }

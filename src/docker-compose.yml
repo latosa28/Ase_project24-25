@@ -8,9 +8,15 @@ services:
       dockerfile: ./auth/Dockerfile
     container_name: auth
     expose:
-      - "5011"  # Exposed only within the Docker network
+      - "5011"
     networks:
       - app-network
+    environment:
+      - FLASK_ENV=development
+    secrets:
+      - auth_cert
+      - auth_key
+
   # Microservice for collections
   collection:
     build:
@@ -18,16 +24,22 @@ services:
       dockerfile: ./collection/Dockerfile
     container_name: collection
     expose:
-      - "5002"  # Exposed only within the Docker network
+      - "5002"
     networks:
       - app-network
     environment:
       - FLASK_ENV=development
       - DB_HOST=collection_db
       - DB_PORT=3306
-      - DB_NAME=${DB_COLLECTION_NAME}  # Database name from .env
-      - DB_USER=${DB_COLLECTION_USER}  # Database user from .env
-      - DB_PASSWORD=${DB_COLLECTION_PASSWORD}  # Database password from .env
+      - DB_NAME=${DB_COLLECTION_NAME}
+      - DB_USER=${DB_COLLECTION_USER}
+    secrets:
+      - db_collection_password
+      - collection_cert
+      - collection_key
+      - mysql_ca_cert
+      - collection_db_cert
+      - collection_db_key
     depends_on:
       collection_db:
         condition: service_healthy
@@ -39,37 +51,49 @@ services:
       dockerfile: ./account/Dockerfile
     container_name: account
     expose:
-      - "5003"  # Exposed only within the Docker network
+      - "5003"
     networks:
       - app-network
     environment:
       - FLASK_ENV=development
       - DB_HOST=account_db
       - DB_PORT=3306
-      - DB_NAME=${DB_ACCOUNT_NAME}  # Database name from .env
-      - DB_USER=${DB_ACCOUNT_USER}  # Database user from .env
-      - DB_PASSWORD=${DB_ACCOUNT_PASSWORD}  # Database password from .env
+      - DB_NAME=${DB_ACCOUNT_NAME}
+      - DB_USER=${DB_ACCOUNT_USER}
+    secrets:
+      - db_account_password
+      - account_cert
+      - account_key
+      - mysql_ca_cert
+      - account_db_cert
+      - account_db_key
     depends_on:
       account_db:
         condition: service_healthy
 
-  # Microservice for the market
+  # Microservice for market
   market:
     build:
       context: .
       dockerfile: ./market/Dockerfile
     container_name: market
     expose:
-      - "5004"  # Exposed only within the Docker network
+      - "5004"
     networks:
       - app-network
     environment:
       - FLASK_ENV=development
       - DB_HOST=market_db
       - DB_PORT=3306
-      - DB_NAME=${DB_MARKET_NAME}  # Database name from .env
-      - DB_USER=${DB_MARKET_USER}  # Database user from .env
-      - DB_PASSWORD=${DB_MARKET_PASSWORD}  # Database password from .env
+      - DB_NAME=${DB_MARKET_NAME}
+      - DB_USER=${DB_MARKET_USER}
+    secrets:
+      - db_market_password
+      - market_cert
+      - market_key
+      - mysql_ca_cert
+      - market_db_cert
+      - market_db_key
     depends_on:
       market_db:
         condition: service_healthy
@@ -81,16 +105,22 @@ services:
       dockerfile: ./currency/Dockerfile
     container_name: currency
     expose:
-      - "5005"  # Exposed only within the Docker network
+      - "5005"
     networks:
       - app-network
     environment:
       - FLASK_ENV=development
       - DB_HOST=currency_db
       - DB_PORT=3306
-      - DB_NAME=${DB_CURRENCY_NAME}  # Database name from .env
-      - DB_USER=${DB_CURRENCY_USER}  # Database user from .env
-      - DB_PASSWORD=${DB_CURRENCY_PASSWORD}  # Database password from .env
+      - DB_NAME=${DB_CURRENCY_NAME}
+      - DB_USER=${DB_CURRENCY_USER}
+    secrets:
+      - db_currency_password
+      - currency_cert
+      - currency_key
+      - mysql_ca_cert
+      - currency_db_cert
+      - currency_db_key
     depends_on:
       currency_db:
         condition: service_healthy
@@ -102,16 +132,22 @@ services:
       dockerfile: ./payment/Dockerfile
     container_name: payment
     expose:
-      - "5007"  # Exposed only within the Docker network
+      - "5007"
     networks:
       - app-network
     environment:
       - FLASK_ENV=development
       - DB_HOST=payment_db
       - DB_PORT=3306
-      - DB_NAME=${DB_PAYMENT_NAME}  # Database name from .env
-      - DB_USER=${DB_PAYMENT_USER}  # Database user from .env
-      - DB_PASSWORD=${DB_PAYMENT_PASSWORD}  # Database password from .env
+      - DB_NAME=${DB_PAYMENT_NAME}
+      - DB_USER=${DB_PAYMENT_USER}
+    secrets:
+      - db_payment_password
+      - payment_cert
+      - payment_key
+      - mysql_ca_cert
+      - payment_db_cert
+      - payment_db_key
     depends_on:
       payment_db:
         condition: service_healthy
@@ -123,10 +159,10 @@ services:
       dockerfile: ./api_gateway/Dockerfile
     container_name: api_gateway
     ports:
-      - "5001:5000"  # Exposed port for public client
+      - "5001:5000"
     networks:
       - app-network
-      - public-network  # Connected to the public network
+      - public-network
     environment:
       - FLASK_ENV=development
     depends_on:
@@ -135,27 +171,9 @@ services:
       - market
       - currency
       - payment
-
-  # Admin service (accessible only from the private network and through api_gateway_admin)
-  admin_account:
-    build:
-      context: .
-      dockerfile: ./admin_account/Dockerfile
-    container_name: admin_account
-    expose:
-      - "5006"  # Exposed only within the Docker network
-    networks:
-      - app-network
-    environment:
-      - FLASK_ENV=development
-      - DB_HOST=admin_db
-      - DB_PORT=3306
-      - DB_NAME=${DB_ADMIN_NAME}  # Database name from .env
-      - DB_USER=${DB_ADMIN_USER}  # Database user from .env
-      - DB_PASSWORD=${DB_ADMIN_PASSWORD}  # Database password from .env
-    depends_on:
-      admin_db:
-        condition: service_healthy
+    secrets:
+      - api_gateway_cert
+      - api_gateway_key
 
   # Admin API Gateway (accessible only from the private network)
   admin_api_gateway:
@@ -164,10 +182,10 @@ services:
       dockerfile: ./admin_api_gateway/Dockerfile
     container_name: admin_api_gateway
     ports:
-      - "5010:5010"  
+      - "5010:5010"
     networks:
-      - app-network  # Accessible only from the private network
-      - admin-network  # Private network for admin services
+      - app-network
+      - admin-network
     environment:
       - FLASK_ENV=development
     depends_on:
@@ -176,20 +194,83 @@ services:
       - admin_account
       - market
       - payment
+    secrets:
+      - admin_api_gateway_cert
+      - admin_api_gateway_key
 
-  # MySQL for the collection microservice
+  # Admin Account Service
+  admin_account:
+    build:
+      context: .
+      dockerfile: ./admin_account/Dockerfile
+    container_name: admin_account
+    expose:
+      - "5009"
+    networks:
+      - app-network
+    environment:
+      - FLASK_ENV=development
+      - DB_HOST=admin_account_db
+      - DB_PORT=3306
+      - DB_NAME=${DB_ADMIN_NAME}
+      - DB_USER=${DB_ADMIN_USER}
+    secrets:
+      - db_admin_account_password
+      - admin_account_cert
+      - admin_account_key
+      - mysql_ca_cert
+      - admin_account_db_cert
+      - admin_account_db_key
+    depends_on:
+      admin_account_db:
+        condition: service_healthy
+
+  # MySQL for admin_account (database for admin_account)
+  admin_account_db:
+    image: mysql:8
+    container_name: admin_account_db
+    environment:
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+      - MYSQL_DATABASE=${DB_ADMIN_NAME}
+      - MYSQL_USER=${DB_ADMIN_USER}
+      - MYSQL_PASSWORD_FILE=/run/secrets/db_admin_account_password
+    command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/admin_account_db_cert --ssl-key=/run/secrets/admin_account_db_key
+    volumes:
+      - admin_account_db_data:/var/lib/mysql
+    secrets:
+      - db_admin_account_password
+      - mysql_ca_cert
+      - admin_account_db_cert
+      - admin_account_db_key
+      - db_root_password
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  # MySQL for each microservice
   collection_db:
     image: mysql:8
     container_name: collection_db
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
-      - MYSQL_DATABASE=${DB_COLLECTION_NAME}  # Database name from .env
-      - MYSQL_USER=${DB_COLLECTION_USER}  # User for this service from .env
-      - MYSQL_PASSWORD=${DB_COLLECTION_PASSWORD}  # Password for this user from .env
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+      - MYSQL_DATABASE=${DB_COLLECTION_NAME}
+      - MYSQL_USER=${DB_COLLECTION_USER}
+      - MYSQL_PASSWORD_FILE=/run/secrets/db_collection_password
+    command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/collection_db_cert --ssl-key=/run/secrets/collection_db_key
     volumes:
       - collection_db_data:/var/lib/mysql
       - ./collection/db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./collection/db/images:/collection_db/items_images
+    secrets:
+      - db_collection_password
+      - mysql_ca_cert
+      - collection_db_cert
+      - collection_db_key
+      - db_root_password
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
@@ -198,35 +279,47 @@ services:
     networks:
       - app-network
 
-  # MySQL for the account microservice
   account_db:
     image: mysql:8
     container_name: account_db
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
-      - MYSQL_DATABASE=${DB_ACCOUNT_NAME}  # Database name from .env
-      - MYSQL_USER=${DB_ACCOUNT_USER}  # User for this service from .env
-      - MYSQL_PASSWORD=${DB_ACCOUNT_PASSWORD}  # Password for this user from .env
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+      - MYSQL_DATABASE=${DB_ACCOUNT_NAME}
+      - MYSQL_USER=${DB_ACCOUNT_USER}
+      - MYSQL_PASSWORD_FILE=/run/secrets/db_account_password
+    command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/account_db_cert --ssl-key=/run/secrets/account_db_key
+    secrets:
+      - db_account_password
+      - mysql_ca_cert
+      - account_db_cert
+      - account_db_key
+      - db_root_password
+    volumes:
+      - account_db_data:/var/lib/mysql
+      - ./account/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
       retries: 5
-    volumes:
-      - account_db_data:/var/lib/mysql
-      - ./account/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
-  # MySQL for the market microservice
   market_db:
     image: mysql:8
     container_name: market_db
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
-      - MYSQL_DATABASE=${DB_MARKET_NAME}  # Database name from .env
-      - MYSQL_USER=${DB_MARKET_USER}  # User for this service from .env
-      - MYSQL_PASSWORD=${DB_MARKET_PASSWORD}  # Password for this user from .env
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+      - MYSQL_DATABASE=${DB_MARKET_NAME}
+      - MYSQL_USER=${DB_MARKET_USER}
+      - MYSQL_PASSWORD_FILE=/run/secrets/db_market_password
+    secrets:
+      - db_market_password
+      - mysql_ca_cert
+      - market_db_cert
+      - market_db_key
+      - db_root_password
+    command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/market_db_cert --ssl-key=/run/secrets/market_db_key
     volumes:
       - market_db_data:/var/lib/mysql
       - ./market/db/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -238,73 +331,65 @@ services:
     networks:
       - app-network
 
-  # MySQL for the currency microservice
   currency_db:
     image: mysql:8
     container_name: currency_db
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
-      - MYSQL_DATABASE=${DB_CURRENCY_NAME}  # Database name from .env
-      - MYSQL_USER=${DB_CURRENCY_USER}  # User for this service from .env
-      - MYSQL_PASSWORD=${DB_CURRENCY_PASSWORD}  # Password for this user from .env
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+      - MYSQL_DATABASE=${DB_CURRENCY_NAME}
+      - MYSQL_USER=${DB_CURRENCY_USER}
+      - MYSQL_PASSWORD_FILE=/run/secrets/db_currency_password
+    command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/currency_db_cert --ssl-key=/run/secrets/currency_db_key
+    secrets:
+      - db_currency_password
+      - mysql_ca_cert
+      - currency_db_cert
+      - currency_db_key
+      - db_root_password
     volumes:
       - currency_db_data:/var/lib/mysql
       - ./currency/db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - app-network
-
-  # MySQL for the admin microservice
-  admin_db:
-    image: mysql:8
-    container_name: admin_db
-    environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
-      - MYSQL_DATABASE=${DB_ADMIN_NAME}  # Database name from .env
-      - MYSQL_USER=${DB_ADMIN_USER}  # User for this service from .env
-      - MYSQL_PASSWORD=${DB_ADMIN_PASSWORD}  # Password for this user from .env
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
       retries: 5
-    volumes:
-      - admin_db_data:/var/lib/mysql
-      - ./admin_account/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
-  # MySQL for the payment microservice
   payment_db:
     image: mysql:8
     container_name: payment_db
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}  # Root password from .env
-      - MYSQL_DATABASE=${DB_PAYMENT_NAME}  # Database name from .env
-      - MYSQL_USER=${DB_PAYMENT_USER}  # User for this service from .env
-      - MYSQL_PASSWORD=${DB_PAYMENT_PASSWORD}  # Password for this user from .env
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+      - MYSQL_DATABASE=${DB_PAYMENT_NAME}
+      - MYSQL_USER=${DB_PAYMENT_USER}
+      - MYSQL_PASSWORD_FILE=/run/secrets/db_payment_password
+    command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/payment_db_cert --ssl-key=/run/secrets/payment_db_key
+    secrets:
+      - db_payment_password
+      - mysql_ca_cert
+      - payment_db_cert
+      - payment_db_key
+      - db_root_password
+    volumes:
+      - payment_db_data:/var/lib/mysql
+      - ./payment/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
       retries: 5
-    volumes:
-      - payment_db_data:/var/lib/mysql
-      - ./payment/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
 networks:
   app-network:
-    driver: bridge  # Network for microservices
+    driver: bridge
   public-network:
-    driver: bridge  # Network for services exposed to the public
+    driver: bridge
   admin-network:
-    driver: bridge  # Private network for admin services
+    driver: bridge
 
 volumes:
   collection_db_data:
@@ -313,3 +398,96 @@ volumes:
   currency_db_data:
   admin_db_data:
   payment_db_data:
+  admin_account_db_data:
+
+secrets:
+  # DB Password secrets
+  db_collection_password:
+    file: ./secrets/collection/db_password.txt
+  db_account_password:
+    file: ./secrets/account/db_password.txt
+  db_market_password:
+    file: ./secrets/market/db_password.txt
+  db_currency_password:
+    file: ./secrets/currency/db_password.txt
+  db_payment_password:
+    file: ./secrets/payment/db_password.txt
+  db_admin_account_password:
+    file: ./secrets/admin_account/db_password.txt
+  db_root_password:
+    file: ./secrets/mysql/db_password.txt
+
+  # Certificati per ciascun microservizio
+  auth_cert:
+    file: ./secrets/auth/cert.pem
+  auth_key:
+    file: ./secrets/auth/key.pem
+
+  collection_cert:
+    file: ./secrets/collection/cert.pem
+  collection_key:
+    file: ./secrets/collection/key.pem
+
+  account_cert:
+    file: ./secrets/account/cert.pem
+  account_key:
+    file: ./secrets/account/key.pem
+
+  market_cert:
+    file: ./secrets/market/cert.pem
+  market_key:
+    file: ./secrets/market/key.pem
+
+  currency_cert:
+    file: ./secrets/currency/cert.pem
+  currency_key:
+    file: ./secrets/currency/key.pem
+
+  payment_cert:
+    file: ./secrets/payment/cert.pem
+  payment_key:
+    file: ./secrets/payment/key.pem
+
+  admin_account_cert:
+    file: ./secrets/admin_account/cert.pem
+  admin_account_key:
+    file: ./secrets/admin_account/key.pem
+
+  # Certificati per i Gateway
+  api_gateway_cert:
+    file: ./secrets/api_gateway/cert.pem
+  api_gateway_key:
+    file: ./secrets/api_gateway/key.pem
+
+  admin_api_gateway_cert:
+    file: ./secrets/admin_api_gateway/cert.pem
+  admin_api_gateway_key:
+    file: ./secrets/admin_api_gateway/key.pem
+
+  # Certificati CA e del DB
+  mysql_ca_cert:
+    file: ./secrets/mysql/mysql_ca_cert.pem
+  collection_db_cert:
+    file: ./secrets/collection/db_cert.pem
+  collection_db_key:
+    file: ./secrets/collection/db_key.pem
+  account_db_cert:
+    file: ./secrets/account/db_cert.pem
+  account_db_key:
+    file: ./secrets/account/db_key.pem
+  market_db_cert:
+    file: ./secrets/market/db_cert.pem
+  market_db_key:
+    file: ./secrets/market/db_key.pem
+  currency_db_cert:
+    file: ./secrets/currency/db_cert.pem
+  currency_db_key:
+    file: ./secrets/currency/db_key.pem
+  payment_db_cert:
+    file: ./secrets/payment/db_cert.pem
+  payment_db_key:
+    file: ./secrets/payment/db_key.pem
+  admin_account_db_cert:
+    file: ./secrets/admin_account/db_cert.pem
+  admin_account_db_key:
+    file: ./secrets/admin_account/db_key.pem
