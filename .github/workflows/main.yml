@@ -124,6 +124,7 @@ jobs:
     - name: Run and Test Docker Compose
       run: |
         docker-compose -f ./src/docker-compose.yml up -d
+        sleep 20
         newman run ./docs/tests/Integration_test.postman_collection.json --insecure
 
     # Step per down dell'applicazione
