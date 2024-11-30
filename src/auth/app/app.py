@@ -5,12 +5,16 @@ from api.others import others_api
 from api.admin import admin_api
 from api.user import user_api
 from errors.error_handler import register_errors
+from utils_helpers.config import load_config
 
 logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
-register_errors(app)
 
+def setup():
+    load_config(app)
+    register_errors(app)
 
+setup()
 app.register_blueprint(user_api)
 app.register_blueprint(admin_api)
 app.register_blueprint(others_api)
