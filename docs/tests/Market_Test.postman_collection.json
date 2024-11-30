@@ -74,7 +74,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/1/instance/1/auction"
+				"url": "https://localhost:5004/user/1/instance/1/auction"
 			},
 			"response": []
 		},
@@ -141,7 +141,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/1/instance/1/auction"
+				"url": "https://localhost:5004/user/1/instance/1/auction"
 			},
 			"response": []
 		},
@@ -208,7 +208,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/1/instance/1/auction"
+				"url": "https://localhost:5004/user/1/instance/1/auction"
 			},
 			"response": []
 		},
@@ -251,7 +251,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5004/user/1/market_list"
+				"url": "https://localhost:5004/user/1/market_list"
 			},
 			"response": []
 		},
@@ -297,7 +297,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/2/market/1/bid"
+				"url": "https://localhost:5004/user/2/market/1/bid"
 			},
 			"response": []
 		},
@@ -337,7 +337,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/1/market/1/bid"
+				"url": "https://localhost:5004/user/1/market/1/bid"
 			},
 			"response": []
 		},
@@ -376,7 +376,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/2/market/1/bid"
+				"url": "https://localhost:5004/user/2/market/1/bid"
 			},
 			"response": []
 		},
@@ -419,7 +419,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5004/user/1/transactions_history"
+				"url": "https://localhost:5004/user/1/transactions_history"
 			},
 			"response": []
 		}

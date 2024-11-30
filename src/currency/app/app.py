@@ -38,7 +38,6 @@ def get_amount(user_id):
     raise HTTPNotFoundError("User not found")
     
 
-
 # Endpoint per aggiungere una quantità al saldo di un utente
 @app.route('/user/<user_id>/add_amount', methods=['POST'])
 def add_amount(user_id):

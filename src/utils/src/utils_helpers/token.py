@@ -4,7 +4,7 @@ from flask import request, jsonify, current_app
 
 from errors.errors import HTTPUnauthorizedError, HTTPForbiddenError
 
-MY_APP = "http://localhost"
+MY_APP = "https://localhost"
 
 
 def decode_token(token, public_key):

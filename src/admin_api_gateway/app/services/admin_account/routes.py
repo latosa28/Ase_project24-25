@@ -1,4 +1,4 @@
-import requests
+from utils_helpers.http_client import HttpClient
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 
@@ -7,7 +7,7 @@ from errors.errors import HTTPBadRequestError
 
 admin_account_bp = Blueprint('admin_account', __name__)
 
-URL = "http://admin_account:5006"
+URL = "https://admin_account:5006"
 
 
 # Route to create a new account
@@ -23,7 +23,7 @@ def create_account():
     password = generate_password_hash(data['password'], method='pbkdf2:sha256')
 
     # Send request to account service to create the user
-    response = requests.post(URL + '/admin', json={
+    response = HttpClient.post(URL + '/admin', json={
         'username': username,
         'email': email,
         'password': password
@@ -45,7 +45,7 @@ def create_account():
 
 @admin_account_bp.route('/admin/<int:admin_id>', methods=['DELETE'])
 def delete_admin(admin_id):
-    response = requests.delete(URL + f'/admin/{admin_id}', headers=request.headers)
+    response = HttpClient.delete(URL + f'/admin/{admin_id}', headers=request.headers)
 
     if response.status_code == 200:
         return jsonify({'message': 'Account deleted successfully'}), 200
@@ -55,7 +55,7 @@ def delete_admin(admin_id):
 
 @admin_account_bp.route('/admin/<int:admin_id>', methods=['GET'])
 def get_admin_by_id(admin_id):
-    response = requests.get(URL + f'/admin/{admin_id}', headers=request.headers)
+    response = HttpClient.get(URL + f'/admin/{admin_id}', headers=request.headers)
     return response.json(), response.status_code
 
 

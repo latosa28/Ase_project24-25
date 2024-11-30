@@ -10,4 +10,4 @@ COPY utils/src .
 
 EXPOSE 5003
 
-CMD flask --app app run --host=0.0.0.0 --port=5003
+CMD flask run --host=0.0.0.0 --port=5003 --cert=/run/secrets/account_cert --key=/run/secrets/account_key

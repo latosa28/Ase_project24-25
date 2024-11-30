@@ -1,4 +1,4 @@
-import requests
+from utils_helpers.http_client import HttpClient
 from flask import current_app
 
 
@@ -20,7 +20,7 @@ class CurrencyHelper:
         if current_app.config['ENV'] == 'testing':
             return self.mock_currency_request(user_id, "add", amount)
         else:
-            response = requests.post(
+            response = HttpClient.post(
                 f"{self.base_url}/user/{user_id}/add_amount",
                 json={"amount": str(amount)},
             )

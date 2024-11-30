@@ -15,7 +15,13 @@ services:
       - DB_PORT=3306
       - DB_NAME=${DB_MARKET_NAME}
       - DB_USER=${DB_MARKET_USER}
-      - DB_PASSWORD=${DB_MARKET_PASSWORD}
+    secrets:
+      - db_market_password
+      - market_cert
+      - market_key
+      - mysql_ca_cert
+      - market_db_cert
+      - market_db_key
     depends_on:
       market_db:
         condition: service_healthy  # Assicurati che il database sia pronto prima di avviare il servizio
@@ -25,10 +31,17 @@ services:
     image: mysql:8
     container_name: market_db
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
       - MYSQL_DATABASE=${DB_MARKET_NAME}
       - MYSQL_USER=${DB_MARKET_USER}
-      - MYSQL_PASSWORD=${DB_MARKET_PASSWORD}
+      - MYSQL_PASSWORD_FILE=/run/secrets/db_market_password
+    command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/market_db_cert --ssl-key=/run/secrets/market_db_key
+    secrets:
+      - db_market_password
+      - mysql_ca_cert
+      - market_db_cert
+      - market_db_key
+      - db_root_password
     ports:
       - "3306:3306"
     healthcheck:
@@ -42,3 +55,23 @@ services:
 
 volumes:
   test_market_db_data:
+
+secrets:
+  # DB Password secrets
+  db_market_password:
+    file: ./secrets/market/db_password.txt
+  db_root_password:
+    file: ./secrets/mysql/db_password.txt
+
+  # Microservices certificates
+  market_cert:
+    file: ./secrets/market/cert.pem
+  market_key:
+    file: ./secrets/market/key.pem
+
+  mysql_ca_cert:
+    file: ./secrets/mysql/mysql_ca_cert.pem
+  market_db_cert:
+    file: ./secrets/market/db_cert.pem
+  market_db_key:
+    file: ./secrets/market/db_key.pem

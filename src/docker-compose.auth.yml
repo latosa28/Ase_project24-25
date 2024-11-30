@@ -10,9 +10,14 @@ services:
       - "5011:5011"  
     environment:
       - FLASK_ENV=testing
-      - DB_HOST=localhost  
-      - DB_PORT=3306
-      - DB_NAME=${DB_AUTH_NAME}  
-      - DB_USER=${DB_AUTH_USER}  
-      - DB_PASSWORD=${DB_AUTH_PASSWORD}  
+    secrets:
+      - auth_cert
+      - auth_key
+
+secrets:
+  auth_cert:
+    file: ./secrets/auth/cert.pem
+  auth_key:
+    file: ./secrets/auth/key.pem
+
 

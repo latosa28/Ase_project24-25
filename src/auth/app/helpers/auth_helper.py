@@ -1,7 +1,7 @@
 import datetime
 import uuid
 import jwt
-import requests
+from utils_helpers.http_client import HttpClient
 from cryptography.hazmat.primitives.asymmetric import rsa
 from flask import current_app, request, jsonify
 from werkzeug.security import check_password_hash
@@ -11,7 +11,7 @@ from errors.errors import HTTPBadRequestError
 private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
 public_key = private_key.public_key()
 
-MY_APP = "http://localhost"
+MY_APP = "https://localhost"
 
 
 class AuthHelper:
@@ -69,7 +69,7 @@ class AuthHelper:
             # Usa il mock durante il testing
             response = self.mock_account_request(username)
         else:
-            response = requests.get(
+            response = HttpClient.get(
                 self.role_dict[self.role][0] + f"/{self.role}/username/{username}"
             )
 
@@ -104,7 +104,7 @@ class AuthHelper:
         if current_app.config['ENV'] == 'testing':
             response = self.mock_get_userinfo_request(user_id)
         else:
-            response = requests.get(
+            response = HttpClient.get(
                 self.role_dict[self.role][0] + f"/{self.role}/{user_id}"
             )
 

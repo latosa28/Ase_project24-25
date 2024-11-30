@@ -37,8 +37,8 @@ Steps to get the project up and running:
 
    | Service               | Port   | Access URL                  |
    |-----------------------|--------|-----------------------------|
-   | **Public API Gateway** | 5001   | http://localhost:5001       |
-   | **Admin API Gateway**  | 5010   | http://localhost:5010       |
+   | **Public API Gateway** | 5001   | https://localhost:5001       |
+   | **Admin API Gateway**  | 5010   | https://localhost:5010       |
 
 5. **Stop the services**  
    To stop all containers, run:

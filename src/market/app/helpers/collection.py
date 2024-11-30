@@ -1,4 +1,4 @@
-import requests
+from utils_helpers.http_client import HttpClient
 from flask import current_app
 
 
@@ -19,7 +19,7 @@ class CollectionHelper:
         if current_app.config['ENV'] == 'testing':
             return self.mock_collection_request(user_id, instance_id, new_user_id)
         else:
-            response = requests.post(
+            response = HttpClient.post(
                 f"{self.base_url}/user/{user_id}/instance/{instance_id}",
                 json={"new_user_id": new_user_id},
             )
@@ -31,7 +31,7 @@ class CollectionHelper:
         if current_app.config['ENV'] == 'testing':
             return self.mock_collection_request(user_id, instance_id)
         else:
-            response = requests.get(
+            response = HttpClient.get(
                 f"{self.base_url}/user/{user_id}/instance/{instance_id}"
             )
             return response

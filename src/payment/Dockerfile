@@ -10,4 +10,7 @@ COPY utils/src .
 
 EXPOSE 5007
 
-CMD flask run --host=0.0.0.0 --port=5007
+CMD flask run --host=0.0.0.0 --port=5007 --cert=/run/secrets/payment_cert --key=/run/secrets/payment_key
+
+
+

@@ -1,4 +1,4 @@
 {
-    "account": "http://account:5003",
-    "admin_account": "http://admin_account:5006"
+    "account": "https://account:5003",
+    "admin_account": "https://admin_account:5006"
 }

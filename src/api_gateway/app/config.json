@@ -1,7 +1,7 @@
 {
-    "collection": "http://collection:5002",
-    "account": "http://account:5003",
-    "market": "http://market:5004",
-    "payment": "http://payment:5005",
-    "currency": "http://currency:5007"
+    "collection": "https://collection:5002",
+    "account": "https://account:5003",
+    "market": "https://market:5004",
+    "payment": "https://payment:5005",
+    "currency": "https://currency:5007"
 }
