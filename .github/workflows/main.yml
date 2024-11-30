@@ -44,7 +44,7 @@ jobs:
     - name: Run and Test Account Service
       run: |
         docker-compose -f ./src/docker-compose.account.yml up -d
-        newman run ./docs/tests/Account_Test.postman_collection.json
+        newman run ./docs/tests/Account_Test.postman_collection.json --insecure
 
     # Step per down del servizio Account
     - name: Tear Down Account Service
@@ -60,7 +60,7 @@ jobs:
     - name: Run and Test Collection Service
       run: |
         docker-compose -f ./src/docker-compose.collection.yml up -d
-        newman run ./docs/tests/Collection_Test.postman_collection.json
+        newman run ./docs/tests/Collection_Test.postman_collection.json --insecure
 
     # Step per down del servizio Collection
     - name: Tear Down Collection Service
@@ -76,7 +76,7 @@ jobs:
     - name: Run and Test Currency Service
       run: |
         docker-compose -f ./src/docker-compose.currency.yml up -d
-        newman run ./docs/tests/Currency_Test.postman_collection.json
+        newman run ./docs/tests/Currency_Test.postman_collection.json --insecure
 
     # Step per down del servizio Currency
     - name: Tear Down Currency Service
@@ -92,7 +92,7 @@ jobs:
     - name: Run and Test Market Service
       run: |
         docker-compose -f ./src/docker-compose.market.yml up -d
-        newman run ./docs/tests/Market_Test.postman_collection.json
+        newman run ./docs/tests/Market_Test.postman_collection.json --insecure
 
     # Step per down del servizio Market
     - name: Tear Down Market Service
@@ -108,7 +108,7 @@ jobs:
     - name: Run and Test Payment Service
       run: |
         docker-compose -f ./src/docker-compose.payment.yml up -d
-        newman run ./docs/tests/Payment.postman_collection.json
+        newman run ./docs/tests/Payment.postman_collection.json --insecure
 
     # Step per down del servizio Payment
     - name: Tear Down Payment Service
@@ -124,7 +124,7 @@ jobs:
     - name: Run and Test Docker Compose
       run: |
         docker-compose -f ./src/docker-compose.yml up -d
-        newman run ./docs/tests/Integration_test.postman_collection.json
+        newman run ./docs/tests/Integration_test.postman_collection.json --insecure
 
     # Step per down dell'applicazione
     - name: Tear Down Docker Compose
