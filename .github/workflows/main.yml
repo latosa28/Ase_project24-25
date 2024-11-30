@@ -108,7 +108,7 @@ jobs:
     - name: Run and Test Payment Service
       run: |
         docker-compose -f ./src/docker-compose.payment.yml up -d
-        newman run ./docs/tests/Payment.postman_collection.json --insecure
+        newman run ./docs/tests/Payment_Test.postman_collection.json --insecure
 
     # Step per down del servizio Payment
     - name: Tear Down Payment Service
