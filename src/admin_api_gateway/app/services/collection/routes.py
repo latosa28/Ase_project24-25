@@ -38,5 +38,5 @@ def add_item(admin_id):
 
 @collection_bp.route('/admin/<int:admin_id>/item/<int:item_id>', methods=['DELETE'])
 def delete_item(admin_id, item_id):
-    response = HttpClient.get(f'{URL}/admin/{admin_id}/item/{item_id}', headers=request.headers)
+    response = HttpClient.delete(f'{URL}/admin/{admin_id}/item/{item_id}', headers=request.headers)
     return response.json(), response.status_code
