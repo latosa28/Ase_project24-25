@@ -28,19 +28,7 @@ def create_account():
         'email': email,
         'password': password
     })
-
-    if response.status_code == 201:
-        response_data = response.json()
-        admin_id = response_data.get('admin_id')
-
-        if admin_id:
-            return jsonify({
-                'message': 'Account created successfully!'
-            }), 201
-        else:
-            raise HTTPBadRequestError("Failed to retrieve user_id!")
-    else:
-        raise HTTPBadRequestError("Failed to create account!")
+    return response.json(), response.status_code
 
 
 @admin_account_bp.route('/admin/<int:admin_id>', methods=['DELETE'])

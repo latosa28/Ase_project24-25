@@ -237,6 +237,7 @@ services:
     command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/admin_account_db_cert --ssl-key=/run/secrets/admin_account_db_key
     volumes:
       - admin_account_db_data:/var/lib/mysql
+      - ./admin_account/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     secrets:
       - db_admin_account_password
       - mysql_ca_cert
