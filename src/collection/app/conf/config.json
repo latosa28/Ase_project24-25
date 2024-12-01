@@ -1,0 +1,10 @@
+{
+    "roll_price": 20,
+    "rarities": {
+        "superultrarare": 0.05,
+        "ultrarare": 0.5,
+        "superrare": 5.0,
+        "rare": 40.0,
+        "common": 54.45
+    }
+}
