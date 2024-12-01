@@ -11,29 +11,29 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-      
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '16'
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         
-    - name: Install Newman
-      run: npm install -g newman
-      
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v3
-      
-    - name: Install Docker Compose
-      run: |
-        DOCKER_COMPOSE_VERSION=2.20.2
-        sudo curl -L "https://github.com/docker/compose/releases/download/v$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
-        sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-        docker-compose --version
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+          
+      - name: Install Newman
+        run: npm install -g newman
+        
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Install Docker Compose
+        run: |
+          DOCKER_COMPOSE_VERSION=2.20.2
+          sudo curl -L "https://github.com/docker/compose/releases/download/v$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+          docker-compose --version
 
-  # Job dinamico per i vari servizi
+  # Job con matrice per eseguire test sui vari microservizi
   build-and-test:
     needs: setup
     runs-on: ubuntu-latest
@@ -43,38 +43,38 @@ jobs:
         file: [ "./src/docker-compose.${{ matrix.service }}.yml" ]
         test_collection: [ "./docs/tests/${{ matrix.service }}_Test.postman_collection.json" ]
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Build and Start Service
+        run: |
+          docker compose -f ${{ matrix.file }} build
+          docker compose -f ${{ matrix.file }} up -d
 
-    - name: Build Service
-      run: docker compose -f ${{ matrix.file }} build
+      - name: Run Tests for ${{ matrix.service }} Service
+        run: newman run ${{ matrix.test_collection }} --insecure
 
-    - name: Start Service
-      run: docker compose -f ${{ matrix.file }} up -d
+      - name: Tear Down ${{ matrix.service }} Service
+        run: docker compose -f ${{ matrix.file }} down -v
 
-    - name: Run Tests for ${{ matrix.service }} Service
-      run: newman run ${{ matrix.test_collection }} --insecure
-
-    - name: Tear Down ${{ matrix.service }} Service
-      run: docker compose -f ${{ matrix.file }} down -v
-
-  # Test per l'applicazione completa (test di integrazione)
+  # Job per eseguire i test di integrazione
   integration-test:
-    needs: setup
+    needs: build-and-test
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
       
-    - name: Build Full Application
-      run: docker compose -f ./src/docker-compose.yml build
+      - name: Build Full Application
+        run: docker compose -f ./src/docker-compose.yml build
 
-    - name: Start Full Application
-      run: docker compose -f ./src/docker-compose.yml up -d
+      - name: Start Full Application
+        run: docker compose -f ./src/docker-compose.yml up -d
 
-    - name: Run Integration Tests
-      run: |
-        sleep 20
-        newman run ./docs/tests/Integration_Test.postman_collection.json --insecure
-    - name: Tear Down Full Application
-      run: docker compose -f ./src/docker-compose.yml down -v
+      - name: Run Integration Tests
+        run: |
+          sleep 20 # Attendere che i servizi siano completamente avviati
+          newman run ./docs/tests/Integration_Test.postman_collection.json --insecure
+
+      - name: Tear Down Full Application
+        run: docker compose -f ./src/docker-compose.yml down -v
