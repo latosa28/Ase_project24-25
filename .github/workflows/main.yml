@@ -51,6 +51,22 @@ jobs:
       run: |
         docker-compose -f ./src/docker-compose.account.yml down -v
 
+    # Step per build del servizio Auth
+    - name: Build Auth Service
+      run: |
+        docker-compose -f ./src/docker-compose.auth.yml build
+
+    # Step per run del servizio Auth e eseguire i test
+    - name: Run and Test Auth Service
+      run: |
+        docker-compose -f ./src/docker-compose.auth.yml up -d
+        newman run ./docs/tests/Auth_Test.postman_collection.json --insecure
+
+    # Step per down del servizio Auth
+    - name: Tear Down Auth Service
+      run: |
+        docker-compose -f ./src/docker-compose.auth.yml down -v
+
     # Step per build del servizio Collection
     - name: Build Collection Service
       run: |
@@ -125,7 +141,7 @@ jobs:
       run: |
         docker-compose -f ./src/docker-compose.yml up -d
         sleep 20
-        newman run ./docs/tests/Integration_test.postman_collection.json --insecure
+        newman run ./docs/tests/Integration_Test.postman_collection.json --insecure
 
     # Step per down dell'applicazione
     - name: Tear Down Docker Compose

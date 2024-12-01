@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "2dbf0603-6524-4310-8d43-a0c17b5ce75a",
-		"name": "Integration_test",
+		"name": "Integration_Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "39564474"
 	},
@@ -145,17 +145,14 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// Verifica che lo status code sia 200 (OK)\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"// Verifica che la risposta contenga il 'access_token'\r",
 									"pm.test(\"Response contains access_token\", function () {\r",
 									"    var responseJson = pm.response.json();\r",
 									"    pm.expect(responseJson).to.have.property('access_token');\r",
 									"    \r",
-									"    // Salva il token come variabile della collezione\r",
 									"    if (responseJson.access_token) {\r",
 									"        pm.collectionVariables.set(\"jwt_token1\", responseJson.access_token);\r",
 									"    }\r",
@@ -192,6 +189,11 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successfully logged out\", function () {\r",
+									"   const jsonData = pm.response.json();\r",
+									"   pm.expect(jsonData).to.have.property('message','Successfully logged out');\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -219,17 +221,14 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// Verifica che lo status code sia 200 (OK)\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"// Verifica che la risposta contenga il 'access_token'\r",
 									"pm.test(\"Response contains access_token\", function () {\r",
 									"    var responseJson = pm.response.json();\r",
 									"    pm.expect(responseJson).to.have.property('access_token');\r",
 									"    \r",
-									"    // Salva il token come variabile della collezione\r",
 									"    if (responseJson.access_token) {\r",
 									"        pm.collectionVariables.set(\"jwt_token1\", responseJson.access_token);\r",
 									"    }\r",
@@ -267,6 +266,7 @@
 									"pm.test(\"Delete User - Status Code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
+									"\r",
 									""
 								],
 								"type": "text/javascript",
@@ -342,17 +342,14 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// Verifica che lo status code sia 200 (OK)\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"// Verifica che la risposta contenga il 'access_token'\r",
 									"pm.test(\"Response contains access_token\", function () {\r",
 									"    var responseJson = pm.response.json();\r",
 									"    pm.expect(responseJson).to.have.property('access_token');\r",
 									"    \r",
-									"    // Salva il token come variabile della collezione\r",
 									"    if (responseJson.access_token) {\r",
 									"        pm.collectionVariables.set(\"jwt_token4\", responseJson.access_token);\r",
 									"    }\r",
@@ -387,17 +384,14 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// Verifica che lo status code sia 200 (OK)\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"// Verifica che la risposta contenga il 'access_token'\r",
 									"pm.test(\"Response contains access_token\", function () {\r",
 									"    var responseJson = pm.response.json();\r",
 									"    pm.expect(responseJson).to.have.property('access_token');\r",
 									"    \r",
-									"    // Salva il token come variabile della collezione\r",
 									"    if (responseJson.access_token) {\r",
 									"        pm.collectionVariables.set(\"jwt_token2\", responseJson.access_token);\r",
 									"    }\r",
@@ -432,17 +426,14 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// Verifica che lo status code sia 200 (OK)\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"// Verifica che la risposta contenga il 'access_token'\r",
 									"pm.test(\"Response contains access_token\", function () {\r",
 									"    var responseJson = pm.response.json();\r",
 									"    pm.expect(responseJson).to.have.property('access_token');\r",
 									"    \r",
-									"    // Salva il token come variabile della collezione\r",
 									"    if (responseJson.access_token) {\r",
 									"        pm.collectionVariables.set(\"jwt_token3\", responseJson.access_token);\r",
 									"    }\r",
@@ -472,6 +463,26 @@
 				},
 				{
 					"name": "user_info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User info are correct\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('email','testuser4@example.com');\r",
+									"    pm.expect(jsonData).to.have.property('name','testuser4');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1045,11 +1056,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
 									"    pm.expect(jsonData.amount).to.eql(510);\r",
@@ -1081,11 +1092,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
 									"    pm.expect(jsonData.amount).to.eql(480);\r",
@@ -1123,14 +1134,13 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
-									"    pm.environment.set(\"old_balance\", jsonData.amount);\r",
 									"    pm.expect(jsonData.amount).to.eql(500);\r",
 									"});\r",
 									""
@@ -1165,12 +1175,12 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"const jsonData = pm.response.json();\r",
-									"pm.test(\"Verifica che la lista delle aste sia un array\", function () {\r",
+									"pm.test(\"Check that the list of auctions is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.be.an('array');\r",
 									"    pm.expect(jsonData.length).to.eql(0); \r",
 									"});\r",
@@ -1202,16 +1212,16 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"const jsonData = pm.response.json();\r",
-									"pm.test(\"Verifica che la lista delle transazioni sia un array\", function () {\r",
+									"pm.test(\"Check that the transaction history of the user is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.be.an('array');\r",
 									"    pm.expect(jsonData.length).to.eql(0); \r",
-									"\r",
 									"});\r",
+									"\r",
 									""
 								],
 								"type": "text/javascript",
@@ -1239,12 +1249,12 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica che la risposta sia 201 Created\", function () {\r",
+									"pm.test(\"Status code is 201 Created\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
 									"const jsonData = pm.response.json();\r",
-									"pm.test(\"Verifica che l'asta sia stata creata con successo\", function () {\r",
+									"pm.test(\"Check that the auction has been successfully created\", function () {\r",
 									"    pm.expect(jsonData).to.have.property('istance_id');\r",
 									"    pm.expect(jsonData).to.have.property('start_date');\r",
 									"    pm.expect(jsonData).to.have.property('end_date');\r",
@@ -1318,15 +1328,16 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"const jsonData = pm.response.json();\r",
-									"pm.test(\"Verifica che la lista delle aste sia un array\", function () {\r",
+									"pm.test(\"Check that the list of auctions is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.be.an('array');\r",
 									"    pm.expect(jsonData.length).to.eql(1); \r",
 									"});\r",
+									"\r",
 									"\r",
 									"pm.test(\"Each auction should have required fields\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
@@ -1367,12 +1378,12 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"pm.test(\"Stutus code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"const jsonData = pm.response.json();\r",
-									"pm.test(\"Verifica che l'importo offerto sia corretto\", function () {\r",
+									"pm.test(\"Bid set correctly\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('istance_id');\r",
 									"    pm.expect(jsonData).to.have.property('start_date');\r",
 									"    pm.expect(jsonData).to.have.property('end_date');\r",
@@ -1418,11 +1429,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
 									"    pm.expect(jsonData.amount).to.eql(280);\r",
@@ -1454,12 +1465,12 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"pm.test(\"Stutus code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"const jsonData = pm.response.json();\r",
-									"pm.test(\"Verifica che l'importo offerto sia corretto\", function () {\r",
+									"pm.test(\"Bid set correctly\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('istance_id');\r",
 									"    pm.expect(jsonData).to.have.property('start_date');\r",
 									"    pm.expect(jsonData).to.have.property('end_date');\r",
@@ -1505,11 +1516,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
 									"    pm.expect(jsonData.amount).to.eql(480);\r",
@@ -1710,11 +1721,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
 									"    pm.expect(jsonData.amount).to.eql(760);\r",
@@ -1746,11 +1757,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
 									"    pm.expect(jsonData.amount).to.eql(480);\r",
@@ -1782,11 +1793,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica stato 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Verifica che il saldo esista\", function () {\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
 									"    pm.expect(jsonData.amount).to.eql(250);\r",
@@ -1818,15 +1829,14 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"const jsonData = pm.response.json();\r",
-									"pm.test(\"Verifica che la lista delle transazioni sia un array\", function () {\r",
+									"pm.test(\"Check that the transaction history of the user is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.be.an('array');\r",
 									"    pm.expect(jsonData.length).to.eql(1); \r",
-									"\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Each transaction should have required fields\", function () {\r",
@@ -1868,15 +1878,14 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"const jsonData = pm.response.json();\r",
-									"pm.test(\"Verifica che la lista delle transazioni sia un array\", function () {\r",
+									"pm.test(\"Check that the transaction history of the user is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.be.an('array');\r",
 									"    pm.expect(jsonData.length).to.eql(0); \r",
-									"\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -1904,15 +1913,14 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"const jsonData = pm.response.json();\r",
-									"pm.test(\"Verifica che la lista delle transazioni sia un array\", function () {\r",
+									"pm.test(\"Check that the transaction history of the user is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.be.an('array');\r",
 									"    pm.expect(jsonData.length).to.eql(1); \r",
-									"\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Each transaction should have required fields\", function () {\r",

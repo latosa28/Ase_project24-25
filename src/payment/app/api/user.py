@@ -54,10 +54,11 @@ def payment(user_id):
 
     if success:
         response = CurrencyHelper().add_amount(user_id, currency_amount)
-        return jsonify({
-            'message': 'Payment successful',
-            'amount_paid': amount,
-            'currency_received': currency_amount if response.status_code == 200 else 0,
-        }), 200
+        if response.status_code == 200:
+            return jsonify({
+                'message': 'Payment successful',
+                'amount_paid': amount,
+                'currency_received': currency_amount
+            }), 200
     else:
         raise HTTPInternalServerError("Payment failed")

@@ -13,16 +13,16 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.test(\"Collection User - Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Response should be an array\", function () {\r",
+							"pm.test(\"Collection User - Response should be an array\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.be.an('array');\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Each item should have required fields\", function () {\r",
+							"pm.test(\"Collection User - Each item should have required fields\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    jsonData.forEach(item => {\r",
 							"        pm.expect(item).to.have.property('item_id');\r",
@@ -52,11 +52,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.test(\"Item System - Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Item should have required fields\", function () {\r",
+							"pm.test(\"Item System - Item should have required fields\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property('item_id');\r",
 							"    pm.expect(jsonData).to.have.property('rarity');\r",
@@ -83,11 +83,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 404\", function () {\r",
+							"pm.test(\"Item System - Status code is 404\", function () {\r",
 							"    pm.response.to.have.status(404);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Item in the system collection not found \", function () {\r",
+							"pm.test(\"Item System - Item in the system collection not found \", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"     pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
 							"    pm.expect(jsonData).to.have.property('error_description', 'Item not found');\r",
@@ -112,11 +112,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 201\", function () {\r",
+							"pm.test(\"Roll - Status code is 201\", function () {\r",
 							"    pm.response.to.have.status(201);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Response should contain new item instance details\", function () {\r",
+							"pm.test(\"Roll -  Response should contain new item instance details\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property('item_id');\r",
 							"    pm.expect(jsonData).to.have.property('instance_id');\r",
@@ -145,11 +145,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 500\", function () {\r",
+							"pm.test(\"Roll - Status code is 500\", function () {\r",
 							"    pm.response.to.have.status(500);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Service Unavailable\", function () {\r",
+							"pm.test(\"Roll - Service Unavailable\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"error\", \"service_unavailable\");\r",
 							"    pm.expect(jsonData).to.have.property('error_description', 'Service Unavailable');\r",
@@ -174,11 +174,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.test(\"Item Collection - Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Item instance should have required fields\", function () {\r",
+							"pm.test(\"Item Collection - Item instance should have required fields\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property('date_roll')\r",
 							"    pm.expect(jsonData).to.have.property('item_id');\r",
@@ -207,11 +207,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 404\", function () {\r",
+							"pm.test(\"Item Collection - Status code is 404\", function () {\r",
 							"    pm.response.to.have.status(404);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Item instance should have required fields\", function () {\r",
+							"pm.test(\"Item Collection - Item instance should have required fields\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"     pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
 							"    pm.expect(jsonData).to.have.property('error_description', 'Item instance not found')\r",

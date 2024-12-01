@@ -55,7 +55,7 @@
 			"response": []
 		},
 		{
-			"name": "create_user missing credenzials",
+			"name": "create_user missing credentials",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -75,7 +75,7 @@
 							"    pm.response.to.have.status(400);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Create User - Fail\", function () {\r",
+							"pm.test(\"Create User - Missing Data\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"error\", 'bad_request');\r",
 							"    pm.expect(jsonData).to.have.property(\"error_description\", 'Missing Data');\r",
@@ -124,7 +124,7 @@
 							"    pm.response.to.have.status(400);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Create User - Fail\", function () {\r",
+							"pm.test(\"Create User - Invalid Credentials\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"error\", 'bad_request');\r",
 							"    pm.expect(jsonData).to.have.property(\"error_description\", 'Invalid Credentials');\r",
@@ -193,7 +193,7 @@
 							"    pm.response.to.have.status(404);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Get User by ID - Fail\", function () {\r",
+							"pm.test(\"Get User by ID - User not found\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
 							"    pm.expect(jsonData).to.have.property(\"error_description\", \"User not found\");\r",
@@ -254,7 +254,7 @@
 							"    pm.response.to.have.status(404);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Get User by Username - Fail\", function () {\r",
+							"pm.test(\"Get User by Username - User not found\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
 							"    pm.expect(jsonData).to.have.property(\"error_description\", \"User not found\");\r",
@@ -283,6 +283,8 @@
 							"pm.test(\"Delete User - Status Code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
+							"\r",
+							"\r",
 							""
 						],
 						"type": "text/javascript",
@@ -314,7 +316,7 @@
 							"    pm.response.to.have.status(404);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Delete User - Fail\", function () {\r",
+							"pm.test(\"Delete User - User not found\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"     pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
 							"    pm.expect(jsonData).to.have.property(\"error_description\", \"User not found\");\r",

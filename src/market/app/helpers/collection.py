@@ -8,11 +8,9 @@ class CollectionHelper:
         self.base_url = current_app.config["collection"]
 
     def mock_collection_request(self, user_id, instance_id, new_user_id=None):
-        if user_id >= 1 and (new_user_id is None or new_user_id >= 1):
-            # Simulazione di successo per l'utente con id 1
+        if user_id == 1 and (new_user_id is None or new_user_id == 2):
             return type('MockResponse', (object,), {"status_code": 200, "json": lambda: {"message": "Mock success"}})()
         else:
-            # Simulazione di fallimento per tutti gli altri utenti
             return type('MockResponse', (object,), {"status_code": 403, "json": lambda: {"error": "Mock failure"}})()
 
     def move_instance(self, user_id, new_user_id, instance_id):
