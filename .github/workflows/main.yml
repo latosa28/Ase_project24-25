@@ -11,70 +11,164 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '16'
         
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '16'
-          
-      - name: Install Newman
-        run: npm install -g newman
-        
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v3
-        
-      - name: Install Docker Compose
-        run: |
-          DOCKER_COMPOSE_VERSION=2.20.2
-          sudo curl -L "https://github.com/docker/compose/releases/download/v$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-          docker-compose --version
-
-  # Job con matrice per eseguire test sui vari microservizi
-  build-and-test:
+    - name: Install Newman
+      run: npm install -g newman
+      
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Install Docker Compose
+      run: |
+        DOCKER_COMPOSE_VERSION=2.20.2
+        sudo curl -L "https://github.com/docker/compose/releases/download/v$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+        docker-compose --version
+  # Test per il servizio Account
+  account-service:
     needs: setup
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        service: [ "account", "auth", "collection", "currency", "market", "payment" ]
-        file: [ "./src/docker-compose.${{ matrix.service }}.yml" ]
-        test_collection: [ "./docs/tests/${{ matrix.service }}_Test.postman_collection.json" ]
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        
-      - name: Build and Start Service
-        run: |
-          docker compose -f ${{ matrix.file }} build
-          docker compose -f ${{ matrix.file }} up -d
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Build Account Service
+      run: docker compose -f ./src/docker-compose.account.yml build
 
-      - name: Run Tests for ${{ matrix.service }} Service
-        run: newman run ${{ matrix.test_collection }} --insecure
+    - name: Start Account Service
+      run: docker compose -f ./src/docker-compose.account.yml up -d
 
-      - name: Tear Down ${{ matrix.service }} Service
-        run: docker compose -f ${{ matrix.file }} down -v
+    - name: Run Tests for Account Service
+      run: newman run ./docs/tests/Account_Test.postman_collection.json --insecure
 
-  # Job per eseguire i test di integrazione
-  integration-test:
-    needs: build-and-test
+    - name: Tear Down Account Service
+      run: docker compose -f ./src/docker-compose.account.yml down -v
+
+  # Test per il servizio Auth
+  auth-service:
+    needs: setup
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
       
-      - name: Build Full Application
-        run: docker compose -f ./src/docker-compose.yml build
+    - name: Build Auth Service
+      run: docker compose -f ./src/docker-compose.auth.yml build
 
-      - name: Start Full Application
-        run: docker compose -f ./src/docker-compose.yml up -d
+    - name: Start Auth Service
+      run: docker compose -f ./src/docker-compose.auth.yml up -d
 
-      - name: Run Integration Tests
-        run: |
-          sleep 20 # Attendere che i servizi siano completamente avviati
-          newman run ./docs/tests/Integration_Test.postman_collection.json --insecure
+    - name: Run Tests for Auth Service
+      run: newman run ./docs/tests/Auth_Test.postman_collection.json --insecure
 
-      - name: Tear Down Full Application
-        run: docker compose -f ./src/docker-compose.yml down -v
+    - name: Tear Down Auth Service
+      run: docker compose -f ./src/docker-compose.auth.yml down -v
+
+  # Test per il servizio Collection
+  collection-service:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Build Collection Service
+      run: docker compose -f ./src/docker-compose.collection.yml build
+
+    - name: Start Collection Service
+      run: docker compose -f ./src/docker-compose.collection.yml up -d
+
+    - name: Run Tests for Collection Service
+      run: newman run ./docs/tests/Collection_Test.postman_collection.json --insecure
+
+    - name: Tear Down Collection Service
+      run: docker compose -f ./src/docker-compose.collection.yml down -v
+
+  # Test per il servizio Currency
+  currency-service:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Build Currency Service
+      run: docker compose -f ./src/docker-compose.currency.yml build
+
+    - name: Start Currency Service
+      run: docker compose -f ./src/docker-compose.currency.yml up -d
+
+    - name: Run Tests for Currency Service
+      run: newman run ./docs/tests/Currency_Test.postman_collection.json --insecure
+
+    - name: Tear Down Currency Service
+      run: docker compose -f ./src/docker-compose.currency.yml down -v
+
+  # Test per il servizio Market
+  market-service:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Build Market Service
+      run: docker compose -f ./src/docker-compose.market.yml build
+
+    - name: Start Market Service
+      run: docker compose -f ./src/docker-compose.market.yml up -d
+
+    - name: Run Tests for Market Service
+      run: newman run ./docs/tests/Market_Test.postman_collection.json --insecure
+
+    - name: Tear Down Market Service
+      run: docker compose -f ./src/docker-compose.market.yml down -v
+
+  # Test per il servizio Payment
+  payment-service:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Build Payment Service
+      run: docker compose -f ./src/docker-compose.payment.yml build
+
+    - name: Start Payment Service
+      run: docker compose -f ./src/docker-compose.payment.yml up -d
+
+    - name: Run Tests for Payment Service
+      run: newman run ./docs/tests/Payment_Test.postman_collection.json --insecure
+
+    - name: Tear Down Payment Service
+      run: docker compose -f ./src/docker-compose.payment.yml down -v
+
+  # Test per l'applicazione completa (test di integrazione)
+  integration-test:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Build Full Application
+      run: docker compose -f ./src/docker-compose.yml build
+
+    - name: Start Full Application
+      run: docker compose -f ./src/docker-compose.yml up -d
+
+    - name: Run Integration Tests
+      run: |
+        sleep 20
+        newman run ./docs/tests/Integration_Test.postman_collection.json --insecure
+    - name: Tear Down Full Application
+      run: docker compose -f ./src/docker-compose.yml down -v
