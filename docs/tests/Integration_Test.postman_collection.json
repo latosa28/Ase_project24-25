@@ -1,0 +1,2012 @@
+{
+	"info": {
+		"_postman_id": "2dbf0603-6524-4310-8d43-a0c17b5ce75a",
+		"name": "Integration_Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "39564474"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "create_user1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create User - Status Code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"testuser1\",\r\n  \"email\": \"testuser1@example.com\",\r\n  \"password\": \"TestPassword123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user"
+					},
+					"response": []
+				},
+				{
+					"name": "create_user2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create User - Status Code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"testuser2\",\r\n  \"email\": \"testuser2@example.com\",\r\n  \"password\": \"TestPassword1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user"
+					},
+					"response": []
+				},
+				{
+					"name": "create_user3",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create User - Status Code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"testuser3\",\r\n  \"email\": \"testuser3@example.com\",\r\n  \"password\": \"TestPassword12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user"
+					},
+					"response": []
+				},
+				{
+					"name": "login1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains access_token\", function () {\r",
+									"    var responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property('access_token');\r",
+									"    \r",
+									"    if (responseJson.access_token) {\r",
+									"        pm.collectionVariables.set(\"jwt_token1\", responseJson.access_token);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser1\",\r\n    \"password\": \"TestPassword123\",\r\n    \"grant_type\": \"password\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user/auth"
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successfully logged out\", function () {\r",
+									"   const jsonData = pm.response.json();\r",
+									"   pm.expect(jsonData).to.have.property('message','Successfully logged out');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token1}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "https://localhost:5001/user/1/auth"
+					},
+					"response": []
+				},
+				{
+					"name": "login1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains access_token\", function () {\r",
+									"    var responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property('access_token');\r",
+									"    \r",
+									"    if (responseJson.access_token) {\r",
+									"        pm.collectionVariables.set(\"jwt_token1\", responseJson.access_token);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser1\",\r\n    \"password\": \"TestPassword123\",\r\n    \"grant_type\": \"password\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user/auth"
+					},
+					"response": []
+				},
+				{
+					"name": "delete_user1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Delete User - Status Code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token1}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "https://localhost:5001/user/1"
+					},
+					"response": []
+				},
+				{
+					"name": "create_user4",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create User - Status Code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"testuser4\",\r\n  \"email\": \"testuser4@example.com\",\r\n  \"password\": \"TestPassword123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "login1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains access_token\", function () {\r",
+									"    var responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property('access_token');\r",
+									"    \r",
+									"    if (responseJson.access_token) {\r",
+									"        pm.collectionVariables.set(\"jwt_token4\", responseJson.access_token);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser4\",\r\n    \"password\": \"TestPassword123\",\r\n    \"grant_type\": \"password\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user/auth"
+					},
+					"response": []
+				},
+				{
+					"name": "login2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains access_token\", function () {\r",
+									"    var responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property('access_token');\r",
+									"    \r",
+									"    if (responseJson.access_token) {\r",
+									"        pm.collectionVariables.set(\"jwt_token2\", responseJson.access_token);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser2\",\r\n    \"password\": \"TestPassword1234\",\r\n    \"grant_type\": \"password\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user/auth"
+					},
+					"response": []
+				},
+				{
+					"name": "login3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains access_token\", function () {\r",
+									"    var responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property('access_token');\r",
+									"    \r",
+									"    if (responseJson.access_token) {\r",
+									"        pm.collectionVariables.set(\"jwt_token3\", responseJson.access_token);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser3\",\r\n    \"password\": \"TestPassword12345\",\r\n    \"grant_type\": \"password\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user/auth"
+					},
+					"response": []
+				},
+				{
+					"name": "user_info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User info are correct\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('email','testuser4@example.com');\r",
+									"    pm.expect(jsonData).to.have.property('name','testuser4');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/userinfo"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collection",
+			"item": [
+				{
+					"name": "collection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response should be an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(item => {\r",
+									"        pm.expect(item).to.have.property('item_id');\r",
+									"        pm.expect(item).to.have.property('rarity');\r",
+									"        pm.expect(item).to.have.property('name');\r",
+									"        pm.expect(item).to.have.property('image_path');\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/4/collection"
+					},
+					"response": []
+				},
+				{
+					"name": "item_system",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('item_id');\r",
+									"    pm.expect(jsonData).to.have.property('rarity');\r",
+									"    pm.expect(jsonData).to.have.property('name');\r",
+									"    pm.expect(jsonData).to.have.property('image_path')\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/4/item/3"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response should be an empty object\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(Object.keys(jsonData).length).to.eql(0);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token1}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/4/mycollection"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response should be an empty object\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(Object.keys(jsonData).length).to.eql(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "https://localhost:5001/user/2/mycollection"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response should be an empty object\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(Object.keys(jsonData).length).to.eql(0);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/3/mycollection"
+					},
+					"response": []
+				},
+				{
+					"name": "roll1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response should contain new item instance details\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('item_id');\r",
+									"    pm.expect(jsonData).to.have.property('instance_id');\r",
+									"    pm.expect(jsonData).to.have.property('image_path');\r",
+									"    pm.expect(jsonData).to.have.property('name');\r",
+									"    pm.expect(jsonData).to.have.property('rarity');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"url": "https://localhost:5001/user/4/roll"
+					},
+					"response": []
+				},
+				{
+					"name": "roll2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response should contain new item instance details\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('item_id');\r",
+									"    pm.expect(jsonData).to.have.property('instance_id');\r",
+									"    pm.expect(jsonData).to.have.property('image_path');\r",
+									"    pm.expect(jsonData).to.have.property('name');\r",
+									"    pm.expect(jsonData).to.have.property('rarity');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"url": "https://localhost:5001/user/4/roll"
+					},
+					"response": []
+				},
+				{
+					"name": "roll3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response should contain new item instance details\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('item_id');\r",
+									"    pm.expect(jsonData).to.have.property('instance_id');\r",
+									"    pm.expect(jsonData).to.have.property('image_path');\r",
+									"    pm.expect(jsonData).to.have.property('name');\r",
+									"    pm.expect(jsonData).to.have.property('rarity');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"url": "https://localhost:5001/user/2/roll"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User collection should be an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(2); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each user item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(item => {\r",
+									"    pm.expect(item).to.have.property('item_id');\r",
+									"    pm.expect(item).to.have.property('instance_id');\r",
+									"    pm.expect(item).to.have.property('image_path');\r",
+									"    pm.expect(item).to.have.property('name');\r",
+									"    pm.expect(item).to.have.property('rarity');\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/4/mycollection"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User collection should be an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each user item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(item => {\r",
+									"    pm.expect(item).to.have.property('item_id');\r",
+									"    pm.expect(item).to.have.property('instance_id');\r",
+									"    pm.expect(item).to.have.property('image_path');\r",
+									"    pm.expect(item).to.have.property('name');\r",
+									"    pm.expect(item).to.have.property('rarity');\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "https://localhost:5001/user/2/mycollection"
+					},
+					"response": []
+				},
+				{
+					"name": "item_collection1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Item instance should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('date_roll')\r",
+									"    pm.expect(jsonData).to.have.property('item_id');\r",
+									"    pm.expect(jsonData).to.have.property('instance_id');\r",
+									"    pm.expect(jsonData).to.have.property('image_path');\r",
+									"    pm.expect(jsonData).to.have.property('name');\r",
+									"    pm.expect(jsonData).to.have.property('rarity');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/4/instance/1"
+					},
+					"response": []
+				},
+				{
+					"name": "item_collection2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Item instance should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('date_roll')\r",
+									"    pm.expect(jsonData).to.have.property('item_id');\r",
+									"    pm.expect(jsonData).to.have.property('instance_id');\r",
+									"    pm.expect(jsonData).to.have.property('image_path');\r",
+									"    pm.expect(jsonData).to.have.property('name');\r",
+									"    pm.expect(jsonData).to.have.property('rarity');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/2/instance/3"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 for successful payment\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains message and currency_received\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('message', 'Payment successful');\r",
+									"    pm.expect(jsonData).to.have.property('currency_received');\r",
+									"    pm.expect(jsonData.currency_received).to.eql(50);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token1}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"card_number\": \"4111111111111111\",\r\n    \"card_expiry\": \"12/26\",\r\n    \"card_cvc\": \"123\",\r\n    \"amount\": 10\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user/4/payment"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Currency",
+			"item": [
+				{
+					"name": "get_amount1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(510);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/4/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(480);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{jwt_token2}}",
+								"type": "text"
+							}
+						],
+						"url": "https://localhost:5001/user/2/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(500);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/3/amount"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Market",
+			"item": [
+				{
+					"name": "market_list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the list of auctions is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(0); \r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/4/market_list"
+					},
+					"response": []
+				},
+				{
+					"name": "transaction_history",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the transaction history of the user is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(0); \r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/4/transactions_history"
+					},
+					"response": []
+				},
+				{
+					"name": "auction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Check that the auction has been successfully created\", function () {\r",
+									"    pm.expect(jsonData).to.have.property('istance_id');\r",
+									"    pm.expect(jsonData).to.have.property('start_date');\r",
+									"    pm.expect(jsonData).to.have.property('end_date');\r",
+									"    pm.expect(jsonData).to.have.property('bid');\r",
+									"    pm.expect(jsonData).to.have.property('buyer_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('status')\r",
+									"    pm.expect(jsonData).to.have.property('seller_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('istance_id')\r",
+									"    pm.expect(jsonData).to.have.property('market_id')\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const currentDate = new Date();\r",
+									"\r",
+									"// Aggiungi 1 minuto alla data corrente\r",
+									"currentDate.setMinutes(currentDate.getMinutes() + 1);\r",
+									"console.log(currentDate);\r",
+									"// Imposta il fuso orario per Roma (Europe/Rome) utilizzando toLocaleString\r",
+									"const options = {\r",
+									"  timeZone: 'Europe/Rome',\r",
+									"  year: 'numeric',\r",
+									"  month: '2-digit',\r",
+									"  day: '2-digit',\r",
+									"  hour: '2-digit',\r",
+									"  minute: '2-digit'\r",
+									"};\r",
+									"\r",
+									"const formattedDate = currentDate.toLocaleString('it-IT', options).replace(',', '');\r",
+									"// Imposta la variabile \"end_date\" con la data formattata\r",
+									"pm.collectionVariables.set(\"end_date\", formattedDate);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"end_date\": \"{{end_date}}\",\r\n  \"start_bid\": 100.0\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user/4/instance/1/auction"
+					},
+					"response": []
+				},
+				{
+					"name": "market_list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the list of auctions is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Each auction should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(auction => {\r",
+									"        pm.expect(auction).to.have.property('istance_id');\r",
+									"        pm.expect(auction).to.have.property('start_date');\r",
+									"        pm.expect(auction).to.have.property('end_date');\r",
+									"        pm.expect(auction).to.have.property('bid');\r",
+									"        pm.expect(auction).to.have.property('buyer_user_id')\r",
+									"        pm.expect(auction).to.have.property('status')\r",
+									"        pm.expect(auction).to.have.property('seller_user_id')\r",
+									"        pm.expect(auction).to.have.property('istance_id')\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/2/market_list"
+					},
+					"response": []
+				},
+				{
+					"name": "bid2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Stutus code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Bid set correctly\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('istance_id');\r",
+									"    pm.expect(jsonData).to.have.property('start_date');\r",
+									"    pm.expect(jsonData).to.have.property('end_date');\r",
+									"    pm.expect(jsonData).to.have.property('bid');\r",
+									"    pm.expect(jsonData).to.have.property('buyer_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('status')\r",
+									"    pm.expect(jsonData).to.have.property('seller_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('istance_id')\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"bid_amount\": 200\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user/2/market/1/bid"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(280);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/2/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "bid3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Stutus code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Bid set correctly\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('istance_id');\r",
+									"    pm.expect(jsonData).to.have.property('start_date');\r",
+									"    pm.expect(jsonData).to.have.property('end_date');\r",
+									"    pm.expect(jsonData).to.have.property('bid');\r",
+									"    pm.expect(jsonData).to.have.property('buyer_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('status')\r",
+									"    pm.expect(jsonData).to.have.property('seller_user_id')\r",
+									"    pm.expect(jsonData).to.have.property('istance_id')\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"bid_amount\": 250\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:5001/user/3/market/1/bid"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(480);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/2/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User collection should be an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each user item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(item => {\r",
+									"    pm.expect(item).to.have.property('item_id');\r",
+									"    pm.expect(item).to.have.property('instance_id');\r",
+									"    pm.expect(item).to.have.property('image_path');\r",
+									"    pm.expect(item).to.have.property('name');\r",
+									"    pm.expect(item).to.have.property('rarity');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The instance_id of the single item should be 1\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].instance_id).to.eql(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function delay(ms) {\r",
+									"    return new Promise(resolve => setTimeout(resolve, ms));\r",
+									"}\r",
+									"\r",
+									"delay(70000).then(() => {\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/4/mycollection"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User collection should be an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each user item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(item => {\r",
+									"    pm.expect(item).to.have.property('item_id');\r",
+									"    pm.expect(item).to.have.property('instance_id');\r",
+									"    pm.expect(item).to.have.property('image_path');\r",
+									"    pm.expect(item).to.have.property('name');\r",
+									"    pm.expect(item).to.have.property('rarity');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The instance_id of the single item should be 3\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].instance_id).to.eql(3);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/2/mycollection"
+					},
+					"response": []
+				},
+				{
+					"name": "user_collection3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User collection should be an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each user item should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(item => {\r",
+									"    pm.expect(item).to.have.property('item_id');\r",
+									"    pm.expect(item).to.have.property('instance_id');\r",
+									"    pm.expect(item).to.have.property('image_path');\r",
+									"    pm.expect(item).to.have.property('name');\r",
+									"    pm.expect(item).to.have.property('rarity');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The instance_id of the single item should be 1\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].instance_id).to.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/3/mycollection"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(760);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/4/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(480);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/2/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "get_amount3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the balance exists\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"amount\");\r",
+									"    pm.expect(jsonData.amount).to.eql(250);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/3/amount"
+					},
+					"response": []
+				},
+				{
+					"name": "transaction_history1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the transaction history of the user is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each transaction should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(transaction => {\r",
+									"        pm.expect(transaction).to.have.property('istance_id');\r",
+									"        pm.expect(transaction).to.have.property('start_date');\r",
+									"        pm.expect(transaction).to.have.property('end_date');\r",
+									"        pm.expect(transaction).to.have.property('bid');\r",
+									"        pm.expect(transaction).to.have.property('buyer_user_id')\r",
+									"        pm.expect(transaction).to.have.property('status')\r",
+									"        pm.expect(transaction).to.have.property('seller_user_id')\r",
+									"        pm.expect(transaction).to.have.property('istance_id')\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token4}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/4/transactions_history"
+					},
+					"response": []
+				},
+				{
+					"name": "transaction_history2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the transaction history of the user is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(0); \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/2/transactions_history"
+					},
+					"response": []
+				},
+				{
+					"name": "transaction_history3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that the transaction history of the user is an array\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array');\r",
+									"    pm.expect(jsonData.length).to.eql(1); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each transaction should have required fields\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    jsonData.forEach(transaction => {\r",
+									"        pm.expect(transaction).to.have.property('istance_id');\r",
+									"        pm.expect(transaction).to.have.property('start_date');\r",
+									"        pm.expect(transaction).to.have.property('end_date');\r",
+									"        pm.expect(transaction).to.have.property('bid');\r",
+									"        pm.expect(transaction).to.have.property('buyer_user_id')\r",
+									"        pm.expect(transaction).to.have.property('status')\r",
+									"        pm.expect(transaction).to.have.property('seller_user_id')\r",
+									"        pm.expect(transaction).to.have.property('istance_id')\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token3}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:5001/user/3/transactions_history"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt_token1",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token3",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token_admin",
+			"value": ""
+		},
+		{
+			"key": "jwt_token4",
+			"value": ""
+		},
+		{
+			"key": "end_date",
+			"value": ""
+		}
+	]
+}

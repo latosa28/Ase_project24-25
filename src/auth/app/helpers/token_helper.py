@@ -1,15 +1,10 @@
-import datetime
-import uuid
 from functools import wraps
 
 import jwt
-from cryptography.hazmat.primitives.asymmetric import rsa
-from flask import request, jsonify
+from flask import request
 
-private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-public_key = private_key.public_key()
-
-MY_APP = "http://localhost"
+from errors.errors import HTTPBadRequestError, HTTPUnauthorizedError, HTTPForbiddenError
+from helpers.auth_helper import public_key, MY_APP
 
 
 def decode_token(token):
@@ -23,58 +18,39 @@ def decode_token(token):
     return decoded_token
 
 
-def generate_token(user_id):
-    # Define the token payload with standard OAuth claims
-    payload = {
-        "iss": MY_APP,  # Issuer: your auth server's URL
-        "sub": str(user_id),  # Subject: the user's unique ID
-        "aud": MY_APP,  # Audience: the API/service you're securing
-        "iat": datetime.datetime.now(datetime.UTC),  # Issued at: current time
-        "exp": datetime.datetime.now(datetime.UTC)
-        + datetime.timedelta(hours=1),  # Expiration time
-        "scope": "all",  # Scopes: permissions granted to this token
-        "jti": str(uuid.uuid4()),  # JWT ID: unique identifier for the token
-    }
-    # Generate the access token
-    access_token = jwt.encode(payload, private_key, algorithm="RS256")
-    return access_token
-
-
-def get_token_user_id():
-    auth_header = request.headers.get('Authorization')
+def get_token_info():
+    auth_header = request.headers.get("Authorization")
     if not auth_header:
-        return jsonify({'message': 'Token is missing!'}), 403
+        raise HTTPBadRequestError("Missing token", "invalid_request")
 
     token = auth_header.removeprefix("Bearer ").strip()
 
     try:
         data = decode_token(token)
-        token_user_id = data['sub']
+        token_user_id = data["sub"]
+        return token_user_id
     except Exception:
-        return jsonify({'message': 'Token is invalid!'}), 403
-    return token_user_id
+        raise HTTPUnauthorizedError("Invalid token", "invalid_token")
 
 
-def token_required(f):
+def token_authorized(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        token_user_id = get_token_user_id()
-        user_id = kwargs.get('user_id')
+        token_user_id = get_token_info()
+        user_id = kwargs.get("user_id")
         if int(token_user_id) != user_id:
-            return jsonify({'message': 'Unauthorized Access'}), 403
+            raise HTTPForbiddenError("Unauthorized Access", "unauthorized")
 
         return f(*args, **kwargs)
     return wrapper
 
 
-def admin_token_required(f):
+def admin_token_authorized(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        token_user_id = get_token_user_id()
-        user_id = kwargs.get('admin_id')
-        if int(token_user_id) != user_id:
-            return jsonify({'message': 'Unauthorized Access'}), 403
-
+        token_admin_id = get_token_info()
+        admin_id = kwargs.get("admin_id")
+        if int(token_admin_id) != admin_id:
+            raise HTTPForbiddenError("Unauthorized Access", "unauthorized")
         return f(*args, **kwargs)
     return wrapper
-

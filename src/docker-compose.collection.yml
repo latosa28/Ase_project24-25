@@ -15,7 +15,13 @@ services:
       - DB_PORT=3306
       - DB_NAME=${DB_COLLECTION_NAME}
       - DB_USER=${DB_COLLECTION_USER}
-      - DB_PASSWORD=${DB_COLLECTION_PASSWORD}
+    secrets:
+      - db_collection_password
+      - collection_cert
+      - collection_key
+      - mysql_ca_cert
+      - collection_db_cert
+      - collection_db_key
     depends_on:
       collection_db:
         condition: service_healthy  # Ensure the database starts before the service
@@ -25,10 +31,17 @@ services:
     image: mysql:8
     container_name: collection_db
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
       - MYSQL_DATABASE=${DB_COLLECTION_NAME}
       - MYSQL_USER=${DB_COLLECTION_USER}
-      - MYSQL_PASSWORD=${DB_COLLECTION_PASSWORD}
+      - MYSQL_PASSWORD_FILE=/run/secrets/db_collection_password
+    command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/collection_db_cert --ssl-key=/run/secrets/collection_db_key
+    secrets:
+      - db_collection_password
+      - mysql_ca_cert
+      - collection_db_cert
+      - collection_db_key
+      - db_root_password
     ports:
       - "3306:3306"
     healthcheck:
@@ -43,3 +56,23 @@ services:
 
 volumes:
   test_collection_db_data:
+
+secrets:
+  # DB Password secrets
+  db_collection_password:
+    file: ./secrets/collection/db_password.txt
+  db_root_password:
+    file: ./secrets/mysql/db_password.txt
+
+  # Microservices certificates
+  collection_cert:
+    file: ./secrets/collection/cert.pem
+  collection_key:
+    file: ./secrets/collection/key.pem
+
+  mysql_ca_cert:
+    file: ./secrets/mysql/mysql_ca_cert.pem
+  collection_db_cert:
+    file: ./secrets/collection/db_cert.pem
+  collection_db_key:
+    file: ./secrets/collection/db_key.pem

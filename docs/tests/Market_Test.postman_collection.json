@@ -13,11 +13,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica che la risposta sia 201 Created\", function () {\r",
+							"pm.test(\"Auction - Status code is 201\", function () {\r",
 							"    pm.response.to.have.status(201);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Verifica che l'asta sia stata creata con successo\", function () {\r",
+							"pm.test(\"Auction - Check that the auction has been successfully created\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property('istance_id');\r",
 							"    pm.expect(jsonData).to.have.property('start_date');\r",
@@ -38,25 +38,24 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"// Ottieni la data corrente in UTC\r",
 							"const currentDate = new Date();\r",
 							"\r",
-							"// Aggiungi 1 minuto alla data\r",
-							"currentDate.setMinutes(currentDate.getMinutes() + 1);\r",
+							"// Aggiungi 1 minuto alla data corrente\r",
+							"currentDate.setMinutes(currentDate.getMinutes() + 2);\r",
+							"console.log(currentDate);\r",
+							"// Imposta il fuso orario per Roma (Europe/Rome) utilizzando toLocaleString\r",
+							"const options = {\r",
+							"  timeZone: 'Europe/Rome',\r",
+							"  year: 'numeric',\r",
+							"  month: '2-digit',\r",
+							"  day: '2-digit',\r",
+							"  hour: '2-digit',\r",
+							"  minute: '2-digit'\r",
+							"};\r",
 							"\r",
-							"// Estrai giorno, mese, anno, ore e minuti\r",
-							"const day = String(currentDate.getDate()).padStart(2, '0');\r",
-							"const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // I mesi in JavaScript partono da 0\r",
-							"const year = currentDate.getFullYear();\r",
-							"const hours = String(currentDate.getHours()).padStart(2, '0');\r",
-							"const minutes = String(currentDate.getMinutes()).padStart(2, '0');\r",
-							"\r",
-							"// Formatta la data nel formato \"dd/mm/yyyy HH:mm\"\r",
-							"const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;\r",
-							"\r",
+							"const formattedDate = currentDate.toLocaleString('it-IT', options).replace(',', '');\r",
 							"// Imposta la variabile \"end_date\" con la data formattata\r",
-							"pm.collectionVariables.set(\"end_date\", formattedDate);\r",
-							""
+							"pm.collectionVariables.set(\"end_date\", formattedDate);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -75,7 +74,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/1/instance/2/auction"
+				"url": "https://localhost:5004/user/1/instance/1/auction"
 			},
 			"response": []
 		},
@@ -86,14 +85,14 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica che la risposta sia 400 \", function () {\r",
+							"pm.test(\"Auction - Status code is 400 \", function () {\r",
 							"    pm.response.to.have.status(400);\r",
 							"});\r",
 							"\r",
-							"\r",
-							"pm.test(\"Auction already open\", function () {\r",
+							"pm.test(\"Auction - Auction already open\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('message','Auction already open');\r",
+							"    pm.expect(jsonData).to.have.property('error','bad_request');\r",
+							"    pm.expect(jsonData).to.have.property('error_description','Auction already open');\r",
 							"});\r",
 							""
 						],
@@ -105,25 +104,24 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"// Ottieni la data corrente in UTC\r",
 							"const currentDate = new Date();\r",
 							"\r",
-							"// Aggiungi 1 minuto alla data\r",
+							"// Aggiungi 1 minuto alla data corrente\r",
 							"currentDate.setMinutes(currentDate.getMinutes() + 1);\r",
+							"console.log(currentDate);\r",
+							"// Imposta il fuso orario per Roma (Europe/Rome) utilizzando toLocaleString\r",
+							"const options = {\r",
+							"  timeZone: 'Europe/Rome',\r",
+							"  year: 'numeric',\r",
+							"  month: '2-digit',\r",
+							"  day: '2-digit',\r",
+							"  hour: '2-digit',\r",
+							"  minute: '2-digit'\r",
+							"};\r",
 							"\r",
-							"// Estrai giorno, mese, anno, ore e minuti\r",
-							"const day = String(currentDate.getDate()).padStart(2, '0');\r",
-							"const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // I mesi in JavaScript partono da 0\r",
-							"const year = currentDate.getFullYear();\r",
-							"const hours = String(currentDate.getHours()).padStart(2, '0');\r",
-							"const minutes = String(currentDate.getMinutes()).padStart(2, '0');\r",
-							"\r",
-							"// Formatta la data nel formato \"dd/mm/yyyy HH:mm\"\r",
-							"const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;\r",
-							"\r",
+							"const formattedDate = currentDate.toLocaleString('it-IT', options).replace(',', '');\r",
 							"// Imposta la variabile \"end_date\" con la data formattata\r",
-							"pm.collectionVariables.set(\"end_date\", formattedDate);\r",
-							""
+							"pm.collectionVariables.set(\"end_date\", formattedDate);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -142,7 +140,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/1/instance/1/auction"
+				"url": "https://localhost:5004/user/1/instance/1/auction"
 			},
 			"response": []
 		},
@@ -153,14 +151,14 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica che la risposta sia 400\", function () {\r",
+							"pm.test(\"Auction - Status code is 400\", function () {\r",
 							"    pm.response.to.have.status(400);\r",
 							"});\r",
 							"\r",
-							"\r",
-							"pm.test(\"Missing requirements\", function () {\r",
+							"pm.test(\"Auction - Missing requirements\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('message','end_date and start_bid are mandatory');\r",
+							"     pm.expect(jsonData).to.have.property('error','bad_request');\r",
+							"    pm.expect(jsonData).to.have.property('error_description','end_date and start_bid are mandatory');\r",
 							"});\r",
 							""
 						],
@@ -172,25 +170,24 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"// Ottieni la data corrente in UTC\r",
 							"const currentDate = new Date();\r",
 							"\r",
-							"// Aggiungi 1 minuto alla data\r",
+							"// Aggiungi 1 minuto alla data corrente\r",
 							"currentDate.setMinutes(currentDate.getMinutes() + 1);\r",
+							"console.log(currentDate);\r",
+							"// Imposta il fuso orario per Roma (Europe/Rome) utilizzando toLocaleString\r",
+							"const options = {\r",
+							"  timeZone: 'Europe/Rome',\r",
+							"  year: 'numeric',\r",
+							"  month: '2-digit',\r",
+							"  day: '2-digit',\r",
+							"  hour: '2-digit',\r",
+							"  minute: '2-digit'\r",
+							"};\r",
 							"\r",
-							"// Estrai giorno, mese, anno, ore e minuti\r",
-							"const day = String(currentDate.getDate()).padStart(2, '0');\r",
-							"const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // I mesi in JavaScript partono da 0\r",
-							"const year = currentDate.getFullYear();\r",
-							"const hours = String(currentDate.getHours()).padStart(2, '0');\r",
-							"const minutes = String(currentDate.getMinutes()).padStart(2, '0');\r",
-							"\r",
-							"// Formatta la data nel formato \"dd/mm/yyyy HH:mm\"\r",
-							"const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;\r",
-							"\r",
+							"const formattedDate = currentDate.toLocaleString('it-IT', options).replace(',', '');\r",
 							"// Imposta la variabile \"end_date\" con la data formattata\r",
-							"pm.collectionVariables.set(\"end_date\", formattedDate);\r",
-							""
+							"pm.collectionVariables.set(\"end_date\", formattedDate);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -209,7 +206,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/1/instance/1/auction"
+				"url": "https://localhost:5004/user/1/instance/1/auction"
 			},
 			"response": []
 		},
@@ -220,17 +217,16 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+							"pm.test(\"Market List - Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"\r",
-							"pm.test(\"Verifica che la lista delle aste sia un array\", function () {\r",
+							"pm.test(\"Market List - Check that the list of auctions is an array\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.be.an('array');\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Each auction should have required fields\", function () {\r",
+							"pm.test(\"Market List - Each auction should have required fields\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    jsonData.forEach(auction => {\r",
 							"        pm.expect(auction).to.have.property('istance_id');\r",
@@ -252,7 +248,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5004/user/1/market_list"
+				"url": "https://localhost:5004/user/1/market_list"
 			},
 			"response": []
 		},
@@ -263,12 +259,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+							"pm.test(\"Bid - Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
 							"\r",
-							"pm.test(\"Verifica che l'importo offerto sia corretto\", function () {\r",
+							"pm.test(\"Bid - Bid set correctly\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property('istance_id');\r",
 							"    pm.expect(jsonData).to.have.property('start_date');\r",
@@ -298,7 +294,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/2/market/1/bid"
+				"url": "https://localhost:5004/user/2/market/1/bid"
 			},
 			"response": []
 		},
@@ -309,14 +305,15 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica che la risposta sia 403\", function () {\r",
+							"pm.test(\"Bid - Status code is 403\", function () {\r",
 							"    pm.response.to.have.status(403);\r",
 							"});\r",
 							"\r",
 							"\r",
-							"pm.test(\"Seller cannot bid on his auction\", function () {\r",
+							"pm.test(\"Bid - Seller cannot bid on his auction\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('message','You cannot bid on your own auction');\r",
+							"    pm.expect(jsonData).to.have.property('error','forbidden');\r",
+							"    pm.expect(jsonData).to.have.property('error_description','You cannot bid on your own auction');\r",
 							"});\r",
 							""
 						],
@@ -337,7 +334,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/1/market/1/bid"
+				"url": "https://localhost:5004/user/1/market/1/bid"
 			},
 			"response": []
 		},
@@ -348,14 +345,14 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica che la risposta sia 400\", function () {\r",
+							"pm.test(\"Bid - Status code is 400\", function () {\r",
 							"    pm.response.to.have.status(400);\r",
 							"});\r",
 							"\r",
-							"\r",
-							"pm.test(\"Bid is mandatory\", function () {\r",
+							"pm.test(\"Bid - Bid is mandatory\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('message','bid is mandatory');\r",
+							"    pm.expect(jsonData).to.have.property('error','bad_request');\r",
+							"    pm.expect(jsonData).to.have.property('error_description','bid is mandatory');\r",
 							"});\r",
 							""
 						],
@@ -376,7 +373,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5004/user/2/market/1/bid"
+				"url": "https://localhost:5004/user/2/market/1/bid"
 			},
 			"response": []
 		},
@@ -387,17 +384,17 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica che la risposta sia 200 OK\", function () {\r",
+							"pm.test(\"Transaction history - Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
 							"\r",
-							"pm.test(\"Verifica che la lista delle transazioni sia un array\", function () {\r",
+							"pm.test(\"Transaction history - Check that the transaction list is an array\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.be.an('array');\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Each transaction should have required fields\", function () {\r",
+							"pm.test(\"Transaction history - Each transaction should have required fields\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    jsonData.forEach(transaction => {\r",
 							"        pm.expect(transaction).to.have.property('istance_id');\r",
@@ -419,7 +416,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5004/user/1/transactions_history"
+				"url": "https://localhost:5004/user/1/transactions_history"
 			},
 			"response": []
 		}

@@ -1,6 +1,6 @@
 from flask import Flask
 
-from conf.config import load_config
+from errors.error_handler import register_errors
 from services.account.routes import account_bp
 from services.auth.routes import auth_bp
 from services.collection.routes import collection_bp
@@ -9,7 +9,7 @@ from services.market.routes import market_bp
 from services.payment.routes import payment_bp
 
 app = Flask(__name__)
-load_config(app)
+register_errors(app)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(account_bp)

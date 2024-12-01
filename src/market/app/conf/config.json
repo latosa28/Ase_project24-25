@@ -1,9 +1,0 @@
-{
-    "auction_end":
-    {
-        "job_frequency_second": 10
-    },
-    "date_format": "%d/%m/%Y %H:%M",
-    "currency": "http://currency:5005",
-    "collection": "http://collection:5002"
-}

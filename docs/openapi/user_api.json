@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5001",
+      "url": "https://localhost:5001",
       "description": "Local API Gateway"
     }
   ],

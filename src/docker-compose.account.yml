@@ -15,7 +15,13 @@ services:
       - DB_PORT=3306
       - DB_NAME=${DB_ACCOUNT_NAME}
       - DB_USER=${DB_ACCOUNT_USER}
-      - DB_PASSWORD=${DB_ACCOUNT_PASSWORD}
+    secrets:
+      - db_account_password
+      - account_cert
+      - account_key
+      - mysql_ca_cert
+      - account_db_cert
+      - account_db_key
     depends_on:
       account_db:
         condition: service_healthy  # Ensure the database starts before the service
@@ -25,10 +31,17 @@ services:
     image: mysql:8
     container_name: account_db
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
       - MYSQL_DATABASE=${DB_ACCOUNT_NAME}
       - MYSQL_USER=${DB_ACCOUNT_USER}
-      - MYSQL_PASSWORD=${DB_ACCOUNT_PASSWORD}
+      - MYSQL_PASSWORD_FILE=/run/secrets/db_account_password
+    command: --ssl-ca=/run/secrets/mysql_ca_cert --ssl-cert=/run/secrets/account_db_cert --ssl-key=/run/secrets/account_db_key
+    secrets:
+      - db_account_password
+      - mysql_ca_cert
+      - account_db_cert
+      - account_db_key
+      - db_root_password
     ports:
       - "3306:3306"
     healthcheck:
@@ -42,3 +55,23 @@ services:
 
 volumes:
   test_account_db_:  # Explicitly define the named volume
+
+secrets:
+  # DB Password secrets
+  db_account_password:
+    file: ./secrets/account/db_password.txt
+  db_root_password:
+    file: ./secrets/mysql/db_password.txt
+
+  # Microservices certificates
+  account_cert:
+    file: ./secrets/account/cert.pem
+  account_key:
+    file: ./secrets/account/key.pem
+
+  mysql_ca_cert:
+    file: ./secrets/mysql/mysql_ca_cert.pem
+  account_db_cert:
+    file: ./secrets/account/db_cert.pem
+  account_db_key:
+    file: ./secrets/account/db_key.pem

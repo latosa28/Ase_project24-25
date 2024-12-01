@@ -1,0 +1,8 @@
+{
+    "db_conf": {
+        "db_password_secret": "db_currency_password",
+        "ca_cert_secret": "mysql_ca_cert",
+        "client_cert_secret": "currency_db_cert",
+        "client_key_secret": "currency_db_key"
+    }
+}

@@ -13,7 +13,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica stato 200 OK\", function () {\r",
+							"pm.test(\"Add Amount - Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
@@ -36,7 +36,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5005/user/1/add_amount"
+				"url": "https://localhost:5005/user/1/add_amount"
 			},
 			"response": []
 		},
@@ -47,13 +47,14 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica stato 400\", function () {\r",
+							"pm.test(\"Add Amount - Status code is 400\", function () {\r",
 							"    pm.response.to.have.status(400);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Not valid amount\", function () {\r",
+							"pm.test(\"Add Amount - Not valid amount\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"error\", 'Amount must be a valid number');\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", 'bad_request');\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", 'Amount must be a valid number');\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -73,7 +74,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5005/user/1/add_amount"
+				"url": "https://localhost:5005/user/1/add_amount"
 			},
 			"response": []
 		},
@@ -84,13 +85,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"// Verifica che la richiesta abbia avuto successo\r",
-							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.test(\"Get Amount - Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"// Verifica che la risposta contenga l'ID utente e l'importo\r",
-							"pm.test(\"Response contains user_id and amount\", function () {\r",
+							"pm.test(\"Get Amount - Response contains user_id and amount\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"user_id\");\r",
 							"    pm.expect(jsonData).to.have.property(\"amount\",50);\r",
@@ -105,7 +104,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5005/user/1/amount"
+				"url": "https://localhost:5005/user/1/amount"
 			},
 			"response": []
 		},
@@ -116,14 +115,14 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"// Verifica che la richiesta abbia avuto successo\r",
-							"pm.test(\"Status code is 404\", function () {\r",
+							"pm.test(\"Get Amount - Status code is 404\", function () {\r",
 							"    pm.response.to.have.status(404);\r",
 							"});\r",
 							"\r",
-							"// Verifica che la risposta contenga l'ID utente e l'importo\r",
-							"pm.test(\"User not found\", function () {\r",
-							"    const jsonData = pm.response.json('error', 'User not found');\r",
+							"pm.test(\"Get Amount - User not found\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", 'not_found');\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", 'User not found');\r",
 							"});\r",
 							""
 						],
@@ -135,7 +134,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5005/user/2/amount"
+				"url": "https://localhost:5005/user/2/amount"
 			},
 			"response": []
 		},
@@ -146,7 +145,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica stato 200 OK\", function () {\r",
+							"pm.test(\"Sub Amount - Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
@@ -169,7 +168,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5005/user/1/sub_amount"
+				"url": "https://localhost:5005/user/1/sub_amount"
 			},
 			"response": []
 		},
@@ -180,13 +179,14 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verifica stato 400\", function () {\r",
+							"pm.test(\"Sub Amount - Status code is 400\", function () {\r",
 							"    pm.response.to.have.status(400);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Insufficient balance\", function () {\r",
+							"pm.test(\"Sub Amount -Insufficient balance\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"error\", 'Insufficient balance');\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", 'bad_request');\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", 'Insufficient balance');\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -206,7 +206,7 @@
 						}
 					}
 				},
-				"url": "http://localhost:5005/user/1/sub_amount"
+				"url": "https://localhost:5005/user/1/sub_amount"
 			},
 			"response": []
 		},
@@ -217,13 +217,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"// Verifica che la richiesta abbia avuto successo\r",
-							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.test(\"Get Amount - Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"// Verifica che la risposta contenga l'ID utente e l'importo\r",
-							"pm.test(\"Response contains user_id and amount\", function () {\r",
+							"pm.test(\"Get Amount - Response contains user_id and amount\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"user_id\");\r",
 							"    pm.expect(jsonData).to.have.property(\"amount\",0);\r",
@@ -238,7 +236,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5005/user/1/amount"
+				"url": "https://localhost:5005/user/1/amount"
 			},
 			"response": []
 		}
