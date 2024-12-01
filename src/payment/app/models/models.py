@@ -10,9 +10,6 @@ class Transactions(db.Model):
 
     id = Column(db.Integer, primary_key=True)
     user_id = Column(db.Integer, nullable=False)
-    card_number = Column(db.String(16), nullable=False)
-    card_expiry = Column(db.String(5), nullable=False)
-    card_cvc = Column(db.String(3), nullable=False)
     amount = Column(db.Float, nullable=False)  # Importo pagato in EUR
     currency_amount = Column(
         Float, nullable=False

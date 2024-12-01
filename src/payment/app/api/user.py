@@ -41,9 +41,6 @@ def payment(user_id):
     transaction_status = 'success' if success else 'failed'
     transaction = Transactions(
         user_id=user_id,
-        card_number=card_number,
-        card_expiry=card_expiry,
-        card_cvc=card_cvc,
         amount=amount,
         currency_amount=currency_amount,
         status=transaction_status,
