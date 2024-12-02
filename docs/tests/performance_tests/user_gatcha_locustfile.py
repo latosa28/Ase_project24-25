@@ -3,6 +3,7 @@ import random
 import json
 import time
 
+
 class GachaTestUser(HttpUser):
     wait_time = between(0.5, 0.6)
     user_counter = 0  # Contatore statico per ID univoci

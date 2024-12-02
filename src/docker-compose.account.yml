@@ -15,6 +15,7 @@ services:
       - DB_PORT=3306
       - DB_NAME=${DB_ACCOUNT_NAME}
       - DB_USER=${DB_ACCOUNT_USER}
+      - REDIS_HOST=redis
     secrets:
       - db_account_password
       - account_cert
@@ -25,6 +26,12 @@ services:
     depends_on:
       account_db:
         condition: service_healthy  # Ensure the database starts before the service
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    expose:
+      - "6379:6379"
 
   # MySQL for the account microservice
   account_db:

@@ -1,4 +1,8 @@
 {
+    "login": {
+        "max_attempts": 5,
+        "time_window": 600
+    },
     "currency": "https://currency:5005",
     "db_conf": {
         "db_password_secret": "db_account_password",

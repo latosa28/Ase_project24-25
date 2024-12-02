@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-# Lista di microservizi e gateway
+# Lista di microservizi
 services = [
     "auth",
     "collection",
@@ -14,8 +14,13 @@ services = [
     "admin_api_gateway"
 ]
 
-# Path base per i certificati
-base_path = './secrets/'
+# Lista dei servizi per i quali non generiamo i certificati del DB
+no_db_services = ["api_gateway",
+                  "admin_api_gateway",
+                  "auth"]
+
+# Path base per i secrets
+base_path = '../src/secrets/'
 
 
 # Funzione per creare i certificati
@@ -98,10 +103,7 @@ def generate_mysql_root_password():
     generate_db_password("mysql")
 
 
-# Lista dei servizi per i quali non generiamo certificati DB
-no_db_services = ["api_gateway", "admin_api_gateway", "auth"]
-
-# Generazione dei certificati per ogni servizio
+# Generazione dei secrets per ogni servizio
 for service in services:
     no_db_serv = service in no_db_services
     generate_certificates(service, no_db_serv)

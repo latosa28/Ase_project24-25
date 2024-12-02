@@ -60,6 +60,7 @@ services:
       - DB_PORT=3306
       - DB_NAME=${DB_ACCOUNT_NAME}
       - DB_USER=${DB_ACCOUNT_USER}
+      - REDIS_HOST=redis
     secrets:
       - db_account_password
       - account_cert
@@ -70,6 +71,14 @@ services:
     depends_on:
       account_db:
         condition: service_healthy
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    expose:
+      - "6379"
+    networks:
+      - app-network
 
   # Microservice for market
   market:
@@ -214,6 +223,7 @@ services:
       - DB_PORT=3306
       - DB_NAME=${DB_ADMIN_NAME}
       - DB_USER=${DB_ADMIN_USER}
+      - REDIS_HOST=redis
     secrets:
       - db_admin_account_password
       - admin_account_cert

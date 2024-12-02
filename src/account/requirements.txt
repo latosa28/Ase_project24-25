@@ -7,3 +7,5 @@ mysql-connector-python
 requests
 PyJWT
 cryptography
+Werkzeug
+redis

@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "c330f3ed-825a-4a13-a9bd-ae025c27b4d8",
+		"_postman_id": "b027af93-066b-4905-a267-664dc55e9d90",
 		"name": "Account_Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "39564474"
+		"_exporter_id": "17878724"
 	},
 	"item": [
 		{
@@ -55,7 +55,7 @@
 			"response": []
 		},
 		{
-			"name": "create_user missing credentials",
+			"name": "create_user missing credenzials",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -75,7 +75,7 @@
 							"    pm.response.to.have.status(400);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Create User - Missing Data\", function () {\r",
+							"pm.test(\"Create User - Fail\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"error\", 'bad_request');\r",
 							"    pm.expect(jsonData).to.have.property(\"error_description\", 'Missing Data');\r",
@@ -124,7 +124,7 @@
 							"    pm.response.to.have.status(400);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Create User - Invalid Credentials\", function () {\r",
+							"pm.test(\"Create User - Fail\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"error\", 'bad_request');\r",
 							"    pm.expect(jsonData).to.have.property(\"error_description\", 'Invalid Credentials');\r",
@@ -165,7 +165,7 @@
 							"\r",
 							"pm.test(\"Get User by ID - User Data is Correct\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"name\", \"testuser\");\r",
+							"    pm.expect(jsonData).to.have.property(\"username\", \"testuser\");\r",
 							"    pm.expect(jsonData).to.have.property(\"email\", \"testuser@example.com\");\r",
 							"});\r",
 							""
@@ -193,7 +193,7 @@
 							"    pm.response.to.have.status(404);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Get User by ID - User not found\", function () {\r",
+							"pm.test(\"Get User by ID - Fail\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
 							"    pm.expect(jsonData).to.have.property(\"error_description\", \"User not found\");\r",
@@ -213,7 +213,7 @@
 			"response": []
 		},
 		{
-			"name": "get_user_username",
+			"name": "check credentials username",
 			"event": [
 				{
 					"listen": "test",
@@ -226,8 +226,6 @@
 							"pm.test(\"Get User by Username - User Data is Correct\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"     pm.expect(jsonData).to.have.property(\"user_id\", 1);\r",
-							"    pm.expect(jsonData).to.have.property(\"username\", \"testuser\");\r",
-							"    pm.expect(jsonData).to.have.property(\"email\", \"testuser@example.com\");\r",
 							"});\r",
 							""
 						],
@@ -237,27 +235,36 @@
 				}
 			],
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
-				"url": "https://localhost:5003/user/username/testuser"
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\": \"TestPassword123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://localhost:5003/user/username/testuser/check_credentials"
 			},
 			"response": []
 		},
 		{
-			"name": "get_user_username user not found",
+			"name": "check credentials username invalid password",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Get User by Username - Status Code is 404\", function () {\r",
-							"    pm.response.to.have.status(404);\r",
+							"pm.test(\"Check credentials User by Username - Status Code is 404\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Get User by Username - User not found\", function () {\r",
+							"pm.test(\"Check credentials by Username - Fail\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
-							"    pm.expect(jsonData).to.have.property(\"error_description\", \"User not found\");\r",
+							"    pm.expect(jsonData).to.have.property(\"error\", \"forbidden\");\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", \"Invalid Credentials\");\r",
 							"});\r",
 							""
 						],
@@ -267,9 +274,18 @@
 				}
 			],
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
-				"url": "https://localhost:5003/user/username/testuser5"
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\": \"wrong_password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://localhost:5003/user/username/testuser/check_credentials"
 			},
 			"response": []
 		},
@@ -283,8 +299,6 @@
 							"pm.test(\"Delete User - Status Code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
-							"\r",
-							"\r",
 							""
 						],
 						"type": "text/javascript",
@@ -316,7 +330,7 @@
 							"    pm.response.to.have.status(404);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Delete User - User not found\", function () {\r",
+							"pm.test(\"Delete User - Fail\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"     pm.expect(jsonData).to.have.property(\"error\", \"not_found\");\r",
 							"    pm.expect(jsonData).to.have.property(\"error_description\", \"User not found\");\r",

@@ -20,5 +20,4 @@ class User(db.Model):
             "user_id": self.user_id,
             "username": self.username,
             "email": self.email,
-            "password": self.password,
         }

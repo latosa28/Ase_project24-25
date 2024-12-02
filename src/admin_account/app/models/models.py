@@ -20,5 +20,4 @@ class Admin(db.Model):
             "admin_id": self.admin_id,
             "username": self.username,
             "email": self.email,
-            "password": self.password,
         }

@@ -3,7 +3,8 @@ import random
 import json
 import time
 
-class GachaTestUser(HttpUser):
+
+class RarityGachaTestUser(HttpUser):
     wait_time = between(0.1, 0.2)  # Tempo di attesa tra le richieste
     user_counter = 0  # Contatore per assegnare un ID univoco a ogni utente
 

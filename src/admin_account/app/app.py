@@ -1,10 +1,12 @@
 import logging
 from flask import Flask, request, jsonify
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from errors.error_handler import register_errors
-from errors.errors import HTTPBadRequestError, HTTPInternalServerError, HTTPNotFoundError
+from errors.errors import HTTPBadRequestError, HTTPInternalServerError, HTTPNotFoundError, HTTPForbiddenError
 from models.models import Admin, db
 from utils_helpers.config import load_config
+from utils_helpers.credentials import check_credentials
 
 logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
@@ -36,6 +38,7 @@ def create_admin():
     if admin:
         raise HTTPBadRequestError("Invalid Credentials")
 
+    password = generate_password_hash(password, method='pbkdf2:sha256')
     new_admin = Admin(username=username, email=email, password=password)
 
     try:
@@ -69,17 +72,20 @@ def delete_admin(admin_id):
 def get_admin_by_id(admin_id):
     admin = Admin.query.get(admin_id)
     if admin:
-        return jsonify({"name": admin.username, "email": admin.email}), 200
+        return jsonify(admin.serialize()), 200
     else:
         raise HTTPNotFoundError("Admin not found")
 
 
-# Route to get user details by ID
-@app.route("/admin/username/<string:username>", methods=["GET"])
-def get_admin_by_username(username):
+# Route to check account credentials
+@app.route('/admin/username/<string:username>/check_credentials', methods=['POST'])
+def check_account_credentials(username):
+    password = request.get_json()["password"]
     admin = Admin.query.filter_by(username=username).first()
     if admin:
-        return jsonify(admin.serialize()), 200
+        if check_credentials("admin", username, admin.password, password):
+            return jsonify({"admin_id": admin.admin_id}), 200
+        return HTTPForbiddenError("Invalid Credentials")
     else:
         raise HTTPNotFoundError("Admin not found")
 
@@ -87,4 +93,4 @@ def get_admin_by_username(username):
 # Run the application
 if __name__ == "__main__":
     # Set host to '0.0.0.0' to make the app accessible from other containers
-    app.run(host="0.0.0.0", port=5010, debug=True)
+    app.run(host="0.0.0.0", port=5010)
