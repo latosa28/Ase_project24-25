@@ -65,7 +65,7 @@
 							"pm.test(\"Login User - Missing mandatory fields\", function () {\r",
 							"    const responseJson = pm.response.json();\r",
 							"    pm.expect(responseJson).to.have.property('error','invalid_request');\r",
-							"    pm.expect(responseJson).to.have.property('error_description','Missing mandatory fields')\r",
+							"    pm.expect(responseJson).to.have.property('error_description','Missing password field')\r",
 							"});\r",
 							""
 						],

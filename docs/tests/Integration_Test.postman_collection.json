@@ -475,7 +475,7 @@
 									"pm.test(\"User info are correct\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('email','testuser4@example.com');\r",
-									"    pm.expect(jsonData).to.have.property('name','testuser4');\r",
+									"    pm.expect(jsonData).to.have.property('username','testuser4');\r",
 									"});"
 								],
 								"type": "text/javascript",
