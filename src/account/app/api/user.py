@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from errors.errors import HTTPBadRequestError, HTTPError, HTTPInternalServerError, HTTPNotFoundError, HTTPForbiddenError
 from helpers.currency import CurrencyHelper
 from models.models import User, db
+from utils_helpers.credentials import check_credentials
 from utils_helpers.token import token_authorized
 
 user_api = Blueprint('user_api', __name__)
@@ -77,7 +78,7 @@ def check_account_credentials(username):
     password = request.get_json()["password"]
     user = User.query.filter_by(username=username).first()
     if user:
-        if check_password_hash(user.password, password):
+        if check_credentials("user", username, user.password, password):
             return jsonify({"user_id": user.user_id}), 200
         return HTTPForbiddenError("Invalid Credentials")
     else:

@@ -6,6 +6,7 @@ from errors.error_handler import register_errors
 from errors.errors import HTTPBadRequestError, HTTPInternalServerError, HTTPNotFoundError, HTTPForbiddenError
 from models.models import Admin, db
 from utils_helpers.config import load_config
+from utils_helpers.credentials import check_credentials
 
 logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
@@ -82,7 +83,7 @@ def check_account_credentials(username):
     password = request.get_json()["password"]
     admin = Admin.query.filter_by(username=username).first()
     if admin:
-        if check_password_hash(admin.password, password):
+        if check_credentials("admin", username, admin.password, password):
             return jsonify({"admin_id": admin.admin_id}), 200
         return HTTPForbiddenError("Invalid Credentials")
     else:

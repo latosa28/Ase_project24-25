@@ -6,3 +6,4 @@ pymysql
 mysql-connector-python
 requests
 Werkzeug
+redis

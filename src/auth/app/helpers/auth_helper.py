@@ -87,6 +87,8 @@ class AuthHelper:
             )
 
         if response.status_code != 200:
+            if response.status_code == 429:
+                raise HTTPBadRequestError(response.json()["error_description"], "invalid_grant")
             raise HTTPBadRequestError("Not valid credentials", "invalid_grant")
 
         user = response.json()
