@@ -13,7 +13,7 @@ admin_api = Blueprint('admin_api', __name__)
 def get_all_users(admin_id):
     all_users = User.query.all()
     return jsonify([
-        {"user_id": user.user_id, "username": user.username, "email": user.email} 
+        user.serialize()
         for user in all_users
     ]), 200
 

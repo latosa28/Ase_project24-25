@@ -1,8 +1,9 @@
 import logging
 
 from flask import Blueprint, jsonify, request
+from werkzeug.security import generate_password_hash, check_password_hash
 
-from errors.errors import HTTPBadRequestError, HTTPError, HTTPInternalServerError, HTTPNotFoundError
+from errors.errors import HTTPBadRequestError, HTTPError, HTTPInternalServerError, HTTPNotFoundError, HTTPForbiddenError
 from helpers.currency import CurrencyHelper
 from models.models import User, db
 from utils_helpers.token import token_authorized
@@ -24,6 +25,7 @@ def create_user():
     if user:
         raise HTTPBadRequestError("Invalid Credentials")
 
+    password = generate_password_hash(password, method='pbkdf2:sha256')
     new_user = User(username=username, email=email, password=password)
 
     try:
@@ -64,18 +66,22 @@ def delete_user(user_id):
 def get_user_by_id(user_id):
     user = User.query.get(user_id)
     if user:
-        return jsonify({"name": user.username, "email": user.email}), 200
-    else:
-        raise HTTPNotFoundError("User not found")
-
-
-# Route to get user details by username
-@user_api.route('/user/username/<string:username>', methods=['GET'])
-def get_user_by_username(username):
-    user = User.query.filter_by(username=username).first()
-    if user:
         return jsonify(user.serialize()), 200
     else:
         raise HTTPNotFoundError("User not found")
+
+
+# Route to check account credentials
+@user_api.route('/user/username/<string:username>/check_credentials', methods=['POST'])
+def check_account_credentials(username):
+    password = request.get_json()["password"]
+    user = User.query.filter_by(username=username).first()
+    if user:
+        if check_password_hash(user.password, password):
+            return jsonify({"user_id": user.user_id}), 200
+        return HTTPForbiddenError("Invalid Credentials")
+    else:
+        raise HTTPNotFoundError("User not found")
+
 
 

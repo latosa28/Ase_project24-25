@@ -27,4 +27,4 @@ app.register_blueprint(admin_api)
 
 if __name__ == '__main__':
     # Set host to '0.0.0.0' to make the app accessible from other containers
-    app.run(host='0.0.0.0', port=5003, debug=True)
+    app.run(host='0.0.0.0', port=5003)

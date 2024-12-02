@@ -13,21 +13,7 @@ URL = "https://admin_account:5006"
 # Route to create a new account
 @admin_account_bp.route('/admin', methods=['POST'])
 def create_account():
-    data = request.get_json()
-
-    if not data or not data.get('username') or not data.get('email') or not data.get('password'):
-        raise HTTPBadRequestError("Missing required fields!")
-
-    username = data['username']
-    email = data['email']
-    password = generate_password_hash(data['password'], method='pbkdf2:sha256')
-
-    # Send request to account service to create the user
-    response = HttpClient.post(URL + '/admin', json={
-        'username': username,
-        'email': email,
-        'password': password
-    })
+    response = HttpClient.post(URL + '/admin', json=request.get_json())
     return response.json(), response.status_code
 
 

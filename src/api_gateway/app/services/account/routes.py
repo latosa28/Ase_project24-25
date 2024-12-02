@@ -13,27 +13,13 @@ URL = "https://account:5003"
 # Route to create a new account
 @account_bp.route('/user', methods=['POST'])
 def create_account():
-    data = request.get_json()
-
-    if not data or not data.get('username') or not data.get('email') or not data.get('password'):
-        raise HTTPBadRequestError("Missing required fields!")
-
-    username = data['username']
-    email = data['email']
-    password = generate_password_hash(data['password'], method='pbkdf2:sha256')
-
-    # Send request to account service to create the user
-    response = HttpClient.post(URL + '/user', json={
-        'username': username,
-        'email': email,
-        'password': password
-    })
+    response = HttpClient.post(URL + '/user', json=request.get_json())
     return response.json(), response.status_code
 
 
 @account_bp.route('/user/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    response = HttpClient.delete(URL + f'/user/{user_id}',headers=request.headers)
+    response = HttpClient.delete(URL + f'/user/{user_id}', headers=request.headers)
     return response.json(), response.status_code
 
 
