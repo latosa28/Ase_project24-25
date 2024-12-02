@@ -80,7 +80,7 @@ def check_account_credentials(username):
     if user:
         if check_credentials("user", username, user.password, password):
             return jsonify({"user_id": user.user_id}), 200
-        return HTTPForbiddenError("Invalid Credentials")
+        raise HTTPForbiddenError("Invalid Credentials")
     else:
         raise HTTPNotFoundError("User not found")
 

@@ -3,8 +3,7 @@ import uuid
 import jwt
 from utils_helpers.http_client import HttpClient
 from cryptography.hazmat.primitives.asymmetric import rsa
-from flask import current_app, request, jsonify
-from werkzeug.security import check_password_hash
+from flask import current_app, jsonify
 from errors.errors import HTTPBadRequestError
 
 
@@ -33,9 +32,7 @@ class AuthHelper:
                 (object,),
                 {
                     "status_code": 200,
-                    "json": lambda username: {
-                        "user_id": 1
-                    },
+                    "json": lambda username: {"user_id": 1},
                 },
             )()
         else:
@@ -47,7 +44,6 @@ class AuthHelper:
                     "json": lambda username: {"error": "User not found"},
                 },
             )()
-
 
     def mock_get_userinfo_request(self, user_id):
 
@@ -83,12 +79,16 @@ class AuthHelper:
             response = self.mock_account_request(username)
         else:
             response = HttpClient.post(
-                self.role_dict[self.role][0] + f"/{self.role}/username/{username}/check_credentials", json={"password": password}
+                self.role_dict[self.role][0]
+                + f"/{self.role}/username/{username}/check_credentials",
+                json={"password": password},
             )
 
         if response.status_code != 200:
             if response.status_code == 429:
-                raise HTTPBadRequestError(response.json()["error_description"], "invalid_grant")
+                raise HTTPBadRequestError(
+                    response.json()["error_description"], "invalid_grant"
+                )
             raise HTTPBadRequestError("Not valid credentials", "invalid_grant")
 
         user = response.json()
