@@ -40,9 +40,6 @@ INSERT IGNORE INTO item (item_id, Name, rarity, image_path)
 VALUES (6, 'Gyarados', 'superrare', '/collection_db/items_images/Gyarados.png');
 
 INSERT IGNORE INTO item (item_id, Name, rarity, image_path)
-VALUES (6, 'Horsea', 'rare', '/collection_db/items_images/Horsea.png');
-
-INSERT IGNORE INTO item (item_id, Name, rarity, image_path)
 VALUES (7, 'Jigglypuff', 'common', '/collection_db/items_images/Jigglypuff.png');
 
 INSERT IGNORE INTO item (item_id, Name, rarity, image_path)
