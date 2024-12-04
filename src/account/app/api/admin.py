@@ -18,6 +18,16 @@ def get_all_users(admin_id):
     ]), 200
 
 
+@admin_api.route('/admin/<int:admin_id>/user/<int:user_id>', methods=['GET'])
+@admin_token_authorized
+def get_user_by_id(admin_id, user_id):
+    user = User.query.get(user_id)
+    if user:
+        return jsonify(user.serialize()), 200
+    else:
+        raise HTTPNotFoundError("User not found")
+
+
 @admin_api.route('/admin/<int:admin_id>/user/<int:user_id>', methods=['POST'])
 @admin_token_authorized
 def modify_user(admin_id, user_id):

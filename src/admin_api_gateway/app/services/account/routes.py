@@ -12,6 +12,12 @@ def get_all_users(admin_id):
     return response.json(), response.status_code
 
 
+@account_bp.route("/admin/<int:admin_id>/user/<int:user_id>", methods=["GET"])
+def get_user_by_id(admin_id, user_id):
+    response = HttpClient.get(URL + f"/admin/{admin_id}/user/{user_id}", headers=request.headers)
+    return response.json(), response.status_code
+
+
 @account_bp.route("/admin/<int:admin_id>/user/<int:user_id>", methods=["POST"])
 def modify_user(admin_id, user_id):
     response = HttpClient.post(
@@ -20,3 +26,5 @@ def modify_user(admin_id, user_id):
         headers=request.headers,
     )
     return response.json(), response.status_code
+
+
