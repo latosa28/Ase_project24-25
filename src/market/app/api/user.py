@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, request, current_app
 from datetime import datetime
 import logging
 
-from errors.errors import HTTPBadRequestError, HTTPForbiddenError, HTTPNotFoundError
+from errors.errors import HTTPBadRequestError, HTTPForbiddenError, HTTPNotFoundError, HTTPError
 from utils_helpers.token import token_authorized
 from helpers.currency import CurrencyHelper
 from helpers.collection import CollectionHelper
@@ -55,23 +55,21 @@ def place_bid(user_id, market_id):
     # Verifica che l'offerta sia maggiore di quella attuale
     if bid_amount <= auction.bid:
         raise HTTPBadRequestError("Bid must be higher than the current bid")
+
+    CurrencyHelper().sub_amount(user_id, bid_amount)
     try:
-        CurrencyHelper().sub_amount(user_id, bid_amount)
         old_buyer_user_id = auction.buyer_user_id
         old_bid = auction.bid
-        # Aggiorna l'asta con la nuova offerta
         auction.bid = bid_amount
         auction.buyer_user_id = user_id  # Imposta l'acquirente
         db.session.commit()
-        if old_buyer_user_id:
-            CurrencyHelper().add_amount(old_buyer_user_id, old_bid)
     except Exception as e:
         db.session.rollback()
-        logging.error(f"Error while place bid: {str(e)}")
-        return (
-            jsonify({"message": "An error occurred while processing your request."}),
-            400,
-        )
+        CurrencyHelper().add_amount(user_id, bid_amount)
+        raise e
+
+    if old_buyer_user_id:
+        CurrencyHelper().add_amount(old_buyer_user_id, old_bid)
 
     return jsonify(auction.serialize()), 200
 

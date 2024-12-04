@@ -1,7 +1,7 @@
 import logging
 from flask import Blueprint, jsonify, request
 
-from errors.errors import HTTPNotFoundError, HTTPInternalServerError
+from errors.errors import HTTPNotFoundError, HTTPInternalServerError, HTTPBadRequestError
 from utils_helpers.token import token_required, admin_token_authorized
 from models.models import User, db
 
@@ -24,15 +24,18 @@ def modify_user(admin_id, user_id):
     email = request.json.get('email')
     user = User.query.get(user_id)
 
+    if not email:
+        raise HTTPBadRequestError("Missing data to change")
+
     if not user:
         raise HTTPNotFoundError("User not found")
 
+    user.email = email
+
     try:
-        user.email = email
         db.session.commit()
-        return jsonify({}), 200
-    except Exception as e:
+        return jsonify({"message": "User info update successfully"}), 200
+    except Exception:
         db.session.rollback()
-        logging.error(f"Error while updating user: {str(e)}")
         raise HTTPInternalServerError()
 

@@ -62,6 +62,36 @@ def delete_user(user_id):
         raise HTTPNotFoundError("User not found")
 
 
+# Route to change info (email and/or password) to an existing user by ID
+@user_api.route('/user/<int:user_id>', methods=['POST'])
+@token_authorized
+def change_user_info(user_id):
+    email = request.json.get('email')
+    password = request.json.get('password')
+
+    if not password and not email:
+        raise HTTPBadRequestError("Missing data to change")
+
+    user = User.query.filter(User.user_id == user_id).first()
+
+    if not user:
+        raise HTTPNotFoundError("User not found")
+
+    try:
+        if password:
+            password = generate_password_hash(password, method='pbkdf2:sha256')
+            user.password = password
+
+        if email:
+            user.email = email
+
+        db.session.commit()
+        return jsonify({"message": "User info update successfully"}), 200
+    except Exception:
+        db.session.rollback()
+        raise HTTPInternalServerError()
+
+
 # Route to get user details by ID
 @user_api.route('/user/<int:user_id>', methods=['GET'])
 def get_user_by_id(user_id):
