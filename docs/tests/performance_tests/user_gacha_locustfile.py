@@ -42,7 +42,7 @@ class GachaTestUser(HttpUser):
             "username": self.username,
             "email": self.email,
             "password": self.password
-        })
+        }, verify=False)  # Disabilita verifica SSL
         if response.status_code == 201:
             print(f"Utente {self.username} creato con successo.")
             return True
@@ -54,10 +54,11 @@ class GachaTestUser(HttpUser):
         """Effettua il login per ottenere il token di autorizzazione."""
         response = self.client.post("/user/auth", json={
             "username": self.username,
-            "password": self.password
-        })
+            "password": self.password,
+            "grant_type": "password"  # Aggiunto nuovo campo
+        }, verify=False)  # Disabilita verifica SSL
         if response.status_code == 200:
-            self.headers = {"Authorization": f"Bearer {response.json()['token']}"}
+            self.headers = {"Authorization": f"Bearer {response.json()['access_token']}"}  # Usa access_token
             print(f"Utente {self.username} loggato con successo.")
             return True
         else:
@@ -71,7 +72,7 @@ class GachaTestUser(HttpUser):
             "card_expiry": "12/26",
             "card_cvc": "123",
             "amount": amount
-        })
+        }, verify=False)  # Disabilita verifica SSL
         if response.status_code == 200:
             print(f"Aggiunti {amount} soldi all'utente {self.username}.")
             return True
@@ -81,7 +82,7 @@ class GachaTestUser(HttpUser):
 
     def get_instance_id(self):
         """Recupera un ID di istanza casuale dalla collezione dell'utente."""
-        response = self.client.get(f"/user/{self.user_id}/mycollection", headers=self.headers)
+        response = self.client.get(f"/user/{self.user_id}/mycollection", headers=self.headers,verify=False)
         if response.status_code == 200:
             collection = response.json()
             if collection:
@@ -90,7 +91,7 @@ class GachaTestUser(HttpUser):
     @task(3)
     def roll_gacha(self):
         """Simula un roll gacha."""
-        response = self.client.put(f"/user/{self.user_id}/roll", headers=self.headers)
+        response = self.client.put(f"/user/{self.user_id}/roll", headers=self.headers, verify=False)  # Disabilita verifica SSL
         if response.status_code == 201:
             self.total_rolls += 1
             try:
@@ -105,24 +106,24 @@ class GachaTestUser(HttpUser):
     @task(1)
     def view_my_collection(self):
         """Visualizza la collezione personale dell'utente."""
-        self.client.get(f"/user/{self.user_id}/mycollection", headers=self.headers)
+        self.client.get(f"/user/{self.user_id}/mycollection", headers=self.headers, verify=False)  # Disabilita verifica SSL
 
     @task(1)
     def view_system_collection(self):
         """Recupera la collezione globale del sistema."""
-        self.client.get(f"/user/{self.user_id}/collection", headers=self.headers)
+        self.client.get(f"/user/{self.user_id}/collection", headers=self.headers, verify=False)  # Disabilita verifica SSL
 
     @task(1)
     def get_item_details(self):
         """Recupera i dettagli di un Pokémon specifico dalla collezione globale."""
         # Recupera la collezione globale
-        response = self.client.get(f"/user/{self.user_id}/collection", headers=self.headers)
+        response = self.client.get(f"/user/{self.user_id}/collection", headers=self.headers, verify=False)  # Disabilita verifica SSL
         if response.status_code == 200:
             system_collection = response.json()
             if system_collection:
                 # Scegli un Pokémon casuale e ottieni i suoi dettagli
                 item_id = random.choice(system_collection)["item_id"]
-                self.client.get(f"/user/{self.user_id}/item/{item_id}", headers=self.headers)
+                self.client.get(f"/user/{self.user_id}/item/{item_id}", headers=self.headers, verify=False)  # Disabilita verifica SSL
 
     def on_stop(self):
         """Riassume i risultati al termine del test."""
