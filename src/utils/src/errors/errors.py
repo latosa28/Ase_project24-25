@@ -17,6 +17,14 @@ class HTTPError(Exception):
         }
         return jsonify(response), self.http_code
 
+    @staticmethod
+    def raise_error_from_response(response):
+        raise HTTPError(
+            response.status_code,
+            error_description=response.json()["error_description"],
+            error_code=response.json()["error"],
+        )
+
 
 class HTTPBadRequestError(HTTPError):
     http_code = 400
