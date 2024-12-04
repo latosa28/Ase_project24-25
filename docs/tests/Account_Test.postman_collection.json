@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b027af93-066b-4905-a267-664dc55e9d90",
+		"_postman_id": "d681d97a-8b9a-4c25-aa6e-c06ad9f0340e",
 		"name": "Account_Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "17878724"
+		"_exporter_id": "39564474"
 	},
 	"item": [
 		{
@@ -153,6 +153,103 @@
 			"response": []
 		},
 		{
+			"name": "modify_user missing_data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Modify User - Status Code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Modify User - User info update successfully\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"error\",'bad_request');\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\",'Missing data to change');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://localhost:5003/user/1"
+			},
+			"response": []
+		},
+		{
+			"name": "modify_user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Modify User - Status Code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Modify User - User info update successfully\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"message\",'User info update successfully');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"newemail@example.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://localhost:5003/user/1"
+			},
+			"response": []
+		},
+		{
 			"name": "get_user_id",
 			"event": [
 				{
@@ -166,7 +263,7 @@
 							"pm.test(\"Get User by ID - User Data is Correct\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"username\", \"testuser\");\r",
-							"    pm.expect(jsonData).to.have.property(\"email\", \"testuser@example.com\");\r",
+							"    pm.expect(jsonData).to.have.property(\"email\", \"newemail@example.com\");\r",
 							"});\r",
 							""
 						],
@@ -239,7 +336,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"password\": \"TestPassword123\"\n}",
+					"raw": "{\n    \"password\": \"newpassword\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
