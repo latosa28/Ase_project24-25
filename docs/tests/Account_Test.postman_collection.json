@@ -238,7 +238,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"newemail@example.com\"\r\n}",
+					"raw": "{\r\n  \"email\": \"newemail@example.com\",\r\n  \"password\": \"newpassword\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
