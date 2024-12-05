@@ -8,6 +8,7 @@ from helpers.currency import CurrencyHelper
 from models.models import User, db
 from utils_helpers.credentials import check_credentials
 from utils_helpers.token import token_authorized
+from utils_helpers.validation import email_validation, get_body_field
 
 user_api = Blueprint('user_api', __name__)
 
@@ -15,12 +16,14 @@ user_api = Blueprint('user_api', __name__)
 # Route to create a new user
 @user_api.route('/user', methods=['POST'])
 def create_user():
-    username = request.json.get('username')
-    email = request.json.get('email')
-    password = request.json.get('password')
+    username = get_body_field('username')
+    email = get_body_field('email')
+    password = get_body_field('password')
 
     if not username or not email or not password:
         raise HTTPBadRequestError("Missing Data")
+
+    email_validation(email)
 
     user = User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first()
     if user:
@@ -66,8 +69,8 @@ def delete_user(user_id):
 @user_api.route('/user/<int:user_id>', methods=['POST'])
 @token_authorized
 def change_user_info(user_id):
-    email = request.json.get('email')
-    password = request.json.get('password')
+    email = get_body_field('email')
+    password = get_body_field('password')
 
     if not password and not email:
         raise HTTPBadRequestError("Missing data to change")
@@ -77,14 +80,15 @@ def change_user_info(user_id):
     if not user:
         raise HTTPNotFoundError("User not found")
 
+    if email:
+        email_validation(email)
+        user.email = email
+
+    if password:
+        password = generate_password_hash(password, method='pbkdf2:sha256')
+        user.password = password
+
     try:
-        if password:
-            password = generate_password_hash(password, method='pbkdf2:sha256')
-            user.password = password
-
-        if email:
-            user.email = email
-
         db.session.commit()
         return jsonify({"message": "User info update successfully"}), 200
     except Exception:
