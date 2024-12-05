@@ -54,7 +54,7 @@
 							"pm.test(\"Add Amount - Not valid amount\", function () {\r",
 							"    const jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"error\", 'bad_request');\r",
-							"    pm.expect(jsonData).to.have.property(\"error_description\", 'Amount must be a valid number');\r",
+							"    pm.expect(jsonData).to.have.property(\"error_description\", 'invalid amount field format');\r",
 							"});"
 						],
 						"type": "text/javascript",

@@ -150,6 +150,7 @@ services:
       - DB_PORT=3306
       - DB_NAME=${DB_PAYMENT_NAME}
       - DB_USER=${DB_PAYMENT_USER}
+      - AES_SECRET_KEY_FILE=/run/secrets/aes_secret_key
     secrets:
       - db_payment_password
       - payment_cert
@@ -157,6 +158,7 @@ services:
       - mysql_ca_cert
       - payment_db_cert
       - payment_db_key
+      - aes_secret_key
     depends_on:
       payment_db:
         condition: service_healthy
@@ -502,3 +504,7 @@ secrets:
     file: ./secrets/admin_account/db_cert.pem
   admin_account_db_key:
     file: ./secrets/admin_account/db_key.pem
+
+  # AES secret key for payment
+  aes_secret_key:
+    file: ./secrets/payment/aes_secret_key.txt
