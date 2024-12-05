@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from errors.errors import HTTPNotFoundError, HTTPBadRequestError, HTTPInternalServerError
 from utils_helpers.token import admin_token_authorized
 from models.models import Item, db, UserItem
+from utils_helpers.validation import get_body_field
 
 admin_api = Blueprint("admin_api", __name__)
 
@@ -39,9 +40,9 @@ def _check_rarity(rarity):
 @admin_api.route("/admin/<int:admin_id>/item/<int:item_id>", methods=["POST"])
 @admin_token_authorized
 def update_item(admin_id, item_id):
-    image_path = request.json.get("image_path")
-    name = request.json.get("name")
-    rarity = request.json.get("rarity")
+    image_path = get_body_field("image_path")
+    name = get_body_field("name")
+    rarity = get_body_field("rarity")
 
     if not image_path and not name and not rarity:
         raise HTTPNotFoundError("There are no fields to update")
@@ -68,9 +69,9 @@ def update_item(admin_id, item_id):
 @admin_api.route("/admin/<int:admin_id>/item/", methods=["PUT"])
 @admin_token_authorized
 def add_item(admin_id):
-    image_path = request.json.get("image_path")
-    name = request.json.get("name")
-    rarity = request.json.get("rarity")
+    image_path = get_body_field("image_path")
+    name = get_body_field("name")
+    rarity = get_body_field("rarity")
 
     if not image_path or not name or not rarity:
         raise HTTPBadRequestError("Missing mandatory fields")
@@ -91,18 +92,19 @@ def add_item(admin_id):
 @admin_token_authorized
 def delete_item(admin_id, item_id):
     item = Item.query.get(item_id)
-    if item:
-        user_items = UserItem.query.filter_by(item_id=item_id).all()  # Corretto filtro per UserItem
-        if user_items:
-            raise HTTPBadRequestError("It is not possible to delete an item if it is present in a user's collection")
-        try:
-            db.session.delete(item)
-            db.session.commit()
-            return jsonify({}), 200
-        except Exception as e:
-            db.session.rollback()
-            logging.error(f"Error while deleting item: {str(e)}")
-            raise HTTPInternalServerError()
-    else:
+    if not item:
         raise HTTPNotFoundError("Item not found")
+
+    first_user_item = UserItem.query.filter_by(item_id=item_id).first()
+    if first_user_item:
+        raise HTTPBadRequestError("It is not possible to delete an item if it's present in a user's collection")
+    try:
+        db.session.delete(item)
+        db.session.commit()
+        return jsonify({"message": "item deleted successfully"}), 200
+    except Exception:
+        db.session.rollback()
+        raise HTTPInternalServerError()
+
+
 

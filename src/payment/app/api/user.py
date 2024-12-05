@@ -8,6 +8,7 @@ from errors.errors import HTTPBadRequestError, HTTPInternalServerError
 from utils_helpers.token import token_required
 
 from models.models import db, Transactions
+from utils_helpers.validation import get_body_field
 
 user_api = Blueprint('user_api', __name__)
 
@@ -33,7 +34,7 @@ def payment(user_id):
     card_number = data['card_number']
     card_expiry = data['card_expiry']
     card_cvc = data['card_cvc']
-    amount = data['amount']
+    amount = get_body_field("amount", expected_type=float)
 
     success = simulate_payment(card_number, card_expiry, card_cvc, amount)
     currency_amount = convert_to_special_currency(amount)

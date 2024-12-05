@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, request
 from errors.errors import HTTPNotFoundError, HTTPInternalServerError, HTTPBadRequestError
 from utils_helpers.token import token_required, admin_token_authorized
 from models.models import User, db
+from utils_helpers.validation import email_validation, get_body_field
 
 admin_api = Blueprint('admin_api', __name__)
 
@@ -31,7 +32,7 @@ def get_user_by_id(admin_id, user_id):
 @admin_api.route('/admin/<int:admin_id>/user/<int:user_id>', methods=['POST'])
 @admin_token_authorized
 def modify_user(admin_id, user_id):
-    email = request.json.get('email')
+    email = get_body_field('email')
     user = User.query.get(user_id)
 
     if not email:
@@ -40,6 +41,7 @@ def modify_user(admin_id, user_id):
     if not user:
         raise HTTPNotFoundError("User not found")
 
+    email_validation(email)
     user.email = email
 
     try:

@@ -116,7 +116,7 @@ class PostmanTestRunner:
         try:
             subprocess.run(command, check=True)
             print("Servizi Docker per il test di integrazione avviati con successo.")
-            time.sleep(15)  # Attendi qualche secondo che i servizi siano pronti
+            time.sleep(20)  # Attendi qualche secondo che i servizi siano pronti
         except subprocess.CalledProcessError as e:
             print(f"Errore nell'avvio dei servizi Docker per il test di integrazione: {e}")
             exit(1)  # Uscire in caso di errore nell'avvio dei container

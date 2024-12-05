@@ -10,6 +10,7 @@ from helpers.currency import CurrencyHelper
 from utils_helpers.token import token_required, token_authorized
 
 from models.models import db, Item, UserItem
+from utils_helpers.validation import get_body_field
 
 user_api = Blueprint("user_api", __name__)
 
@@ -85,7 +86,7 @@ def get_user_item_instance(user_id, instance_id):
 
 @user_api.route("/user/<int:user_id>/instance/<int:instance_id>", methods=["POST"])
 def move_instance(user_id, instance_id):
-    new_user_id = request.json.get("new_user_id")
+    new_user_id = get_body_field("new_user_id", expected_type=int)
 
     if not new_user_id:
         raise HTTPBadRequestError("New User id is mandatory")
