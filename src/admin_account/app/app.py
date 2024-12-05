@@ -7,6 +7,7 @@ from errors.errors import HTTPBadRequestError, HTTPInternalServerError, HTTPNotF
 from models.models import Admin, db
 from utils_helpers.config import load_config
 from utils_helpers.credentials import check_credentials
+from utils_helpers.validation import email_validation, get_body_field
 
 logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
@@ -24,13 +25,14 @@ setup()
 # Route to create a new admin
 @app.route("/admin", methods=["POST"])
 def create_admin():
-    username = request.json.get("username")
-    email = request.json.get("email")
-    password = request.json.get("password")
+    username = get_body_field("username")
+    email = get_body_field("email")
+    password = get_body_field("password")
 
     if not username or not email or not password:
         raise HTTPBadRequestError("Missing Data")
 
+    email_validation(email)
     admin = (
         Admin.query.filter_by(username=username).first()
         or Admin.query.filter_by(email=email).first()

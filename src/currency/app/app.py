@@ -7,6 +7,7 @@ from utils_helpers.config import load_config
 from utils_helpers.token import token_authorized
 from utils_helpers.auth import AuthHelper
 from models.models import db, Currency
+from utils_helpers.validation import get_body_field
 
 app = Flask(__name__)
 
@@ -41,12 +42,7 @@ def get_amount(user_id):
 # Endpoint per aggiungere una quantità al saldo di un utente
 @app.route('/user/<user_id>/add_amount', methods=['POST'])
 def add_amount(user_id):
-    data = request.json
-    try:
-        amount_to_add = float(data.get("amount"))
-    except (TypeError, ValueError):
-        raise HTTPBadRequestError("Amount must be a valid number")
-
+    amount_to_add = float(get_body_field("amount", expected_type=float))
     amount = Currency.query.filter_by(user_id=user_id).first()
     
     if amount is None:
@@ -61,12 +57,7 @@ def add_amount(user_id):
 # Endpoint per sottrarre una quantità dal saldo di un utente
 @app.route('/user/<user_id>/sub_amount', methods=['POST'])
 def sub_amount(user_id):
-    data = request.json
-    try:
-        amount_to_sub = float(data.get("amount"))
-    except (TypeError, ValueError):
-        raise HTTPBadRequestError("Amount must be a valid number")
-
+    amount_to_sub = float(get_body_field("amount", expected_type=float))
     amount = Currency.query.filter_by(user_id=user_id).first()
 
     if amount is None:

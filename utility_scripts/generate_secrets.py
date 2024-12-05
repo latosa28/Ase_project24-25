@@ -1,6 +1,8 @@
 import os
 import subprocess
 
+from cryptography.fernet import Fernet
+
 # Lista di microservizi
 services = [
     "auth",
@@ -96,6 +98,16 @@ def generate_db_password(service_name):
     return password
 
 
+def generate_aes_secret_key(service_name):
+    aes_secret_key = Fernet.generate_key()
+
+    aes_secret_key_path = os.path.join(base_path, service_name, 'aes_secret_key.txt')
+    with open(aes_secret_key_path, 'wb') as password_file:
+        password_file.write(aes_secret_key)
+
+    print(f"AES secret key per {service_name} generata e salvata in {aes_secret_key_path}")
+
+
 def generate_mysql_root_password():
     # password root sql uguale per tutti
     cert_dir = os.path.join(base_path, "mysql")
@@ -114,5 +126,7 @@ for service in services:
 generate_mysql_root_password()
 # Generazione del certificato CA per MySQL
 generate_ca_cert()
+# Gnerazione AES secret key per payment
+generate_aes_secret_key("payment")
 
 print("Secrets generati con successo!")

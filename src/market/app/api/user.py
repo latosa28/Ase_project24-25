@@ -8,6 +8,7 @@ from utils_helpers.token import token_authorized
 from helpers.currency import CurrencyHelper
 from helpers.collection import CollectionHelper
 from models.models import Market, db
+from utils_helpers.validation import get_body_field
 
 user_api = Blueprint('user_api', __name__)
 
@@ -36,7 +37,7 @@ def get_transactions_history(user_id):
 @token_authorized
 def place_bid(user_id, market_id):
     date_now = datetime.utcnow()
-    bid_amount = request.json.get("bid_amount")
+    bid_amount = get_body_field("bid_amount", expected_type=float)
 
     if not bid_amount:
         raise HTTPBadRequestError("bid is mandatory")
@@ -79,8 +80,8 @@ def place_bid(user_id, market_id):
 def set_auction(user_id, instance_id):
     utc_tz = pytz.utc
     date_now = datetime.utcnow().replace(tzinfo=utc_tz)
-    end_date = request.json.get("end_date")
-    start_bid = request.json.get("start_bid")
+    end_date = get_body_field("end_date")
+    start_bid = get_body_field("start_bid", expected_type=float)
 
     if not end_date or not start_bid:
         raise HTTPBadRequestError("end_date and start_bid are mandatory")
