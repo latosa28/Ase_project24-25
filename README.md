@@ -88,3 +88,47 @@ Finally, execute the following command to stop all services:
 ```bash
 docker-compose down -v
 ```
+### Performance Test:
+
+To execute the performance tests located in the `docs/tests/performance_tests` folder, follow these steps:
+
+1. **Start the application**  
+   Navigate to the `src` directory and start the application with the command:
+
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Start Locust**  
+   Open another terminal, navigate to the `docs/tests/performance_tests` directory, and start the Locust files with the command:
+
+   ```bash
+   locust -f {locustfile_name}.py
+   ```
+
+   - **`rarity_gacha_locustfile`**: implements only the roll operation.  
+   - **`user_gacha_locustfile`**: includes all operations for managing gachas.
+
+3. **Access the Locust interface**  
+   Open a browser and go to the URL:
+
+   ```plaintext
+   http://localhost:8089/
+   ```
+
+4. **Set test parameters**  
+   Once Locust is open, configure the required parameters, including:
+   - Number of simultaneous users.
+   - User spawn rate.
+   - Test duration (configurable through *Advanced Options*).
+
+   Start the test and monitor the results in real-time.
+
+**Once finished, you can view the results from the terminal where you started locust.**
+
+**Note:** After completing the test, remember to stop the containers with the command:
+
+```bash
+docker-compose down -v
+```
+
