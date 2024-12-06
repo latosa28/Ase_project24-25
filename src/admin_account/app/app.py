@@ -95,4 +95,4 @@ def check_account_credentials(username):
 # Run the application
 if __name__ == "__main__":
     # Set host to '0.0.0.0' to make the app accessible from other containers
-    app.run(host="0.0.0.0", port=5010)
+    app.run(host='127.0.0.1', port=5010)
