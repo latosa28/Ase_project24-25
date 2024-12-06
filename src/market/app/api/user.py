@@ -104,7 +104,7 @@ def set_auction(user_id, instance_id):
     if not end_date > date_now:
         raise HTTPBadRequestError("end_date must be in the future")
 
-    response = CollectionHelper().get_instance(user_id, instance_id)   
+    response = CollectionHelper().get_instance(user_id, instance_id, headers=request.headers)
     if response.status_code != 200:
         raise HTTPForbiddenError("Unauthorized or invalid instance")
     new_auction = Market(

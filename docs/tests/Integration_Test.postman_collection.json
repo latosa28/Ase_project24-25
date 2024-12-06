@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "2fe49942-4400-4474-ae52-0283d6098a3e",
+		"_postman_id": "0baa6425-3df2-4103-835a-614af868f4b4",
 		"name": "Integration_Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "39564474"
+		"_exporter_id": "17878724"
 	},
 	"item": [
 		{
@@ -424,7 +424,7 @@
 			"name": "Authentication",
 			"item": [
 				{
-					"name": "login1",
+					"name": "login4",
 					"event": [
 						{
 							"listen": "test",
@@ -1107,6 +1107,12 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt_token2}}"
+							}
+						},
 						"method": "GET",
 						"header": [
 							{
