@@ -7,6 +7,7 @@ import time
 class GachaTestUser(HttpUser):
     wait_time = between(0.5, 0.6)
     user_counter = 0  # Contatore statico per ID univoci
+    successful_users = []
 
     def on_start(self):
         """Inizializza l'utente e configura i dati necessari."""
@@ -16,7 +17,7 @@ class GachaTestUser(HttpUser):
         self.email = f"user_{self.user_id}@example.com"
         self.password = "password123"
 
-        time.sleep(self.user_id * 0.5)
+        time.sleep(self.user_id * 1.5)
 
         # Crea e autentica un nuovo utente
         if not self.create_user():
@@ -35,9 +36,10 @@ class GachaTestUser(HttpUser):
             "common": 0
         }
         self.total_rolls = 0
+        self.__class__.successful_users.append(self)
 
     def create_user(self):
-        """Crea un nuovo utente."""
+        """Create a new user with unique data."""
         response = self.client.post("/user", json={
             "username": self.username,
             "email": self.email,
@@ -72,7 +74,7 @@ class GachaTestUser(HttpUser):
             "card_expiry": "12/26",
             "card_cvc": "123",
             "amount": amount
-        }, verify=False)  # Disabilita verifica SSL
+        }, headers=self.headers, verify=False)  # Disabilita verifica SSL
         if response.status_code == 200:
             print(f"Aggiunti {amount} soldi all'utente {self.username}.")
             return True
@@ -127,7 +129,16 @@ class GachaTestUser(HttpUser):
 
     def on_stop(self):
         """Riassume i risultati al termine del test."""
-        print(f"\n--- Risultati Utente {self.user_id} ---")
-        print(f"Roll Totali: {self.total_rolls}")
-        for rarity, count in self.rarity_counts.items():
-            print(f"{rarity.capitalize()}: {count}")
+        if self not in self.__class__.successful_users:
+            return  # Se l'utente non ha completato con successo, non stampare i risultati
+        
+        if self == self.__class__.successful_users[-1]:
+            # Ordinare gli utenti per user_id
+            sorted_users = sorted(self.__class__.successful_users, key=lambda u: u.user_id)
+
+            # Stampa i risultati solo per gli utenti che hanno completato correttamente tutto il flusso
+            for user in sorted_users:
+                print(f"\n--- Risultati Utente {user.user_id} ---")
+                print(f"Roll Totali: {user.total_rolls}")
+                for rarity, count in user.rarity_counts.items():
+                    print(f"{rarity.capitalize()}: {count}")
