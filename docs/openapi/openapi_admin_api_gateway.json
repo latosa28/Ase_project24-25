@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Admin API Gateway Microservice API",
-    "description": "Admin API Gateway for managing requests to various microservices.",
+    "title": "Admin API Gateway",
+    "description": "Gateway API for admin-related operations.",
     "version": "1.0.0"
   },
   "servers": [
@@ -11,9 +11,9 @@
     }
   ],
   "paths": {
-    "/admin/{admin_id}/users": {
+    "/account/{admin_id}/users": {
       "get": {
-        "summary": "Get all users (Admin only)",
+        "summary": "Get all users",
         "parameters": [
           {
             "name": "admin_id",
@@ -38,15 +38,15 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized"
+          "404": {
+            "description": "Admin not found"
           }
         }
       }
     },
-    "/admin/{admin_id}/user/{user_id}": {
+    "/account/{admin_id}/user/{user_id}": {
       "get": {
-        "summary": "Get user details by ID (Admin only)",
+        "summary": "Get user by ID",
         "parameters": [
           {
             "name": "admin_id",
@@ -77,12 +77,12 @@
             }
           },
           "404": {
-            "description": "User not found"
+            "description": "User or admin not found"
           }
         }
       },
       "post": {
-        "summary": "Modify user info (Admin only)",
+        "summary": "Modify user information",
         "parameters": [
           {
             "name": "admin_id",
@@ -118,20 +118,20 @@
         },
         "responses": {
           "200": {
-            "description": "User updated successfully"
+            "description": "User info updated"
           },
           "400": {
-            "description": "Missing data to change"
+            "description": "Invalid input"
           },
           "404": {
-            "description": "User not found"
+            "description": "User or admin not found"
           }
         }
       }
     },
     "/admin": {
       "post": {
-        "summary": "Create a new admin",
+        "summary": "Create admin account",
         "requestBody": {
           "required": true,
           "content": {
@@ -155,7 +155,7 @@
         },
         "responses": {
           "201": {
-            "description": "Admin created successfully",
+            "description": "Admin created",
             "content": {
               "application/json": {
                 "schema": {
@@ -170,17 +170,35 @@
             }
           },
           "400": {
-            "description": "Missing or invalid data"
-          },
-          "500": {
-            "description": "Internal server error"
+            "description": "Invalid input"
           }
         }
       }
     },
     "/admin/{admin_id}": {
+      "delete": {
+        "summary": "Delete admin account",
+        "parameters": [
+          {
+            "name": "admin_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Admin deleted"
+          },
+          "404": {
+            "description": "Admin not found"
+          }
+        }
+      },
       "get": {
-        "summary": "Get admin details by ID",
+        "summary": "Get admin by ID",
         "parameters": [
           {
             "name": "admin_id",
@@ -206,33 +224,9 @@
             "description": "Admin not found"
           }
         }
-      },
-      "delete": {
-        "summary": "Delete admin by ID",
-        "parameters": [
-          {
-            "name": "admin_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Admin deleted successfully"
-          },
-          "404": {
-            "description": "Admin not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
       }
     },
-    "/admin/auth": {
+    "/authentication": {
       "post": {
         "summary": "Admin login",
         "requestBody": {
@@ -255,29 +249,17 @@
         },
         "responses": {
           "200": {
-            "description": "Login successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Login successful"
           },
-          "401": {
-            "description": "Unauthorized"
+          "403": {
+            "description": "Invalid credentials"
           }
         }
       }
     },
-    "/admin/userinfo": {
+    "/authentication/userinfo": {
       "get": {
-        "summary": "Get user info from token",
+        "summary": "Get authenticated user info",
         "responses": {
           "200": {
             "description": "User info",
@@ -286,14 +268,14 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "admin_id": {
-                      "type": "integer"
-                    },
                     "username": {
                       "type": "string"
                     },
-                    "email": {
-                      "type": "string"
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -306,9 +288,9 @@
         }
       }
     },
-    "/admin/{admin_id}/auth": {
-      "delete": {
-        "summary": "Admin logout",
+    "/collection/{admin_id}/items": {
+      "get": {
+        "summary": "Get all items in collection",
         "parameters": [
           {
             "name": "admin_id",
@@ -321,10 +303,73 @@
         ],
         "responses": {
           "200": {
-            "description": "Logout successful"
+            "description": "List of items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Item"
+                  }
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized"
+          "404": {
+            "description": "Admin not found"
+          }
+        }
+      }
+    },
+    "/payment/{admin_id}/user/{user_id}/currency_history": {
+      "get": {
+        "summary": "Get user currency history",
+        "parameters": [
+          {
+            "name": "admin_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Currency history details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "transaction_id": {
+                        "type": "integer"
+                      },
+                      "amount": {
+                        "type": "number"
+                      },
+                      "timestamp": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or admin not found"
           }
         }
       }
@@ -357,6 +402,23 @@
           },
           "email": {
             "type": "string"
+          }
+        }
+      },
+      "Item": {
+        "type": "object",
+        "properties": {
+          "item_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
           }
         }
       }

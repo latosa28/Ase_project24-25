@@ -1,0 +1,170 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Payment API",
+    "description": "API for handling user payments and transaction history.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5007"
+    }
+  ],
+  "paths": {
+    "/admin/{admin_id}/user/{user_id}/currency_history": {
+      "get": {
+        "summary": "Get the currency history for a specific user",
+        "description": "Retrieve all payment transactions for a specific user.",
+        "operationId": "getUserCurrencyHistory",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User transaction history retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{user_id}/payment": {
+      "post": {
+        "summary": "Make a payment to buy currency",
+        "description": "Process a payment to buy currency and log the transaction.",
+        "operationId": "processPayment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "card_number",
+                  "card_expiry",
+                  "card_cvc",
+                  "amount"
+                ],
+                "properties": {
+                  "card_number": {
+                    "type": "string",
+                    "description": "Card number (as string to handle large numbers)"
+                  },
+                  "card_expiry": {
+                    "type": "string",
+                    "description": "Expiry date of the card"
+                  },
+                  "card_cvc": {
+                    "type": "string",
+                    "description": "Card CVC code"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Amount to pay for currency"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment successful and currency added to user account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "amount_paid": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "currency_received": {
+                      "type": "number",
+                      "format": "float"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (missing or invalid fields)"
+          },
+          "500": {
+            "description": "Internal server error (payment processing failed)"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "transaction_id": {
+            "type": "integer"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "transaction_data": {
+            "type": "string",
+            "description": "Encrypted data of the transaction"
+          },
+          "creation_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of when the transaction was created"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "failed"
+            ],
+            "description": "Transaction status"
+          }
+        }
+      }
+    }
+  }
+}

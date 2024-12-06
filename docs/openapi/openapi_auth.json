@@ -1,0 +1,299 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Authentication API",
+    "description": "API for handling authentication for admins and users",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5011"
+    }
+  ],
+  "paths": {
+    "/admin/auth": {
+      "post": {
+        "summary": "Admin Login",
+        "description": "Admin login route that authenticates using provided credentials.",
+        "operationId": "adminLogin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid credentials)"
+          }
+        }
+      }
+    },
+    "/admin/userinfo": {
+      "get": {
+        "summary": "Get Admin User Info",
+        "description": "Retrieve the information of the logged-in admin.",
+        "operationId": "getAdminInfo",
+        "responses": {
+          "200": {
+            "description": "Admin user information retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "admin_id": {
+                      "type": "integer"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid or missing token)"
+          }
+        }
+      }
+    },
+    "/admin/{admin_id}/auth": {
+      "delete": {
+        "summary": "Admin Logout",
+        "description": "Logout the admin by invalidating the authentication token.",
+        "operationId": "adminLogout",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The admin's unique ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully logged out!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid token)"
+          }
+        }
+      }
+    },
+    "/user/auth": {
+      "post": {
+        "summary": "User Login",
+        "description": "User login route that authenticates using provided credentials.",
+        "operationId": "userLogin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid credentials)"
+          }
+        }
+      }
+    },
+    "/userinfo": {
+      "get": {
+        "summary": "Get User Info",
+        "description": "Retrieve the information of the logged-in user.",
+        "operationId": "getUserInfo",
+        "responses": {
+          "200": {
+            "description": "User information retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_id": {
+                      "type": "integer"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid or missing token)"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/auth": {
+      "delete": {
+        "summary": "User Logout",
+        "description": "Logout the user by invalidating the authentication token.",
+        "operationId": "userLogout",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The user's unique ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully logged out"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid token)"
+          }
+        }
+      }
+    },
+    "/.well-known/jwks.json": {
+      "get": {
+        "summary": "Get JWT Public Key",
+        "description": "Exposes the public key for JWT verification.",
+        "operationId": "getJWK",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved public key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "keys": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kty": {
+                            "type": "string"
+                          },
+                          "kid": {
+                            "type": "string"
+                          },
+                          "use": {
+                            "type": "string"
+                          },
+                          "alg": {
+                            "type": "string"
+                          },
+                          "n": {
+                            "type": "string"
+                          },
+                          "e": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,423 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Market Management API",
+    "description": "API to manage market listings, bids, and transactions.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5004"
+    }
+  ],
+  "paths": {
+    "/admin/{admin_id}/market_list": {
+      "get": {
+        "summary": "Get open market auctions",
+        "description": "Retrieve a list of all open market auctions.",
+        "operationId": "getMarketListAdmin",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of open market auctions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Market"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/{admin_id}/user/{user_id}/transactions_history": {
+      "get": {
+        "summary": "Get user transaction history",
+        "description": "Retrieve the transaction history of a specific user.",
+        "operationId": "getUserTransactionsHistoryAdmin",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of transactions for the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Market"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/{admin_id}/transactions_history": {
+      "get": {
+        "summary": "Get all market transactions",
+        "description": "Retrieve the transaction history for all users in the market.",
+        "operationId": "getTransactionsHistoryAdmin",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all market transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Market"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/{admin_id}/market/{market_id}": {
+      "get": {
+        "summary": "Get a specific market auction",
+        "description": "Retrieve details of a specific auction by market ID.",
+        "operationId": "getAuction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "market_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Market auction details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Market"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Auction not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Close a specific auction",
+        "description": "Close an auction and complete the transaction with the buyer.",
+        "operationId": "closeAuction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "market_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Auction successfully closed"
+          },
+          "400": {
+            "description": "Invalid request (auction expired, already closed, etc.)"
+          },
+          "404": {
+            "description": "Auction not found"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/market_list": {
+      "get": {
+        "summary": "Get open market auctions for a user",
+        "description": "Retrieve a list of all open market auctions for a user.",
+        "operationId": "getMarketListUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of open market auctions for the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Market"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{user_id}/transactions_history": {
+      "get": {
+        "summary": "Get the user's transaction history",
+        "description": "Retrieve the transaction history for a specific user.",
+        "operationId": "getTransactionsHistoryUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of the user's market transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Market"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{user_id}/market/{market_id}/bid": {
+      "put": {
+        "summary": "Place a bid on a market auction",
+        "description": "Place a new bid on a specific market auction.",
+        "operationId": "placeBid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "market_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "bid_amount": {
+                    "type": "number",
+                    "format": "float"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bid placed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Market"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid bid (amount too low, auction expired, etc.)"
+          },
+          "403": {
+            "description": "Forbidden (user trying to bid on their own auction)"
+          },
+          "404": {
+            "description": "Auction not found"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/instance/{instance_id}/auction": {
+      "put": {
+        "summary": "Set an auction for an item",
+        "description": "Create a new auction for a user's item.",
+        "operationId": "setAuction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "instance_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "end_date": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "start_bid": {
+                    "type": "number",
+                    "format": "float"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Auction created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Market"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request (e.g., invalid date, bid amount)"
+          },
+          "403": {
+            "description": "Unauthorized or invalid item instance"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Market": {
+        "type": "object",
+        "properties": {
+          "market_id": {
+            "type": "integer"
+          },
+          "instance_id": {
+            "type": "integer"
+          },
+          "seller_user_id": {
+            "type": "integer"
+          },
+          "buyer_user_id": {
+            "type": "integer"
+          },
+          "bid": {
+            "type": "number",
+            "format": "float"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "closed",
+              "expired"
+            ]
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

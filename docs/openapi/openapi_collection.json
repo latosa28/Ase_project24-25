@@ -1,0 +1,527 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Collection Management API",
+    "description": "API to manage and interact with item collections for admins and users.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5002"
+    }
+  ],
+  "paths": {
+    "/admin/{admin_id}/collection": {
+      "get": {
+        "summary": "Get all items",
+        "description": "Retrieve all items in the collection.",
+        "operationId": "getItemsAdmin",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of items retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "item_id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "rarity": {
+                        "type": "string"
+                      },
+                      "image_path": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/admin/{admin_id}/item/{item_id}": {
+      "get": {
+        "summary": "Get a specific item by ID",
+        "description": "Retrieve an item by its ID.",
+        "operationId": "getItemByIdAdmin",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "item_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "item_id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "rarity": {
+                      "type": "string"
+                    },
+                    "image_path": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update an item",
+        "description": "Update the details of an item (image path, name, rarity).",
+        "operationId": "updateItemAdmin",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "item_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image_path": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "rarity": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "item_id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "rarity": {
+                      "type": "string"
+                    },
+                    "image_path": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (no fields to update)"
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an item",
+        "description": "Remove an item from the collection by its ID.",
+        "operationId": "deleteItemAdmin",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "item_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Item deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      }
+    },
+    "/admin/{admin_id}/item": {
+      "put": {
+        "summary": "Add a new item",
+        "description": "Add a new item to the collection.",
+        "operationId": "addItemAdmin",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image_path": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "rarity": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Item added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "item_id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "rarity": {
+                      "type": "string"
+                    },
+                    "image_path": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (missing mandatory fields)"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/collection": {
+      "get": {
+        "summary": "Get all items for the user",
+        "description": "Retrieve all items available to the user.",
+        "operationId": "getItemsUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of items retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "item_id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "rarity": {
+                        "type": "string"
+                      },
+                      "image_path": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/mycollection": {
+      "get": {
+        "summary": "Get user's specific collection",
+        "description": "Retrieve all items in the user's personal collection.",
+        "operationId": "getUserCollection",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user's collected items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "instance_id": {
+                        "type": "integer"
+                      },
+                      "item_id": {
+                        "type": "integer"
+                      },
+                      "rarity": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "image_path": {
+                        "type": "string"
+                      },
+                      "date_roll": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User collection not found"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/instance/{instance_id}": {
+      "get": {
+        "summary": "Get a specific item instance from user's collection",
+        "description": "Retrieve a specific item instance by its ID from the user's collection.",
+        "operationId": "getUserItemInstance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "instance_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item instance retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "instance_id": {
+                      "type": "integer"
+                    },
+                    "item_id": {
+                      "type": "integer"
+                    },
+                    "rarity": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "image_path": {
+                      "type": "string"
+                    },
+                    "date_roll": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Item instance not found"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/roll": {
+      "put": {
+        "summary": "Roll a gacha to obtain an item",
+        "description": "Execute a gacha roll to get a random item based on probabilities.",
+        "operationId": "rollGacha",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully rolled an item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "instance_id": {
+                      "type": "integer"
+                    },
+                    "item_id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "rarity": {
+                      "type": "string"
+                    },
+                    "image_path": {
+                      "type": "string"
+                    },
+                    "date_roll": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (insufficient currency or other errors)"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  }
+}
