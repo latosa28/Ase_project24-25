@@ -1,0 +1,189 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Admin Account Microservice API",
+    "description": "API for managing admin accounts.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5009"
+    }
+  ],
+  "paths": {
+    "/admin": {
+      "post": {
+        "summary": "Create a new admin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Admin created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "admin_id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/admin/{admin_id}": {
+      "get": {
+        "summary": "Get admin details by ID",
+        "parameters": [
+          {
+            "name": "admin_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Admin details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Admin"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Admin not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete admin by ID",
+        "parameters": [
+          {
+            "name": "admin_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Admin deleted successfully"
+          },
+          "404": {
+            "description": "Admin not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/admin/username/{username}/check_credentials": {
+      "post": {
+        "summary": "Check admin account credentials",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Valid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "admin_id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid credentials"
+          },
+          "404": {
+            "description": "Admin not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Admin": {
+        "type": "object",
+        "properties": {
+          "admin_id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
