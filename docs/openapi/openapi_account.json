@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Account Microservice API",
-    "description": "API for managing user and admin accounts.",
+    "description": "API for managing user accounts.",
     "version": "1.0.0"
   },
   "servers": [
