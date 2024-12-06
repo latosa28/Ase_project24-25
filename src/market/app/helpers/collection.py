@@ -25,12 +25,12 @@ class CollectionHelper:
                 raise Exception(response.reason)
             return response
         
-    def get_instance(self, user_id, instance_id):
+    def get_instance(self, user_id, instance_id, headers):
         if current_app.config['ENV'] == 'testing':
             return self.mock_collection_request(user_id, instance_id)
         else:
             response = HttpClient.get(
-                f"{self.base_url}/user/{user_id}/instance/{instance_id}"
+                f"{self.base_url}/user/{user_id}/instance/{instance_id}", headers=headers
             )
             return response
 

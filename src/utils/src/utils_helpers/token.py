@@ -1,8 +1,8 @@
 from functools import wraps
 import jwt
-from flask import request, jsonify, current_app
+from flask import request, current_app
 
-from errors.errors import HTTPUnauthorizedError, HTTPForbiddenError
+from errors.errors import HTTPUnauthorizedError, HTTPForbiddenError, HTTPBadRequestError
 
 MY_APP = "https://localhost"
 
@@ -21,7 +21,7 @@ def decode_token(token, public_key):
 def get_token_info():
     auth_header = request.headers.get('Authorization')
     if not auth_header:
-        return jsonify({'message': 'Token is missing!'}), 403
+        raise HTTPBadRequestError("Missing token", "invalid_request")
 
     token = auth_header.removeprefix("Bearer ").strip()
 
