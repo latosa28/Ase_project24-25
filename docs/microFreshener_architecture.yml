@@ -8,21 +8,35 @@ topology_template:
       type: micro.nodes.Service
       requirements:
       - interaction: account_db
-      - interaction: auth
-      - interaction: currency
+      - interaction:
+          node: auth
+          relationship: c
+      - interaction:
+          node: currency
+          relationship: c
     collection:
       type: micro.nodes.Service
       requirements:
       - interaction: collection_db
-      - interaction: currency
-      - interaction: auth
+      - interaction:
+          node: currency
+          relationship: c
+      - interaction:
+          node: auth
+          relationship: c
     market:
       type: micro.nodes.Service
       requirements:
       - interaction: market_db
-      - interaction: currency
-      - interaction: collection
-      - interaction: auth
+      - interaction:
+          node: currency
+          relationship: c
+      - interaction:
+          node: collection
+          relationship: c
+      - interaction:
+          node: auth
+          relationship: c
     api_gateway:
       type: micro.nodes.MessageRouter
       requirements:
@@ -42,7 +56,9 @@ topology_template:
       type: micro.nodes.Service
       requirements:
       - interaction: currency_db
-      - interaction: auth
+      - interaction:
+          node: auth
+          relationship: c
     currency_db:
       type: micro.nodes.Datastore
     admin_gateway:
@@ -57,9 +73,13 @@ topology_template:
     payment:
       type: micro.nodes.Service
       requirements:
-      - interaction: currency
+      - interaction:
+          node: currency
+          relationship: c
       - interaction: payment_db
-      - interaction: auth
+      - interaction:
+          node: auth
+          relationship: c
     admin_db:
       type: micro.nodes.Datastore
     payment_db:
@@ -68,12 +88,18 @@ topology_template:
       type: micro.nodes.Service
       requirements:
       - interaction: admin_db
-      - interaction: auth
+      - interaction:
+          node: auth
+          relationship: c
     auth:
       type: micro.nodes.Service
       requirements:
-      - interaction: account
-      - interaction: admin_account
+      - interaction:
+          node: account
+          relationship: c
+      - interaction:
+          node: admin_account
+          relationship: c
   groups:
     adad:
       type: micro.groups.Edge
