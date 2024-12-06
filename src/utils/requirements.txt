@@ -1,5 +1,0 @@
-Flask
-Flask-SQLAlchemy
-requests
-PyJWT
-cryptography
